@@ -1,0 +1,23 @@
+#
+# Copyright (C) 2016+ AzerothCore <www.azerothcore.org>, released under GNU AGPL v3 license: https://github.com/azerothcore/azerothcore-wotlk/blob/master/LICENSE-AGPL3
+#
+
+[worldserver]
+
+########################################
+# mod-token-turnin configuration
+########################################
+#
+#    TokenTurnIn.AllowClassMismatch
+#        Description: Allow ".tokenturnin redeem" to convert a tier token that
+#                      belongs to a different class than the character holding
+#                      it (e.g. a Mage holding a Warrior token via master loot).
+#                      Mirrors real vendor behavior when enabled - nothing
+#                      stops turning in a mismatched token at an NPC either.
+#                      A mismatch always prints a warning in the report,
+#                      regardless of this setting.
+#        Default:     1 - Enabled (allow, with a warning)
+#                     0 - Disabled (block the conversion for that token)
+#
+
+TokenTurnIn.AllowClassMismatch = 1

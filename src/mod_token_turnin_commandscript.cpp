@@ -41,11 +41,28 @@
  *  - Full-inventory fallback is "block": StoreNewItemInBestSlots() is tried
  *    before DestroyItemCount(), so a bot with no free space keeps its token
  *    (nothing lost) and gets a chat message instead of a mailed item.
+ *
+ * Resolved design point:
+ *  - TalentSpec::highestTree() falls through to `return 0` when a character
+ *    has zero points in all three trees (see Talentspec.cpp) - e.g. a freshly
+ *    wiped talent tree. Trusting that return value directly would silently
+ *    treat "no spec" as "tab 0 spec" and hand out fabricated gear. We check
+ *    spec.GetTalentPoints() (total, no args) ourselves first and skip the
+ *    character entirely if it's zero, rather than relying on highestTree()'s
+ *    tie-break default.
+ *
+ * Resolved design point:
+ *  - Class/token mismatch (e.g. a Mage holding a Warrior token) is allowed
+ *    by default to mirror vendor behavior (see DESIGN.md), but is now gated
+ *    behind TokenTurnIn.AllowClassMismatch so server admins can choose to
+ *    block it instead. A mismatch always produces a warning line in the
+ *    report regardless of the setting.
  */
 
 #include "Bag.h"
 #include "Chat.h"
 #include "ChatCommand.h"
+#include "ConfigValueCache.h"
 #include "DatabaseEnv.h"
 #include "Group.h"
 #include "Item.h"
@@ -62,6 +79,40 @@ using namespace Acore::ChatCommands;
 
 namespace
 {
+    enum class TokenTurnInConfig
+    {
+        ALLOW_CLASS_MISMATCH,
+        NUM_CONFIGS,
+    };
+
+    class TokenTurnInConfigData : public ConfigValueCache<TokenTurnInConfig>
+    {
+    public:
+        TokenTurnInConfigData() : ConfigValueCache(TokenTurnInConfig::NUM_CONFIGS) {}
+
+        void BuildConfigCache() override
+        {
+            // Default true: mirrors vendor behavior (nothing stops turning in
+            // a mismatched token at an NPC either). A mismatch still always
+            // produces a warning line in the report - this only controls
+            // whether the conversion itself is blocked.
+            SetConfigValue<bool>(TokenTurnInConfig::ALLOW_CLASS_MISMATCH, "TokenTurnIn.AllowClassMismatch", true);
+        }
+    };
+
+    TokenTurnInConfigData tokenTurnInConfig;
+
+    class TokenTurnInWorldScript : public WorldScript
+    {
+    public:
+        TokenTurnInWorldScript() : WorldScript("TokenTurnInWorldScript", { WORLDHOOK_ON_BEFORE_CONFIG_LOAD }) {}
+
+        void OnBeforeConfigLoad(bool reload) override
+        {
+            tokenTurnInConfig.Initialize(reload);
+        }
+    };
+
     // Reproduced from ChatHelper::specs (playerbots ChatHelper.cpp), which is
     // private to that class. Same data, no chat-link formatting attached.
     // class_id -> talent_tab (0/1/2) -> display name.
@@ -113,6 +164,9 @@ namespace
         uint32 resultItemEntry = 0;
         bool matched = false;
         bool inventoryFull = false;
+        bool noSpec = false;
+        bool classMismatch = false;
+        bool classBlocked = false;
     };
 
     // Collects the item entry of every item in the target's backpack and
@@ -141,8 +195,20 @@ namespace
     {
         std::vector<TokenConversionResult> results;
 
-        // 1. Resolve current spec via playerbots talent logic.
+        // 1. Resolve current spec via playerbots talent logic. A character
+        //    with zero points in every tree (e.g. freshly wiped talents) has
+        //    no real spec - highestTree() would otherwise silently default
+        //    to tab 0, so bail out before trusting it.
         TalentSpec spec(target);
+        if (spec.GetTalentPoints() == 0)
+        {
+            TokenConversionResult noSpec;
+            noSpec.charName = target->GetName();
+            noSpec.matched = false;
+            noSpec.noSpec = true;
+            return { noSpec };
+        }
+
         uint8 talentTab = static_cast<uint8>(spec.highestTree());
         std::string specLabel = ResolveSpecLabel(target->getClass(), talentTab);
 
@@ -155,13 +221,16 @@ namespace
             uint32 tokenEntry = item->GetEntry();
 
             QueryResult queryResult = WorldDatabase.Query(
-                "SELECT result_item_entry FROM mod_token_turnin_tokens WHERE token_entry = {} AND talent_tab = {}",
+                "SELECT result_item_entry, class_id FROM mod_token_turnin_tokens WHERE token_entry = {} AND talent_tab = {}",
                 tokenEntry, talentTab);
 
             if (!queryResult)
                 continue;
 
-            uint32 resultItemEntry = queryResult->Fetch()[0].Get<uint32>();
+            Field* fields = queryResult->Fetch();
+            uint32 resultItemEntry = fields[0].Get<uint32>();
+            uint8 tokenClassId = fields[1].Get<uint8>();
+            bool classMismatch = tokenClassId != target->getClass();
 
             TokenConversionResult match;
             match.charName = target->GetName();
@@ -169,6 +238,14 @@ namespace
             match.tokenEntry = tokenEntry;
             match.resultItemEntry = resultItemEntry;
             match.matched = true;
+            match.classMismatch = classMismatch;
+
+            if (classMismatch && !tokenTurnInConfig.GetConfigValue<bool>(TokenTurnInConfig::ALLOW_CLASS_MISMATCH))
+            {
+                match.classBlocked = true;
+                results.push_back(match);
+                continue;
+            }
 
             // 3. Award before destroying: if there's no room for the result
             //    item, the token is left untouched rather than lost.
@@ -200,14 +277,33 @@ namespace
         {
             if (r.matched)
             {
+                if (r.classBlocked)
+                {
+                    handler->PSendSysMessage(
+                        "[TokenTurnIn] {} -> Token: {} does not belong to {}'s class - blocked by server configuration",
+                        r.charName, BuildItemLink(r.tokenEntry), r.charName);
+                    continue;
+                }
+
                 handler->PSendSysMessage(
                     "[TokenTurnIn] {} ({}) -> Token: {} -> Item: {}",
                     r.charName, r.specLabel, BuildItemLink(r.tokenEntry), BuildItemLink(r.resultItemEntry));
+
+                if (r.classMismatch)
+                    handler->PSendSysMessage(
+                        "[TokenTurnIn] Warning: {} does not belong to {}'s class - {} may not be equippable",
+                        BuildItemLink(r.tokenEntry), r.charName, BuildItemLink(r.resultItemEntry));
 
                 if (r.inventoryFull)
                     handler->PSendSysMessage(
                         "[TokenTurnIn] {} has no inventory space for {} - token not consumed",
                         r.charName, BuildItemLink(r.resultItemEntry));
+            }
+            else if (r.noSpec)
+            {
+                handler->PSendSysMessage(
+                    "[TokenTurnIn] {} has no talents invested - spec cannot be determined, skipped",
+                    r.charName);
             }
             else
             {
@@ -288,4 +384,5 @@ public:
 void AddSC_mod_token_turnin()
 {
     new mod_token_turnin_commandscript();
+    new TokenTurnInWorldScript();
 }
