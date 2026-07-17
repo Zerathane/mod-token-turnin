@@ -1,6 +1,11 @@
 !.gitignore
 
 #
+# Local planning notes
+#
+DESIGN.md
+
+#
 #Generic
 #
 
