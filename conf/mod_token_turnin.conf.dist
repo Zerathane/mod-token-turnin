@@ -8,16 +8,10 @@
 # mod-token-turnin configuration
 ########################################
 #
-#    TokenTurnIn.AllowClassMismatch
-#        Description: Allow ".tokenturnin redeem" to convert a tier token that
-#                      belongs to a different class than the character holding
-#                      it (e.g. a Mage holding a Warrior token via master loot).
-#                      Mirrors real vendor behavior when enabled - nothing
-#                      stops turning in a mismatched token at an NPC either.
-#                      A mismatch always prints a warning in the report,
-#                      regardless of this setting.
-#        Default:     1 - Enabled (allow, with a warning)
-#                     0 - Disabled (block the conversion for that token)
+#    TokenTurnIn.Enable
+#        Description: Enable the .tokenturnin check|redeem commands.
+#        Default:     1 - Enabled
+#                     0 - Disabled
 #
 
-TokenTurnIn.AllowClassMismatch = 1
+TokenTurnIn.Enable = 1

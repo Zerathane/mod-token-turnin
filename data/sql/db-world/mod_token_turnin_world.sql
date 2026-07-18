@@ -22,7 +22,14 @@ CREATE TABLE `mod_token_turnin_tokens` (
   -- token is already a distinct token_entry (distinct item_id) in game data,
   -- so difficulty is implied by which token was scanned, not resolved at
   -- query time. It's kept as a descriptive/bookkeeping column only.
-  UNIQUE KEY `idx_token_lookup` (`token_entry`, `talent_tab`),
+  --
+  -- class_id IS part of the lookup key: a single token_entry can be shared
+  -- across multiple classes (confirmed in game data - e.g. T4's "Fallen
+  -- Defender" family token is usable by Warrior, Priest, and Druid alike,
+  -- each redeeming their own 3 spec-variant items from the same token). Without
+  -- class_id here, two classes sharing a token would collide on (token_entry,
+  -- talent_tab) alone.
+  UNIQUE KEY `idx_token_lookup` (`token_entry`, `class_id`, `talent_tab`),
   KEY `idx_tier` (`tier`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='mod_token_turnin conversion table';
 

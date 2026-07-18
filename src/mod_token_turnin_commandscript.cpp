@@ -18,10 +18,22 @@
  *  - Group::isRaidGroup() exists (Group.h:221), but scanning via GetFirstMember() covers
  *    party and raid identically - no branching needed on group type at all.
  *
- * Confirmed via Talentspec.cpp:
- *  - TalentSpec::highestTree() is fully implemented (not dead code despite the
- *    "unused currently" comment on the class) - compares GetTalentPoints(0/1/2)
- *    and returns the tab with the most points invested.
+ * Resolved design point (supersedes an earlier attempt to reuse
+ * mod-playerbots' TalentSpec::highestTree()):
+ *  - TalentSpec::ReadTalents() (mod-playerbots, Talentspec.cpp) detects
+ *    invested points via Player::HasSpell(spellId). In-game testing showed
+ *    this fails to recognize points spent in early/passive-only talents -
+ *    it only picks up the tree once a talent that also grants an active,
+ *    castable spell has been learned. That made highestTree() itself
+ *    unreliable for low investment, not just our own "no spec" check.
+ *  - Replaced with our own ResolveHighestTalentTab() below, computed
+ *    directly against core's own TalentEntry/TalentTabEntry DBC stores
+ *    (sTalentStore/sTalentTabStore) and Player::HasTalent(), which checks
+ *    the player's actual PlayerTalentMap (m_talents) rather than the general
+ *    spellbook - the correct, passive-or-active-agnostic source of truth.
+ *  - This also removes the module's hard compile-time dependency on
+ *    mod-playerbots (Talentspec.h no longer included), which previously
+ *    broke standalone CI builds (see the removed core-build.yml history).
  *
  * Confirmed via ChatHelper.h/.cpp:
  *  - A class -> talent_tab -> spec name table already exists there
@@ -43,20 +55,20 @@
  *    (nothing lost) and gets a chat message instead of a mailed item.
  *
  * Resolved design point:
- *  - TalentSpec::highestTree() falls through to `return 0` when a character
- *    has zero points in all three trees (see Talentspec.cpp) - e.g. a freshly
- *    wiped talent tree. Trusting that return value directly would silently
- *    treat "no spec" as "tab 0 spec" and hand out fabricated gear. We check
- *    spec.GetTalentPoints() (total, no args) ourselves first and skip the
- *    character entirely if it's zero, rather than relying on highestTree()'s
- *    tie-break default.
+ *  - A character with zero points in every tree (e.g. a freshly wiped talent
+ *    tree) has no real spec. ResolveHighestTalentTab() returns -1 for this
+ *    case explicitly rather than defaulting to tab 0, so we can skip the
+ *    character with a clear message instead of handing out fabricated gear.
  *
  * Resolved design point:
- *  - Class/token mismatch (e.g. a Mage holding a Warrior token) is allowed
- *    by default to mirror vendor behavior (see DESIGN.md), but is now gated
- *    behind TokenTurnIn.AllowClassMismatch so server admins can choose to
- *    block it instead. A mismatch always produces a warning line in the
- *    report regardless of the setting.
+ *  - A single token_entry can be shared across multiple classes (confirmed
+ *    in game data - e.g. T4's "Fallen Defender" family token is looted and
+ *    used identically by Warrior, Priest, and Druid, each redeeming their
+ *    own 3 spec-variant items from the same token entry). The lookup query
+ *    filters on class_id as well as token_entry + talent_tab, so a class
+ *    outside a token's real family simply finds no matching row - same
+ *    outcome as any other unconvertible token, no separate mismatch/warning
+ *    handling needed.
  */
 
 #include "Bag.h"
@@ -64,13 +76,13 @@
 #include "ChatCommand.h"
 #include "ConfigValueCache.h"
 #include "DatabaseEnv.h"
+#include "DBCStores.h"
 #include "Group.h"
 #include "Item.h"
 #include "ObjectMgr.h"
 #include "Player.h"
 #include "ScriptMgr.h"
 #include "StringFormat.h"
-#include "Talentspec.h"
 #include <sstream>
 #include <vector>
 #include <string>
@@ -81,7 +93,7 @@ namespace
 {
     enum class TokenTurnInConfig
     {
-        ALLOW_CLASS_MISMATCH,
+        ENABLE,
         NUM_CONFIGS,
     };
 
@@ -92,11 +104,7 @@ namespace
 
         void BuildConfigCache() override
         {
-            // Default true: mirrors vendor behavior (nothing stops turning in
-            // a mismatched token at an NPC either). A mismatch still always
-            // produces a warning line in the report - this only controls
-            // whether the conversion itself is blocked.
-            SetConfigValue<bool>(TokenTurnInConfig::ALLOW_CLASS_MISMATCH, "TokenTurnIn.AllowClassMismatch", true);
+            SetConfigValue<bool>(TokenTurnInConfig::ENABLE, "TokenTurnIn.Enable", true);
         }
     };
 
@@ -156,6 +164,58 @@ namespace
             color.str(), itemEntry, itemTemplate->Name1);
     }
 
+    // Returns the talent tab (0/1/2) with the most points invested for this
+    // character's class, or -1 if no points are invested anywhere. Computed
+    // directly against core's TalentEntry/TalentTabEntry stores and
+    // Player::HasTalent() (checks the real PlayerTalentMap, passive or
+    // active) rather than mod-playerbots' TalentSpec - see header comment.
+    int32 ResolveHighestTalentTab(Player* target)
+    {
+        uint32 classMask = target->getClassMask();
+        uint32 points[3] = { 0, 0, 0 };
+
+        for (uint32 i = 0; i < sTalentStore.GetNumRows(); ++i)
+        {
+            TalentEntry const* talentInfo = sTalentStore.LookupEntry(i);
+            if (!talentInfo)
+                continue;
+
+            TalentTabEntry const* talentTabInfo = sTalentTabStore.LookupEntry(talentInfo->TalentTab);
+            if (!talentTabInfo)
+                continue;
+
+            if ((classMask & talentTabInfo->ClassMask) == 0)
+                continue;
+
+            // TalentTabID 41 is a known DBC quirk (mirrors the equivalent
+            // correction in mod-playerbots' TalentListEntry::tabPage()).
+            uint32 tab = talentTabInfo->TalentTabID == 41 ? 1 : talentTabInfo->tabpage;
+            if (tab > 2)
+                continue;
+
+            for (uint8 rank = 0; rank < MAX_TALENT_RANK; ++rank)
+            {
+                uint32 spellId = talentInfo->RankID[rank];
+                if (!spellId)
+                    continue;
+
+                if (target->HasTalent(spellId, target->GetActiveSpec()))
+                {
+                    points[tab] += rank + 1;
+                    break;
+                }
+            }
+        }
+
+        if (points[0] + points[1] + points[2] == 0)
+            return -1;
+
+        uint8 best = 0;
+        if (points[1] > points[best]) best = 1;
+        if (points[2] > points[best]) best = 2;
+        return best;
+    }
+
     struct TokenConversionResult
     {
         std::string charName;
@@ -165,8 +225,6 @@ namespace
         bool matched = false;
         bool inventoryFull = false;
         bool noSpec = false;
-        bool classMismatch = false;
-        bool classBlocked = false;
     };
 
     // Collects the item entry of every item in the target's backpack and
@@ -195,12 +253,11 @@ namespace
     {
         std::vector<TokenConversionResult> results;
 
-        // 1. Resolve current spec via playerbots talent logic. A character
-        //    with zero points in every tree (e.g. freshly wiped talents) has
-        //    no real spec - highestTree() would otherwise silently default
-        //    to tab 0, so bail out before trusting it.
-        TalentSpec spec(target);
-        if (spec.GetTalentPoints() == 0)
+        // 1. Resolve current spec. -1 means no points invested anywhere
+        //    (e.g. freshly wiped talents) - bail out with a clear message
+        //    rather than defaulting to a fabricated spec.
+        int32 highestTab = ResolveHighestTalentTab(target);
+        if (highestTab < 0)
         {
             TokenConversionResult noSpec;
             noSpec.charName = target->GetName();
@@ -209,28 +266,28 @@ namespace
             return { noSpec };
         }
 
-        uint8 talentTab = static_cast<uint8>(spec.highestTree());
+        uint8 talentTab = static_cast<uint8>(highestTab);
         std::string specLabel = ResolveSpecLabel(target->getClass(), talentTab);
 
         // 2. Scan backpack + bags for any token_entry present in
-        //    mod_token_turnin_tokens. Difficulty is NOT part of the lookup -
-        //    it's implied by which token_entry was found, since each
-        //    difficulty's token is already a distinct item_id in game data.
+        //    mod_token_turnin_tokens for this character's own class.
+        //    Difficulty is NOT part of the lookup - it's implied by which
+        //    token_entry was found, since each difficulty's token is already
+        //    a distinct item_id in game data. class_id IS part of the lookup:
+        //    a token shared by multiple classes (see header) only matches the
+        //    row for the holder's own class.
         for (Item* item : CollectBagItems(target))
         {
             uint32 tokenEntry = item->GetEntry();
 
             QueryResult queryResult = WorldDatabase.Query(
-                "SELECT result_item_entry, class_id FROM mod_token_turnin_tokens WHERE token_entry = {} AND talent_tab = {}",
-                tokenEntry, talentTab);
+                "SELECT result_item_entry FROM mod_token_turnin_tokens WHERE token_entry = {} AND class_id = {} AND talent_tab = {}",
+                tokenEntry, target->getClass(), talentTab);
 
             if (!queryResult)
                 continue;
 
-            Field* fields = queryResult->Fetch();
-            uint32 resultItemEntry = fields[0].Get<uint32>();
-            uint8 tokenClassId = fields[1].Get<uint8>();
-            bool classMismatch = tokenClassId != target->getClass();
+            uint32 resultItemEntry = queryResult->Fetch()[0].Get<uint32>();
 
             TokenConversionResult match;
             match.charName = target->GetName();
@@ -238,14 +295,6 @@ namespace
             match.tokenEntry = tokenEntry;
             match.resultItemEntry = resultItemEntry;
             match.matched = true;
-            match.classMismatch = classMismatch;
-
-            if (classMismatch && !tokenTurnInConfig.GetConfigValue<bool>(TokenTurnInConfig::ALLOW_CLASS_MISMATCH))
-            {
-                match.classBlocked = true;
-                results.push_back(match);
-                continue;
-            }
 
             // 3. Award before destroying: if there's no room for the result
             //    item, the token is left untouched rather than lost.
@@ -277,22 +326,9 @@ namespace
         {
             if (r.matched)
             {
-                if (r.classBlocked)
-                {
-                    handler->PSendSysMessage(
-                        "[TokenTurnIn] {} -> Token: {} does not belong to {}'s class - blocked by server configuration",
-                        r.charName, BuildItemLink(r.tokenEntry), r.charName);
-                    continue;
-                }
-
                 handler->PSendSysMessage(
                     "[TokenTurnIn] {} ({}) -> Token: {} -> Item: {}",
                     r.charName, r.specLabel, BuildItemLink(r.tokenEntry), BuildItemLink(r.resultItemEntry));
-
-                if (r.classMismatch)
-                    handler->PSendSysMessage(
-                        "[TokenTurnIn] Warning: {} does not belong to {}'s class - {} may not be equippable",
-                        BuildItemLink(r.tokenEntry), r.charName, BuildItemLink(r.resultItemEntry));
 
                 if (r.inventoryFull)
                     handler->PSendSysMessage(
@@ -335,6 +371,12 @@ namespace
 
     void RunTokenTurnIn(ChatHandler* handler, bool doConvert)
     {
+        if (!tokenTurnInConfig.GetConfigValue<bool>(TokenTurnInConfig::ENABLE))
+        {
+            handler->PSendSysMessage("[TokenTurnIn] This module is currently disabled.");
+            return;
+        }
+
         Player* invoker = handler->GetPlayer();
         if (!invoker)
             return;
