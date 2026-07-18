@@ -250,6 +250,7 @@ namespace
         std::string specLabel;
         uint32 tokenEntry = 0;
         uint32 resultItemEntry = 0;
+        uint32 count = 1;
         bool matched = false;
         bool inventoryFull = false;
         bool noSpec = false;
@@ -307,6 +308,7 @@ namespace
         for (Item* item : CollectBagItems(target))
         {
             uint32 tokenEntry = item->GetEntry();
+            uint32 tokenCount = item->GetCount();
 
             QueryResult queryResult = WorldDatabase.Query(
                 "SELECT result_item_entry FROM mod_token_turnin_tokens WHERE token_entry = {} AND class_id = {} AND talent_tab = {}",
@@ -322,14 +324,19 @@ namespace
             match.specLabel = specLabel;
             match.tokenEntry = tokenEntry;
             match.resultItemEntry = resultItemEntry;
+            match.count = tokenCount;
             match.matched = true;
 
             // 3. Award before destroying: if there's no room for the result
-            //    item, the token is left untouched rather than lost.
+            //    items, the token stack is left untouched rather than lost.
+            //    A whole stack found in one slot converts in a single sweep -
+            //    count matches whatever was actually in that slot, not a
+            //    hardcoded 1, so a stack of e.g. 3 doesn't need 3 separate
+            //    .tokenturnin redeem runs to fully clear.
             if (doConvert)
             {
-                if (target->StoreNewItemInBestSlots(resultItemEntry, 1))
-                    target->DestroyItemCount(tokenEntry, 1, true);
+                if (target->StoreNewItemInBestSlots(resultItemEntry, tokenCount))
+                    target->DestroyItemCount(tokenEntry, tokenCount, true);
                 else
                     match.inventoryFull = true;
             }
@@ -354,9 +361,14 @@ namespace
         {
             if (r.matched)
             {
-                handler->PSendSysMessage(
-                    "[TokenTurnIn] {} ({}) -> Token: {} -> Item: {}",
-                    r.charName, r.specLabel, BuildItemLink(r.tokenEntry), BuildItemLink(r.resultItemEntry));
+                if (r.count > 1)
+                    handler->PSendSysMessage(
+                        "[TokenTurnIn] {} ({}) -> Token: {} x{} -> Item: {} x{}",
+                        r.charName, r.specLabel, BuildItemLink(r.tokenEntry), r.count, BuildItemLink(r.resultItemEntry), r.count);
+                else
+                    handler->PSendSysMessage(
+                        "[TokenTurnIn] {} ({}) -> Token: {} -> Item: {}",
+                        r.charName, r.specLabel, BuildItemLink(r.tokenEntry), BuildItemLink(r.resultItemEntry));
 
                 if (r.inventoryFull)
                     handler->PSendSysMessage(
