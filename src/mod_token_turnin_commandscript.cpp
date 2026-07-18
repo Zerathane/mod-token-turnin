@@ -69,6 +69,18 @@
  *    outside a token's real family simply finds no matching row - same
  *    outcome as any other unconvertible token, no separate mismatch/warning
  *    handling needed.
+ *
+ * Resolved design point:
+ *  - This module's purpose is bot-management convenience, not helping real
+ *    players get gear faster - so besides excluding the invoker (see
+ *    TokenTurnIn.IncludeSelf), a real grouped player (not a bot) should also
+ *    be excluded from scanning by default. Detecting "is this a bot" is a
+ *    genuine mod-playerbots concern (PlayerbotsMgr::GetPlayerbotAI()), unlike
+ *    the TalentSpec dependency removed above - that one was dropped for
+ *    being buggy, not for being playerbots-specific. This check is wrapped
+ *    in #ifdef MOD_PLAYERBOTS (a macro CMake already defines when playerbots
+ *    is present in the build) so the module still compiles standalone;
+ *    without playerbots present, real-player filtering is simply a no-op.
  */
 
 #include "Bag.h"
@@ -87,6 +99,10 @@
 #include <vector>
 #include <string>
 
+#ifdef MOD_PLAYERBOTS
+#include "PlayerbotMgr.h"
+#endif
+
 using namespace Acore::ChatCommands;
 
 namespace
@@ -94,6 +110,8 @@ namespace
     enum class TokenTurnInConfig
     {
         ENABLE,
+        INCLUDE_SELF,
+        INCLUDE_REAL_PLAYERS,
         NUM_CONFIGS,
     };
 
@@ -105,6 +123,16 @@ namespace
         void BuildConfigCache() override
         {
             SetConfigValue<bool>(TokenTurnInConfig::ENABLE, "TokenTurnIn.Enable", true);
+            // Default false: this module exists for bot-management convenience,
+            // not to make it easier for the invoking player's own character to
+            // get gear (see DESIGN.md). Off by default, opt-in for admins who
+            // want the convenience for themselves too.
+            SetConfigValue<bool>(TokenTurnInConfig::INCLUDE_SELF, "TokenTurnIn.IncludeSelf", false);
+            // Default false: only real playerbots should be swept up when
+            // scanning a group, not a real grouped friend's character.
+            // Only takes effect when built with mod-playerbots present -
+            // see the MOD_PLAYERBOTS guard on IsRealPlayer() below.
+            SetConfigValue<bool>(TokenTurnInConfig::INCLUDE_REAL_PLAYERS, "TokenTurnIn.IncludeRealPlayers", false);
         }
     };
 
@@ -349,12 +377,34 @@ namespace
         }
     }
 
-    // Collects self, and if grouped, party/raid members. GetFirstMember() covers
-    // both party and raid identically - no need to branch on isRaidGroup().
+    // True for a real (non-bot) player. Without mod-playerbots present there's
+    // no such thing as a bot, so everyone counts as "real" - the
+    // TokenTurnIn.IncludeRealPlayers filter below simply has nothing to do.
+    bool IsRealPlayer(Player* player)
+    {
+#ifdef MOD_PLAYERBOTS
+        return PlayerbotsMgr::instance().GetPlayerbotAI(player) == nullptr;
+#else
+        (void)player;
+        return true;
+#endif
+    }
+
+    // Collects, if grouped, party/raid members - GetFirstMember() covers both
+    // identically, no need to branch on isRaidGroup(). Includes the invoker
+    // themselves only if TokenTurnIn.IncludeSelf is enabled, and real (non-bot)
+    // group members only if TokenTurnIn.IncludeRealPlayers is enabled: this
+    // module exists for bot-management convenience, not to make it easier for
+    // real characters to get gear (see DESIGN.md), so both are excluded by
+    // default.
     std::vector<Player*> ResolveScanScope(Player* invoker)
     {
         std::vector<Player*> scope;
-        scope.push_back(invoker);
+
+        bool includeRealPlayers = tokenTurnInConfig.GetConfigValue<bool>(TokenTurnInConfig::INCLUDE_REAL_PLAYERS);
+
+        if (tokenTurnInConfig.GetConfigValue<bool>(TokenTurnInConfig::INCLUDE_SELF))
+            scope.push_back(invoker);
 
         if (Group* group = invoker->GetGroup())
         {
@@ -362,7 +412,8 @@ namespace
             {
                 if (Player* member = itr->GetSource())
                     if (member != invoker)
-                        scope.push_back(member);
+                        if (includeRealPlayers || !IsRealPlayer(member))
+                            scope.push_back(member);
             }
         }
 
@@ -381,7 +432,15 @@ namespace
         if (!invoker)
             return;
 
-        for (Player* target : ResolveScanScope(invoker))
+        std::vector<Player*> scope = ResolveScanScope(invoker);
+        if (scope.empty())
+        {
+            handler->PSendSysMessage(
+                "[TokenTurnIn] Nothing to scan - you are not in a group, and self-conversion is disabled (TokenTurnIn.IncludeSelf).");
+            return;
+        }
+
+        for (Player* target : scope)
         {
             auto results = ScanAndResolve(target, doConvert);
             ReportResults(handler, results);

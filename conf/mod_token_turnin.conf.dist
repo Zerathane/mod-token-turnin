@@ -10,8 +10,24 @@
 #
 #    TokenTurnIn.Enable
 #        Description: Enable the .tokenturnin check|redeem commands.
-#        Default:     1 - Enabled
-#                     0 - Disabled
+#        Default:       1 - Enabled
+#                       0 - Disabled
+#
+#    TokenTurnIn.IncludeSelf
+#        Description:   Include the invoking player's own character when
+#                       scanning/converting, not just party/raid members. This
+#                       module exists for bot-management convenience, so including self
+#					    is off by default.
+#        Default:       0 - Disabled (bots/group members only)
+#                       1 - Enabled (also convert the invoker's own tokens)
+#
+#    TokenTurnIn.IncludeRealPlayers
+#        Description:   Include real (non-bot) group/raid members, not just
+#                       playerbots. Requires mod-playerbots to be built in.
+#        Default:       0 - Disabled (playerbots only)
+#                       1 - Enabled (also convert real players' tokens)
 #
 
 TokenTurnIn.Enable = 1
+TokenTurnIn.IncludeSelf = 0
+TokenTurnIn.IncludeRealPlayers = 0
