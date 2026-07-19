@@ -444,3 +444,345 @@ VALUES
     (30236, 7, 0, 30169, 5, 'Chestguard of the Vanquished Champion', 'Cataclysm Chestpiece', 'normal'),
     (30236, 7, 1, 30185, 5, 'Chestguard of the Vanquished Champion', 'Cataclysm Chestplate', 'normal'),
     (30236, 7, 2, 30164, 5, 'Chestguard of the Vanquished Champion', 'Cataclysm Chestguard', 'normal');
+
+-- T6 grouping changes from T4/T5: Conqueror = Paladin/Priest/Warlock,
+-- Vanquisher = Druid/Mage/Rogue, Protector = Shaman/Hunter/Warrior.
+
+-- Warrior T6 (Forgotten Protector), normal. Arms/Fury share one itemization
+-- (Onslaught, set 672), Protection has its own (Onslaught, set 673).
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (31100, 31103, 31095, 31094, 31091) AND `class_id` = 1;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (31100, 1, 0, 30977, 6, 'Leggings of the Forgotten Protector', 'Onslaught Greaves', 'normal'),
+    (31100, 1, 1, 30977, 6, 'Leggings of the Forgotten Protector', 'Onslaught Greaves', 'normal'),
+    (31100, 1, 2, 30978, 6, 'Leggings of the Forgotten Protector', 'Onslaught Legguards', 'normal'),
+    (31103, 1, 0, 30979, 6, 'Pauldrons of the Forgotten Protector', 'Onslaught Shoulderblades', 'normal'),
+    (31103, 1, 1, 30979, 6, 'Pauldrons of the Forgotten Protector', 'Onslaught Shoulderblades', 'normal'),
+    (31103, 1, 2, 30980, 6, 'Pauldrons of the Forgotten Protector', 'Onslaught Shoulderguards', 'normal'),
+    (31095, 1, 0, 30972, 6, 'Helm of the Forgotten Protector', 'Onslaught Battle-Helm', 'normal'),
+    (31095, 1, 1, 30972, 6, 'Helm of the Forgotten Protector', 'Onslaught Battle-Helm', 'normal'),
+    (31095, 1, 2, 30974, 6, 'Helm of the Forgotten Protector', 'Onslaught Greathelm', 'normal'),
+    (31094, 1, 0, 30969, 6, 'Gloves of the Forgotten Protector', 'Onslaught Gauntlets', 'normal'),
+    (31094, 1, 1, 30969, 6, 'Gloves of the Forgotten Protector', 'Onslaught Gauntlets', 'normal'),
+    (31094, 1, 2, 30970, 6, 'Gloves of the Forgotten Protector', 'Onslaught Handguards', 'normal'),
+    (31091, 1, 0, 30975, 6, 'Chestguard of the Forgotten Protector', 'Onslaught Breastplate', 'normal'),
+    (31091, 1, 1, 30975, 6, 'Chestguard of the Forgotten Protector', 'Onslaught Breastplate', 'normal'),
+    (31091, 1, 2, 30976, 6, 'Chestguard of the Forgotten Protector', 'Onslaught Chestguard', 'normal');
+
+-- Priest T6 (Forgotten Conqueror), normal. Discipline/Holy share one
+-- itemization (Absolution, set 675), Shadow has its own (Absolution, set 674).
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (31098, 31101, 31097, 31092, 31089) AND `class_id` = 5;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (31098, 5, 0, 31068, 6, 'Leggings of the Forgotten Conqueror', 'Breeches of Absolution', 'normal'),
+    (31098, 5, 1, 31068, 6, 'Leggings of the Forgotten Conqueror', 'Breeches of Absolution', 'normal'),
+    (31098, 5, 2, 31067, 6, 'Leggings of the Forgotten Conqueror', 'Leggings of Absolution', 'normal'),
+    (31101, 5, 0, 31069, 6, 'Pauldrons of the Forgotten Conqueror', 'Mantle of Absolution', 'normal'),
+    (31101, 5, 1, 31069, 6, 'Pauldrons of the Forgotten Conqueror', 'Mantle of Absolution', 'normal'),
+    (31101, 5, 2, 31070, 6, 'Pauldrons of the Forgotten Conqueror', 'Shoulderpads of Absolution', 'normal'),
+    (31097, 5, 0, 31063, 6, 'Helm of the Forgotten Conqueror', 'Cowl of Absolution', 'normal'),
+    (31097, 5, 1, 31063, 6, 'Helm of the Forgotten Conqueror', 'Cowl of Absolution', 'normal'),
+    (31097, 5, 2, 31064, 6, 'Helm of the Forgotten Conqueror', 'Hood of Absolution', 'normal'),
+    (31092, 5, 0, 31060, 6, 'Gloves of the Forgotten Conqueror', 'Gloves of Absolution', 'normal'),
+    (31092, 5, 1, 31060, 6, 'Gloves of the Forgotten Conqueror', 'Gloves of Absolution', 'normal'),
+    (31092, 5, 2, 31061, 6, 'Gloves of the Forgotten Conqueror', 'Handguards of Absolution', 'normal'),
+    (31089, 5, 0, 31066, 6, 'Chestguard of the Forgotten Conqueror', 'Vestments of Absolution', 'normal'),
+    (31089, 5, 1, 31066, 6, 'Chestguard of the Forgotten Conqueror', 'Vestments of Absolution', 'normal'),
+    (31089, 5, 2, 31065, 6, 'Chestguard of the Forgotten Conqueror', 'Shroud of Absolution', 'normal');
+
+-- Paladin T6 (Forgotten Conqueror), normal. Holy (set 681), Protection
+-- (set 679), Retribution (set 680) - all distinct itemizations.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (31098, 31101, 31097, 31092, 31089) AND `class_id` = 2;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (31098, 2, 0, 30994, 6, 'Leggings of the Forgotten Conqueror', 'Lightbringer Leggings', 'normal'),
+    (31098, 2, 1, 30995, 6, 'Leggings of the Forgotten Conqueror', 'Lightbringer Legguards', 'normal'),
+    (31098, 2, 2, 30993, 6, 'Leggings of the Forgotten Conqueror', 'Lightbringer Greaves', 'normal'),
+    (31101, 2, 0, 30996, 6, 'Pauldrons of the Forgotten Conqueror', 'Lightbringer Pauldrons', 'normal'),
+    (31101, 2, 1, 30998, 6, 'Pauldrons of the Forgotten Conqueror', 'Lightbringer Shoulderguards', 'normal'),
+    (31101, 2, 2, 30997, 6, 'Pauldrons of the Forgotten Conqueror', 'Lightbringer Shoulderbraces', 'normal'),
+    (31097, 2, 0, 30988, 6, 'Helm of the Forgotten Conqueror', 'Lightbringer Greathelm', 'normal'),
+    (31097, 2, 1, 30987, 6, 'Helm of the Forgotten Conqueror', 'Lightbringer Faceguard', 'normal'),
+    (31097, 2, 2, 30989, 6, 'Helm of the Forgotten Conqueror', 'Lightbringer War-Helm', 'normal'),
+    (31092, 2, 0, 30983, 6, 'Gloves of the Forgotten Conqueror', 'Lightbringer Gloves', 'normal'),
+    (31092, 2, 1, 30985, 6, 'Gloves of the Forgotten Conqueror', 'Lightbringer Handguards', 'normal'),
+    (31092, 2, 2, 30982, 6, 'Gloves of the Forgotten Conqueror', 'Lightbringer Gauntlets', 'normal'),
+    (31089, 2, 0, 30992, 6, 'Chestguard of the Forgotten Conqueror', 'Lightbringer Chestpiece', 'normal'),
+    (31089, 2, 1, 30991, 6, 'Chestguard of the Forgotten Conqueror', 'Lightbringer Chestguard', 'normal'),
+    (31089, 2, 2, 30990, 6, 'Chestguard of the Forgotten Conqueror', 'Lightbringer Breastplate', 'normal');
+
+-- Shaman T6 (Forgotten Protector), normal. Elemental (set 684), Enhancement
+-- (set 682), Restoration (set 683) - all distinct itemizations.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (31100, 31103, 31095, 31094, 31091) AND `class_id` = 7;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (31100, 7, 0, 31020, 6, 'Leggings of the Forgotten Protector', 'Skyshatter Legguards', 'normal'),
+    (31100, 7, 1, 31021, 6, 'Leggings of the Forgotten Protector', 'Skyshatter Pants', 'normal'),
+    (31100, 7, 2, 31019, 6, 'Leggings of the Forgotten Protector', 'Skyshatter Leggings', 'normal'),
+    (31103, 7, 0, 31023, 6, 'Pauldrons of the Forgotten Protector', 'Skyshatter Mantle', 'normal'),
+    (31103, 7, 1, 31024, 6, 'Pauldrons of the Forgotten Protector', 'Skyshatter Pauldrons', 'normal'),
+    (31103, 7, 2, 31022, 6, 'Pauldrons of the Forgotten Protector', 'Skyshatter Shoulderpads', 'normal'),
+    (31095, 7, 0, 31014, 6, 'Helm of the Forgotten Protector', 'Skyshatter Headguard', 'normal'),
+    (31095, 7, 1, 31015, 6, 'Helm of the Forgotten Protector', 'Skyshatter Cover', 'normal'),
+    (31095, 7, 2, 31012, 6, 'Helm of the Forgotten Protector', 'Skyshatter Helmet', 'normal'),
+    (31094, 7, 0, 31008, 6, 'Gloves of the Forgotten Protector', 'Skyshatter Gauntlets', 'normal'),
+    (31094, 7, 1, 31011, 6, 'Gloves of the Forgotten Protector', 'Skyshatter Grips', 'normal'),
+    (31094, 7, 2, 31007, 6, 'Gloves of the Forgotten Protector', 'Skyshatter Gloves', 'normal'),
+    (31091, 7, 0, 31017, 6, 'Chestguard of the Forgotten Protector', 'Skyshatter Breastplate', 'normal'),
+    (31091, 7, 1, 31018, 6, 'Chestguard of the Forgotten Protector', 'Skyshatter Tunic', 'normal'),
+    (31091, 7, 2, 31016, 6, 'Chestguard of the Forgotten Protector', 'Skyshatter Chestguard', 'normal');
+
+-- Druid T6 (Forgotten Vanquisher), normal. Balance (set 677), Feral
+-- (set 676), Restoration (set 678) - all distinct itemizations.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (31099, 31102, 31096, 31093, 31090) AND `class_id` = 11;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (31099, 11, 0, 31046, 6, 'Leggings of the Forgotten Vanquisher', 'Thunderheart Pants', 'normal'),
+    (31099, 11, 1, 31044, 6, 'Leggings of the Forgotten Vanquisher', 'Thunderheart Leggings', 'normal'),
+    (31099, 11, 2, 31045, 6, 'Leggings of the Forgotten Vanquisher', 'Thunderheart Legguards', 'normal'),
+    (31102, 11, 0, 31049, 6, 'Pauldrons of the Forgotten Vanquisher', 'Thunderheart Shoulderpads', 'normal'),
+    (31102, 11, 1, 31048, 6, 'Pauldrons of the Forgotten Vanquisher', 'Thunderheart Pauldrons', 'normal'),
+    (31102, 11, 2, 31047, 6, 'Pauldrons of the Forgotten Vanquisher', 'Thunderheart Spaulders', 'normal'),
+    (31096, 11, 0, 31040, 6, 'Helm of the Forgotten Vanquisher', 'Thunderheart Headguard', 'normal'),
+    (31096, 11, 1, 31039, 6, 'Helm of the Forgotten Vanquisher', 'Thunderheart Cover', 'normal'),
+    (31096, 11, 2, 31037, 6, 'Helm of the Forgotten Vanquisher', 'Thunderheart Helmet', 'normal'),
+    (31093, 11, 0, 31035, 6, 'Gloves of the Forgotten Vanquisher', 'Thunderheart Handguards', 'normal'),
+    (31093, 11, 1, 31034, 6, 'Gloves of the Forgotten Vanquisher', 'Thunderheart Gauntlets', 'normal'),
+    (31093, 11, 2, 31032, 6, 'Gloves of the Forgotten Vanquisher', 'Thunderheart Gloves', 'normal'),
+    (31090, 11, 0, 31043, 6, 'Chestguard of the Forgotten Vanquisher', 'Thunderheart Vest', 'normal'),
+    (31090, 11, 1, 31042, 6, 'Chestguard of the Forgotten Vanquisher', 'Thunderheart Chestguard', 'normal'),
+    (31090, 11, 2, 31041, 6, 'Chestguard of the Forgotten Vanquisher', 'Thunderheart Tunic', 'normal');
+
+-- Hunter T6 (Forgotten Protector), normal. All 3 specs are ranged DPS - one
+-- itemization (Gronnstalker's) applies regardless of spec.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (31100, 31103, 31095, 31094, 31091) AND `class_id` = 3;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (31100, 3, 0, 31005, 6, 'Leggings of the Forgotten Protector', 'Gronnstalker''s Leggings', 'normal'),
+    (31100, 3, 1, 31005, 6, 'Leggings of the Forgotten Protector', 'Gronnstalker''s Leggings', 'normal'),
+    (31100, 3, 2, 31005, 6, 'Leggings of the Forgotten Protector', 'Gronnstalker''s Leggings', 'normal'),
+    (31103, 3, 0, 31006, 6, 'Pauldrons of the Forgotten Protector', 'Gronnstalker''s Spaulders', 'normal'),
+    (31103, 3, 1, 31006, 6, 'Pauldrons of the Forgotten Protector', 'Gronnstalker''s Spaulders', 'normal'),
+    (31103, 3, 2, 31006, 6, 'Pauldrons of the Forgotten Protector', 'Gronnstalker''s Spaulders', 'normal'),
+    (31095, 3, 0, 31003, 6, 'Helm of the Forgotten Protector', 'Gronnstalker''s Helmet', 'normal'),
+    (31095, 3, 1, 31003, 6, 'Helm of the Forgotten Protector', 'Gronnstalker''s Helmet', 'normal'),
+    (31095, 3, 2, 31003, 6, 'Helm of the Forgotten Protector', 'Gronnstalker''s Helmet', 'normal'),
+    (31094, 3, 0, 31001, 6, 'Gloves of the Forgotten Protector', 'Gronnstalker''s Gloves', 'normal'),
+    (31094, 3, 1, 31001, 6, 'Gloves of the Forgotten Protector', 'Gronnstalker''s Gloves', 'normal'),
+    (31094, 3, 2, 31001, 6, 'Gloves of the Forgotten Protector', 'Gronnstalker''s Gloves', 'normal'),
+    (31091, 3, 0, 31004, 6, 'Chestguard of the Forgotten Protector', 'Gronnstalker''s Chestguard', 'normal'),
+    (31091, 3, 1, 31004, 6, 'Chestguard of the Forgotten Protector', 'Gronnstalker''s Chestguard', 'normal'),
+    (31091, 3, 2, 31004, 6, 'Chestguard of the Forgotten Protector', 'Gronnstalker''s Chestguard', 'normal');
+
+-- Rogue T6 (Forgotten Vanquisher), normal. All 3 specs are melee DPS - one
+-- itemization (Slayer's) applies regardless of spec.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (31099, 31102, 31096, 31093, 31090) AND `class_id` = 4;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (31099, 4, 0, 31029, 6, 'Leggings of the Forgotten Vanquisher', 'Slayer''s Legguards', 'normal'),
+    (31099, 4, 1, 31029, 6, 'Leggings of the Forgotten Vanquisher', 'Slayer''s Legguards', 'normal'),
+    (31099, 4, 2, 31029, 6, 'Leggings of the Forgotten Vanquisher', 'Slayer''s Legguards', 'normal'),
+    (31102, 4, 0, 31030, 6, 'Pauldrons of the Forgotten Vanquisher', 'Slayer''s Shoulderpads', 'normal'),
+    (31102, 4, 1, 31030, 6, 'Pauldrons of the Forgotten Vanquisher', 'Slayer''s Shoulderpads', 'normal'),
+    (31102, 4, 2, 31030, 6, 'Pauldrons of the Forgotten Vanquisher', 'Slayer''s Shoulderpads', 'normal'),
+    (31096, 4, 0, 31027, 6, 'Helm of the Forgotten Vanquisher', 'Slayer''s Helm', 'normal'),
+    (31096, 4, 1, 31027, 6, 'Helm of the Forgotten Vanquisher', 'Slayer''s Helm', 'normal'),
+    (31096, 4, 2, 31027, 6, 'Helm of the Forgotten Vanquisher', 'Slayer''s Helm', 'normal'),
+    (31093, 4, 0, 31026, 6, 'Gloves of the Forgotten Vanquisher', 'Slayer''s Handguards', 'normal'),
+    (31093, 4, 1, 31026, 6, 'Gloves of the Forgotten Vanquisher', 'Slayer''s Handguards', 'normal'),
+    (31093, 4, 2, 31026, 6, 'Gloves of the Forgotten Vanquisher', 'Slayer''s Handguards', 'normal'),
+    (31090, 4, 0, 31028, 6, 'Chestguard of the Forgotten Vanquisher', 'Slayer''s Chestguard', 'normal'),
+    (31090, 4, 1, 31028, 6, 'Chestguard of the Forgotten Vanquisher', 'Slayer''s Chestguard', 'normal'),
+    (31090, 4, 2, 31028, 6, 'Chestguard of the Forgotten Vanquisher', 'Slayer''s Chestguard', 'normal');
+
+-- Mage T6 (Forgotten Vanquisher), normal. All 3 specs are caster DPS - one
+-- itemization (Tempest) applies regardless of spec.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (31099, 31102, 31096, 31093, 31090) AND `class_id` = 8;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (31099, 8, 0, 31058, 6, 'Leggings of the Forgotten Vanquisher', 'Leggings of the Tempest', 'normal'),
+    (31099, 8, 1, 31058, 6, 'Leggings of the Forgotten Vanquisher', 'Leggings of the Tempest', 'normal'),
+    (31099, 8, 2, 31058, 6, 'Leggings of the Forgotten Vanquisher', 'Leggings of the Tempest', 'normal'),
+    (31102, 8, 0, 31059, 6, 'Pauldrons of the Forgotten Vanquisher', 'Mantle of the Tempest', 'normal'),
+    (31102, 8, 1, 31059, 6, 'Pauldrons of the Forgotten Vanquisher', 'Mantle of the Tempest', 'normal'),
+    (31102, 8, 2, 31059, 6, 'Pauldrons of the Forgotten Vanquisher', 'Mantle of the Tempest', 'normal'),
+    (31096, 8, 0, 31056, 6, 'Helm of the Forgotten Vanquisher', 'Cowl of the Tempest', 'normal'),
+    (31096, 8, 1, 31056, 6, 'Helm of the Forgotten Vanquisher', 'Cowl of the Tempest', 'normal'),
+    (31096, 8, 2, 31056, 6, 'Helm of the Forgotten Vanquisher', 'Cowl of the Tempest', 'normal'),
+    (31093, 8, 0, 31055, 6, 'Gloves of the Forgotten Vanquisher', 'Gloves of the Tempest', 'normal'),
+    (31093, 8, 1, 31055, 6, 'Gloves of the Forgotten Vanquisher', 'Gloves of the Tempest', 'normal'),
+    (31093, 8, 2, 31055, 6, 'Gloves of the Forgotten Vanquisher', 'Gloves of the Tempest', 'normal'),
+    (31090, 8, 0, 31057, 6, 'Chestguard of the Forgotten Vanquisher', 'Robes of the Tempest', 'normal'),
+    (31090, 8, 1, 31057, 6, 'Chestguard of the Forgotten Vanquisher', 'Robes of the Tempest', 'normal'),
+    (31090, 8, 2, 31057, 6, 'Chestguard of the Forgotten Vanquisher', 'Robes of the Tempest', 'normal');
+
+-- Warlock T6 (Forgotten Conqueror), normal. All 3 specs are caster DPS - one
+-- itemization (Malefic) applies regardless of spec.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (31098, 31101, 31097, 31092, 31089) AND `class_id` = 9;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (31098, 9, 0, 31053, 6, 'Leggings of the Forgotten Conqueror', 'Leggings of the Malefic', 'normal'),
+    (31098, 9, 1, 31053, 6, 'Leggings of the Forgotten Conqueror', 'Leggings of the Malefic', 'normal'),
+    (31098, 9, 2, 31053, 6, 'Leggings of the Forgotten Conqueror', 'Leggings of the Malefic', 'normal'),
+    (31101, 9, 0, 31054, 6, 'Pauldrons of the Forgotten Conqueror', 'Mantle of the Malefic', 'normal'),
+    (31101, 9, 1, 31054, 6, 'Pauldrons of the Forgotten Conqueror', 'Mantle of the Malefic', 'normal'),
+    (31101, 9, 2, 31054, 6, 'Pauldrons of the Forgotten Conqueror', 'Mantle of the Malefic', 'normal'),
+    (31097, 9, 0, 31051, 6, 'Helm of the Forgotten Conqueror', 'Hood of the Malefic', 'normal'),
+    (31097, 9, 1, 31051, 6, 'Helm of the Forgotten Conqueror', 'Hood of the Malefic', 'normal'),
+    (31097, 9, 2, 31051, 6, 'Helm of the Forgotten Conqueror', 'Hood of the Malefic', 'normal'),
+    (31092, 9, 0, 31050, 6, 'Gloves of the Forgotten Conqueror', 'Gloves of the Malefic', 'normal'),
+    (31092, 9, 1, 31050, 6, 'Gloves of the Forgotten Conqueror', 'Gloves of the Malefic', 'normal'),
+    (31092, 9, 2, 31050, 6, 'Gloves of the Forgotten Conqueror', 'Gloves of the Malefic', 'normal'),
+    (31089, 9, 0, 31052, 6, 'Chestguard of the Forgotten Conqueror', 'Robe of the Malefic', 'normal'),
+    (31089, 9, 1, 31052, 6, 'Chestguard of the Forgotten Conqueror', 'Robe of the Malefic', 'normal'),
+    (31089, 9, 2, 31052, 6, 'Chestguard of the Forgotten Conqueror', 'Robe of the Malefic', 'normal');
+
+-- T6 also introduced Belt/Bracers/Boots tokens beyond the classic 5 slots -
+-- initially missed. Each piece carries the same itemset id as its class's
+-- already-confirmed 5-piece set, so role pairing carries over with no new
+-- confirmation needed (spot-checked: 34858 Vanquisher Boots -> itemset 677 ->
+-- 'Thunderheart Footwraps' = Balance Druid, matches the known 677=Balance).
+
+-- Warrior T6 extra slots (Forgotten Protector).
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (34851, 34854, 34857) AND `class_id` = 1;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (34851, 1, 0, 34441, 6, 'Bracers of the Forgotten Protector', 'Onslaught Bracers', 'normal'),
+    (34851, 1, 1, 34441, 6, 'Bracers of the Forgotten Protector', 'Onslaught Bracers', 'normal'),
+    (34851, 1, 2, 34442, 6, 'Bracers of the Forgotten Protector', 'Onslaught Wristguards', 'normal'),
+    (34854, 1, 0, 34546, 6, 'Belt of the Forgotten Protector', 'Onslaught Belt', 'normal'),
+    (34854, 1, 1, 34546, 6, 'Belt of the Forgotten Protector', 'Onslaught Belt', 'normal'),
+    (34854, 1, 2, 34547, 6, 'Belt of the Forgotten Protector', 'Onslaught Waistguard', 'normal'),
+    (34857, 1, 0, 34569, 6, 'Boots of the Forgotten Protector', 'Onslaught Treads', 'normal'),
+    (34857, 1, 1, 34569, 6, 'Boots of the Forgotten Protector', 'Onslaught Treads', 'normal'),
+    (34857, 1, 2, 34568, 6, 'Boots of the Forgotten Protector', 'Onslaught Boots', 'normal');
+
+-- Priest T6 extra slots (Forgotten Conqueror).
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (34848, 34853, 34856) AND `class_id` = 5;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (34848, 5, 0, 34435, 6, 'Bracers of the Forgotten Conqueror', 'Cuffs of Absolution', 'normal'),
+    (34848, 5, 1, 34435, 6, 'Bracers of the Forgotten Conqueror', 'Cuffs of Absolution', 'normal'),
+    (34848, 5, 2, 34434, 6, 'Bracers of the Forgotten Conqueror', 'Bracers of Absolution', 'normal'),
+    (34853, 5, 0, 34527, 6, 'Belt of the Forgotten Conqueror', 'Belt of Absolution', 'normal'),
+    (34853, 5, 1, 34527, 6, 'Belt of the Forgotten Conqueror', 'Belt of Absolution', 'normal'),
+    (34853, 5, 2, 34528, 6, 'Belt of the Forgotten Conqueror', 'Cord of Absolution', 'normal'),
+    (34856, 5, 0, 34562, 6, 'Boots of the Forgotten Conqueror', 'Boots of Absolution', 'normal'),
+    (34856, 5, 1, 34562, 6, 'Boots of the Forgotten Conqueror', 'Boots of Absolution', 'normal'),
+    (34856, 5, 2, 34563, 6, 'Boots of the Forgotten Conqueror', 'Treads of Absolution', 'normal');
+
+-- Paladin T6 extra slots (Forgotten Conqueror).
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (34848, 34853, 34856) AND `class_id` = 2;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (34848, 2, 0, 34432, 6, 'Bracers of the Forgotten Conqueror', 'Lightbringer Bracers', 'normal'),
+    (34848, 2, 1, 34433, 6, 'Bracers of the Forgotten Conqueror', 'Lightbringer Wristguards', 'normal'),
+    (34848, 2, 2, 34431, 6, 'Bracers of the Forgotten Conqueror', 'Lightbringer Bands', 'normal'),
+    (34853, 2, 0, 34487, 6, 'Belt of the Forgotten Conqueror', 'Lightbringer Belt', 'normal'),
+    (34853, 2, 1, 34488, 6, 'Belt of the Forgotten Conqueror', 'Lightbringer Waistguard', 'normal'),
+    (34853, 2, 2, 34485, 6, 'Belt of the Forgotten Conqueror', 'Lightbringer Girdle', 'normal'),
+    (34856, 2, 0, 34559, 6, 'Boots of the Forgotten Conqueror', 'Lightbringer Treads', 'normal'),
+    (34856, 2, 1, 34560, 6, 'Boots of the Forgotten Conqueror', 'Lightbringer Stompers', 'normal'),
+    (34856, 2, 2, 34561, 6, 'Boots of the Forgotten Conqueror', 'Lightbringer Boots', 'normal');
+
+-- Shaman T6 extra slots (Forgotten Protector).
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (34851, 34854, 34857) AND `class_id` = 7;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (34851, 7, 0, 34437, 6, 'Bracers of the Forgotten Protector', 'Skyshatter Bands', 'normal'),
+    (34851, 7, 1, 34439, 6, 'Bracers of the Forgotten Protector', 'Skyshatter Wristguards', 'normal'),
+    (34851, 7, 2, 34438, 6, 'Bracers of the Forgotten Protector', 'Skyshatter Bracers', 'normal'),
+    (34854, 7, 0, 34542, 6, 'Belt of the Forgotten Protector', 'Skyshatter Cord', 'normal'),
+    (34854, 7, 1, 34545, 6, 'Belt of the Forgotten Protector', 'Skyshatter Girdle', 'normal'),
+    (34854, 7, 2, 34543, 6, 'Belt of the Forgotten Protector', 'Skyshatter Belt', 'normal'),
+    (34857, 7, 0, 34566, 6, 'Boots of the Forgotten Protector', 'Skyshatter Treads', 'normal'),
+    (34857, 7, 1, 34567, 6, 'Boots of the Forgotten Protector', 'Skyshatter Greaves', 'normal'),
+    (34857, 7, 2, 34565, 6, 'Boots of the Forgotten Protector', 'Skyshatter Boots', 'normal');
+
+-- Druid T6 extra slots (Forgotten Vanquisher).
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (34852, 34855, 34858) AND `class_id` = 11;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (34852, 11, 0, 34446, 6, 'Bracers of the Forgotten Vanquisher', 'Thunderheart Bands', 'normal'),
+    (34852, 11, 1, 34444, 6, 'Bracers of the Forgotten Vanquisher', 'Thunderheart Wristguards', 'normal'),
+    (34852, 11, 2, 34445, 6, 'Bracers of the Forgotten Vanquisher', 'Thunderheart Bracers', 'normal'),
+    (34855, 11, 0, 34555, 6, 'Belt of the Forgotten Vanquisher', 'Thunderheart Cord', 'normal'),
+    (34855, 11, 1, 34556, 6, 'Belt of the Forgotten Vanquisher', 'Thunderheart Waistguard', 'normal'),
+    (34855, 11, 2, 34554, 6, 'Belt of the Forgotten Vanquisher', 'Thunderheart Belt', 'normal'),
+    (34858, 11, 0, 34572, 6, 'Boots of the Forgotten Vanquisher', 'Thunderheart Footwraps', 'normal'),
+    (34858, 11, 1, 34573, 6, 'Boots of the Forgotten Vanquisher', 'Thunderheart Treads', 'normal'),
+    (34858, 11, 2, 34571, 6, 'Boots of the Forgotten Vanquisher', 'Thunderheart Boots', 'normal');
+
+-- Hunter T6 extra slots (Forgotten Protector). Single itemization for all specs.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (34851, 34854, 34857) AND `class_id` = 3;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (34851, 3, 0, 34443, 6, 'Bracers of the Forgotten Protector', 'Gronnstalker''s Bracers', 'normal'),
+    (34851, 3, 1, 34443, 6, 'Bracers of the Forgotten Protector', 'Gronnstalker''s Bracers', 'normal'),
+    (34851, 3, 2, 34443, 6, 'Bracers of the Forgotten Protector', 'Gronnstalker''s Bracers', 'normal'),
+    (34854, 3, 0, 34549, 6, 'Belt of the Forgotten Protector', 'Gronnstalker''s Belt', 'normal'),
+    (34854, 3, 1, 34549, 6, 'Belt of the Forgotten Protector', 'Gronnstalker''s Belt', 'normal'),
+    (34854, 3, 2, 34549, 6, 'Belt of the Forgotten Protector', 'Gronnstalker''s Belt', 'normal'),
+    (34857, 3, 0, 34570, 6, 'Boots of the Forgotten Protector', 'Gronnstalker''s Boots', 'normal'),
+    (34857, 3, 1, 34570, 6, 'Boots of the Forgotten Protector', 'Gronnstalker''s Boots', 'normal'),
+    (34857, 3, 2, 34570, 6, 'Boots of the Forgotten Protector', 'Gronnstalker''s Boots', 'normal');
+
+-- Rogue T6 extra slots (Forgotten Vanquisher). Single itemization for all specs.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (34852, 34855, 34858) AND `class_id` = 4;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (34852, 4, 0, 34448, 6, 'Bracers of the Forgotten Vanquisher', 'Slayer''s Bracers', 'normal'),
+    (34852, 4, 1, 34448, 6, 'Bracers of the Forgotten Vanquisher', 'Slayer''s Bracers', 'normal'),
+    (34852, 4, 2, 34448, 6, 'Bracers of the Forgotten Vanquisher', 'Slayer''s Bracers', 'normal'),
+    (34855, 4, 0, 34558, 6, 'Belt of the Forgotten Vanquisher', 'Slayer''s Belt', 'normal'),
+    (34855, 4, 1, 34558, 6, 'Belt of the Forgotten Vanquisher', 'Slayer''s Belt', 'normal'),
+    (34855, 4, 2, 34558, 6, 'Belt of the Forgotten Vanquisher', 'Slayer''s Belt', 'normal'),
+    (34858, 4, 0, 34575, 6, 'Boots of the Forgotten Vanquisher', 'Slayer''s Boots', 'normal'),
+    (34858, 4, 1, 34575, 6, 'Boots of the Forgotten Vanquisher', 'Slayer''s Boots', 'normal'),
+    (34858, 4, 2, 34575, 6, 'Boots of the Forgotten Vanquisher', 'Slayer''s Boots', 'normal');
+
+-- Mage T6 extra slots (Forgotten Vanquisher). Single itemization for all specs.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (34852, 34855, 34858) AND `class_id` = 8;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (34852, 8, 0, 34447, 6, 'Bracers of the Forgotten Vanquisher', 'Bracers of the Tempest', 'normal'),
+    (34852, 8, 1, 34447, 6, 'Bracers of the Forgotten Vanquisher', 'Bracers of the Tempest', 'normal'),
+    (34852, 8, 2, 34447, 6, 'Bracers of the Forgotten Vanquisher', 'Bracers of the Tempest', 'normal'),
+    (34855, 8, 0, 34557, 6, 'Belt of the Forgotten Vanquisher', 'Belt of the Tempest', 'normal'),
+    (34855, 8, 1, 34557, 6, 'Belt of the Forgotten Vanquisher', 'Belt of the Tempest', 'normal'),
+    (34855, 8, 2, 34557, 6, 'Belt of the Forgotten Vanquisher', 'Belt of the Tempest', 'normal'),
+    (34858, 8, 0, 34574, 6, 'Boots of the Forgotten Vanquisher', 'Boots of the Tempest', 'normal'),
+    (34858, 8, 1, 34574, 6, 'Boots of the Forgotten Vanquisher', 'Boots of the Tempest', 'normal'),
+    (34858, 8, 2, 34574, 6, 'Boots of the Forgotten Vanquisher', 'Boots of the Tempest', 'normal');
+
+-- Warlock T6 extra slots (Forgotten Conqueror). Single itemization for all specs.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (34848, 34853, 34856) AND `class_id` = 9;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (34848, 9, 0, 34436, 6, 'Bracers of the Forgotten Conqueror', 'Bracers of the Malefic', 'normal'),
+    (34848, 9, 1, 34436, 6, 'Bracers of the Forgotten Conqueror', 'Bracers of the Malefic', 'normal'),
+    (34848, 9, 2, 34436, 6, 'Bracers of the Forgotten Conqueror', 'Bracers of the Malefic', 'normal'),
+    (34853, 9, 0, 34541, 6, 'Belt of the Forgotten Conqueror', 'Belt of the Malefic', 'normal'),
+    (34853, 9, 1, 34541, 6, 'Belt of the Forgotten Conqueror', 'Belt of the Malefic', 'normal'),
+    (34853, 9, 2, 34541, 6, 'Belt of the Forgotten Conqueror', 'Belt of the Malefic', 'normal'),
+    (34856, 9, 0, 34564, 6, 'Boots of the Forgotten Conqueror', 'Boots of the Malefic', 'normal'),
+    (34856, 9, 1, 34564, 6, 'Boots of the Forgotten Conqueror', 'Boots of the Malefic', 'normal'),
+    (34856, 9, 2, 34564, 6, 'Boots of the Forgotten Conqueror', 'Boots of the Malefic', 'normal');
