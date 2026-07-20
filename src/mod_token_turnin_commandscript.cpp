@@ -110,6 +110,7 @@
 #include "ScriptMgr.h"
 #include "StringFormat.h"
 #include <sstream>
+#include <unordered_map>
 #include <vector>
 #include <string>
 
@@ -171,7 +172,7 @@ namespace
         { CLASS_WARRIOR,      { {0, "arms"},          {1, "fury"},          {2, "protection"}  } },
         { CLASS_PALADIN,      { {0, "holy"},          {1, "protection"},    {2, "retribution"} } },
         { CLASS_HUNTER,       { {0, "beast mastery"}, {1, "marksmanship"},  {2, "survival"}    } },
-        { CLASS_ROGUE,        { {0, "assasination"},  {1, "combat"},        {2, "subtlety"}    } },
+        { CLASS_ROGUE,        { {0, "assassination"}, {1, "combat"},        {2, "subtlety"}    } },
         { CLASS_PRIEST,       { {0, "discipline"},    {1, "holy"},          {2, "shadow"}      } },
         { CLASS_DEATH_KNIGHT, { {0, "blood"},         {1, "frost"},         {2, "unholy"}      } },
         { CLASS_SHAMAN,       { {0, "elemental"},     {1, "enhancement"},   {2, "restoration"} } },
@@ -314,10 +315,54 @@ namespace
         return true;
     }
 
+    // Packs (token_entry, class_id, talent_tab) into one key for the lookup
+    // cache below. token_entry uses bits 16+ (up to 32 bits), class_id bits
+    // 8-15, talent_tab bits 0-7 - no overlap since class_id/talent_tab are
+    // both small TINYINT columns.
+    uint64 PackTokenLookupKey(uint32 tokenEntry, uint8 classId, uint8 talentTab)
+    {
+        return (static_cast<uint64>(tokenEntry) << 16) | (static_cast<uint64>(classId) << 8) | talentTab;
+    }
+
+    // In-memory copy of mod_token_turnin_tokens, keyed by PackTokenLookupKey().
+    // Loaded once on first use rather than querying per bag item scanned -
+    // the table is static world content (only changes when the module's SQL
+    // file changes), so a per-item WorldDatabase.Query() was pure overhead:
+    // a full raid scan could mean well over a thousand blocking round-trips
+    // on the world thread for one .tokenturnin command.
+    std::unordered_map<uint64, uint32> tokenLookupCache;
+    bool tokenLookupCacheLoaded = false;
+
+    void EnsureTokenLookupCacheLoaded()
+    {
+        if (tokenLookupCacheLoaded)
+            return;
+
+        tokenLookupCacheLoaded = true;
+
+        QueryResult result = WorldDatabase.Query(
+            "SELECT token_entry, class_id, talent_tab, result_item_entry FROM mod_token_turnin_tokens");
+        if (!result)
+            return;
+
+        do
+        {
+            Field* fields = result->Fetch();
+            uint32 tokenEntry = fields[0].Get<uint32>();
+            uint8 classId = fields[1].Get<uint8>();
+            uint8 talentTab = fields[2].Get<uint8>();
+            uint32 resultItemEntry = fields[3].Get<uint32>();
+
+            tokenLookupCache[PackTokenLookupKey(tokenEntry, classId, talentTab)] = resultItemEntry;
+        } while (result->NextRow());
+    }
+
     // Core scan+resolve logic shared by "check" and "redeem".
     // doConvert = false -> report only, no destroy/award.
     std::vector<TokenConversionResult> ScanAndResolve(Player* target, bool doConvert)
     {
+        EnsureTokenLookupCacheLoaded();
+
         std::vector<TokenConversionResult> results;
 
         // 1. Resolve current spec. -1 means no points invested anywhere
@@ -348,14 +393,11 @@ namespace
             uint32 tokenEntry = item->GetEntry();
             uint32 tokenCount = item->GetCount();
 
-            QueryResult queryResult = WorldDatabase.Query(
-                "SELECT result_item_entry FROM mod_token_turnin_tokens WHERE token_entry = {} AND class_id = {} AND talent_tab = {}",
-                tokenEntry, target->getClass(), talentTab);
-
-            if (!queryResult)
+            auto cacheIt = tokenLookupCache.find(PackTokenLookupKey(tokenEntry, target->getClass(), talentTab));
+            if (cacheIt == tokenLookupCache.end())
                 continue;
 
-            uint32 resultItemEntry = queryResult->Fetch()[0].Get<uint32>();
+            uint32 resultItemEntry = cacheIt->second;
 
             TokenConversionResult match;
             match.charName = target->GetName();
@@ -406,7 +448,15 @@ namespace
         {
             if (r.matched)
             {
-                if (r.count > 1)
+                // inventoryFull means the award/destroy step was attempted and
+                // failed - report that as its own outcome rather than printing
+                // the success verb ("Converted") followed by a contradicting
+                // "not consumed" line.
+                if (r.inventoryFull)
+                    handler->PSendSysMessage(
+                        "[TokenTurnIn] {} ({}) -> Failed to convert Token: {} -> Item: {} (no inventory space, token not consumed)",
+                        r.charName, r.specLabel, BuildItemLink(r.tokenEntry), BuildItemLink(r.resultItemEntry));
+                else if (r.count > 1)
                     handler->PSendSysMessage(
                         "[TokenTurnIn] {} ({}) -> {} Token: {} x{} -> Item: {} x{}",
                         r.charName, r.specLabel, verb, BuildItemLink(r.tokenEntry), r.count, BuildItemLink(r.resultItemEntry), r.count);
@@ -414,11 +464,6 @@ namespace
                     handler->PSendSysMessage(
                         "[TokenTurnIn] {} ({}) -> {} Token: {} -> Item: {}",
                         r.charName, r.specLabel, verb, BuildItemLink(r.tokenEntry), BuildItemLink(r.resultItemEntry));
-
-                if (r.inventoryFull)
-                    handler->PSendSysMessage(
-                        "[TokenTurnIn] {} has no inventory space for {} - token not consumed",
-                        r.charName, BuildItemLink(r.resultItemEntry));
             }
             else if (r.noSpec)
             {
@@ -492,8 +537,14 @@ namespace
         std::vector<Player*> scope = ResolveScanScope(invoker);
         if (scope.empty())
         {
-            handler->PSendSysMessage(
-                "[TokenTurnIn] Nothing to scan - you are not in a group, and self-conversion is disabled (TokenTurnIn.IncludeSelf).");
+            // Empty scope has two distinct causes - report the one that
+            // actually applies rather than always blaming group membership.
+            if (!invoker->GetGroup())
+                handler->PSendSysMessage(
+                    "[TokenTurnIn] Nothing to scan - you are not in a group, and self-conversion is disabled (TokenTurnIn.IncludeSelf).");
+            else
+                handler->PSendSysMessage(
+                    "[TokenTurnIn] Nothing to scan - no eligible group members found (self-conversion and/or TokenTurnIn.IncludeRealPlayers may need enabling).");
             return;
         }
 
