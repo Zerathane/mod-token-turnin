@@ -81,6 +81,20 @@
  *    in #ifdef MOD_PLAYERBOTS (a macro CMake already defines when playerbots
  *    is present in the build) so the module still compiles standalone;
  *    without playerbots present, real-player filtering is simply a no-op.
+ *
+ * Resolved design point:
+ *  - Awarding via plain StoreNewItemInBestSlots() left items sitting inert
+ *    in a bot's bags - in-game testing showed bots don't auto-equip an
+ *    upgrade received this way, only when a GM's .additem gives it to them.
+ *    Root cause (confirmed against core and mod-playerbots source): a GM's
+ *    .additem calls Player::SendNewItem() after storing, which fires
+ *    SMSG_ITEM_PUSH_RESULT; mod-playerbots hooks that exact packet as its
+ *    "item push result" trigger (WorldPacketHandlerStrategy.cpp) to re-check
+ *    gear and equip upgrades. StoreNewItemInBestSlots() never calls
+ *    SendNewItem() itself, so bots never received that signal for tokens we
+ *    awarded. AwardItemAndNotify() below wraps the same storage call and
+ *    adds the missing SendNewItem() call so bots react the same way they do
+ *    to a GM-given item.
  */
 
 #include "Bag.h"
@@ -276,6 +290,30 @@ namespace
         return items;
     }
 
+    // Wraps Player::StoreNewItemInBestSlots() (kept as-is - it already
+    // correctly handles the N-tokens-to-N-items case: equip one, then store
+    // the rest as a bag stack) and adds one thing it doesn't do: fire
+    // SMSG_ITEM_PUSH_RESULT via Player::SendNewItem(). mod-playerbots' "item
+    // push result" trigger (WorldPacketHandlerStrategy.cpp) is what makes a
+    // bot re-check its gear for upgrades and equip them - StoreNewItemInBestSlots()
+    // alone never sends that packet (confirmed against Player.cpp), so
+    // without this the item just sits in the bag until something else (e.g.
+    // a GM's .additem, which does call SendNewItem) happens to prompt a
+    // recheck. GetItemByEntry() after the fact is a loose match (it doesn't
+    // guarantee *this* is the newly-added instance if the bot already had
+    // one), but that's fine here - the packet's job is just to make the bot
+    // look, and its own gear-check logic re-evaluates from scratch anyway.
+    bool AwardItemAndNotify(Player* target, uint32 itemEntry, uint32 count)
+    {
+        if (!target->StoreNewItemInBestSlots(itemEntry, count))
+            return false;
+
+        if (Item* awarded = target->GetItemByEntry(itemEntry))
+            target->SendNewItem(awarded, count, true, false);
+
+        return true;
+    }
+
     // Core scan+resolve logic shared by "check" and "redeem".
     // doConvert = false -> report only, no destroy/award.
     std::vector<TokenConversionResult> ScanAndResolve(Player* target, bool doConvert)
@@ -335,7 +373,7 @@ namespace
             //    .tokenturnin redeem runs to fully clear.
             if (doConvert)
             {
-                if (target->StoreNewItemInBestSlots(resultItemEntry, tokenCount))
+                if (AwardItemAndNotify(target, resultItemEntry, tokenCount))
                     target->DestroyItemCount(tokenEntry, tokenCount, true);
                 else
                     match.inventoryFull = true;
