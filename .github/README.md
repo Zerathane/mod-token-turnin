@@ -71,8 +71,8 @@ You always trigger this manually — there's no passive or automatic conversion 
 ### Example output
 
 ```
-[TokenTurnIn] BotWarrior1 (Protection) -> Token: [Gloves of the Wayward Protector] -> Item: [Valorous Siegebreaker Gauntlets]
-[TokenTurnIn] BotDruid2 (Restoration) -> Token: [Chestguard of the Fallen Defender] -> Item: [Chestguard of Malorne]
+[TokenTurnIn] BotWarrior1 (Protection) -> Would convert token: [Gloves of the Wayward Protector] -> Item: [Valorous Siegebreaker Gauntlets]
+[TokenTurnIn] BotDruid2 (Restoration) -> Converted token: [Chestguard of the Fallen Defender] -> Item: [Chestguard of Malorne]
 [TokenTurnIn] No convertible tokens found on BotMage3
 ```
 
@@ -94,7 +94,7 @@ Tier token data is added incrementally, tier by tier, and verified in-game befor
 | Tier | Raid(s) | Difficulty | Status |
 |---|---|---|---|
 | ZG, AQ20 | Zul'Gurub, The Ruins of Ahn'Qiraj | 20-man | ✅ Implemented |
-| T2.5 | The Temple of Ahn'Qiraj | 40-man | ❌ — see below |
+| T2.5 | The Temple of Ahn'Qiraj | 40-man | ⚠️ Partial — see below |
 | T3 | Naxxramas | 40 man | ✅ Implemented |
 | T4 | Karazhan / Gruul's Lair / Magtheridon's Lair | 10-man & 25-man | ✅ Implemented |
 | T5 | Serpentshrine Cavern / The Eye | 25-man | ✅ Implemented |
@@ -104,7 +104,7 @@ Tier token data is added incrementally, tier by tier, and verified in-game befor
 | T9 | Trial of the Crusader | 10-man & 25-man | ❌ Out of scope — see below |
 | T10 | Icecrown Citadel | 10-man & 25-man | ❌ Out of scope — see below |
 
-**T2.5 has a unique token sharing issue.** The two AQ40 "Bindings" tokens aren't a direct token-for-item swap — Each Binding can be used to complete a quest rewarding either a shoulder or feet item. This ambiguity makes it difficult to map an item to a reward.
+**T2.5 is implemented for Helm, Legs, and Chest only.** The set has 5 pieces total; Shoulder and Boots are deliberately left out as the two "Bindings" tokens map to two items which, normally are selectable by the player. 
 
 **T9/T10 are intentionally out of scope.** In those tiers, base tier gear is purchased from a vendor with emblem currency rather than looted as a token, and the heroic upgrade item isn't slot-specific — it requires a player's choice of which piece to upgrade. Neither mechanic fits this module's "find token, destroy it, award its paired item" model without inventing behavior the player never asked for.
 

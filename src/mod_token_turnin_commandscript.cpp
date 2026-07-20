@@ -393,20 +393,27 @@ namespace
         return results;
     }
 
-    void ReportResults(ChatHandler* handler, std::vector<TokenConversionResult> const& results)
+    // doConvert selects the verb tense: "check" is describing a hypothetical
+    // (would convert), "redeem" is reporting something that already happened
+    // (converted). Deliberately just a tense swap, not an extra tag/suffix -
+    // which command you typed already tells you the mode, so repeating that
+    // as a label on every line would just be noise.
+    void ReportResults(ChatHandler* handler, std::vector<TokenConversionResult> const& results, bool doConvert)
     {
+        char const* verb = doConvert ? "Converted" : "Would convert";
+
         for (auto const& r : results)
         {
             if (r.matched)
             {
                 if (r.count > 1)
                     handler->PSendSysMessage(
-                        "[TokenTurnIn] {} ({}) -> Token: {} x{} -> Item: {} x{}",
-                        r.charName, r.specLabel, BuildItemLink(r.tokenEntry), r.count, BuildItemLink(r.resultItemEntry), r.count);
+                        "[TokenTurnIn] {} ({}) -> {} Token: {} x{} -> Item: {} x{}",
+                        r.charName, r.specLabel, verb, BuildItemLink(r.tokenEntry), r.count, BuildItemLink(r.resultItemEntry), r.count);
                 else
                     handler->PSendSysMessage(
-                        "[TokenTurnIn] {} ({}) -> Token: {} -> Item: {}",
-                        r.charName, r.specLabel, BuildItemLink(r.tokenEntry), BuildItemLink(r.resultItemEntry));
+                        "[TokenTurnIn] {} ({}) -> {} Token: {} -> Item: {}",
+                        r.charName, r.specLabel, verb, BuildItemLink(r.tokenEntry), BuildItemLink(r.resultItemEntry));
 
                 if (r.inventoryFull)
                     handler->PSendSysMessage(
@@ -493,7 +500,7 @@ namespace
         for (Player* target : scope)
         {
             auto results = ScanAndResolve(target, doConvert);
-            ReportResults(handler, results);
+            ReportResults(handler, results, doConvert);
         }
     }
 

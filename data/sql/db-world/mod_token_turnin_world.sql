@@ -2338,3 +2338,169 @@ VALUES
     (20890, 11, 0, 21407, 0, 'Qiraji Ornate Hilt', 'Mace of Unending Life', 'normal'),
     (20890, 11, 1, 21407, 0, 'Qiraji Ornate Hilt', 'Mace of Unending Life', 'normal'),
     (20890, 11, 2, 21407, 0, 'Qiraji Ornate Hilt', 'Mace of Unending Life', 'normal');
+
+-- Temple of Ahn'Qiraj (AQ40, "Tier 2.5") - Helm/Legs/Chest only. The
+-- other 2 pieces of this 5-piece set (Shoulder/Boots, via the "Qiraji
+-- Bindings of Command/Dominance" tokens) are deliberately NOT included:
+-- those 2 tokens are each a shared prerequisite reused across 2 separate
+-- per-class quests, disambiguated only by a second slot-specific "Idol"
+-- material this module doesn't track - see the Bindings-token design
+-- note earlier in this file (T2.5 out-of-scope reasoning) for the full
+-- explanation. Helm/Legs/Chest don't have that problem - each of the 6
+-- real tokens (Vek'lor's Diadem, Vek'nilash's Circlet, Ouro's Intact
+-- Hide, Skin of the Great Sandworm, Carapace of the Old God, Husk of the
+-- Old God) resolves to exactly one slot for every class that can use it,
+-- same pattern as AQ20. No talent-tab branching - all 3 tabs share the
+-- same item. Cross-checked class groupings against live item_template
+-- AllowableClass and the real per-class token/item table. One duplicate
+-- item_template entry found (a second, unrestricted "Conqueror's
+-- Breastplate" # 25008) - confirmed via quest_template that only the
+-- class-restricted entry (21331) is the one actually referenced by the
+-- real reward quest, so that's the one used here.
+--
+-- `tier` is 0, same placeholder convention as ZG/AQ20 (this predates T3
+-- and isn't part of the T3-T10 numbering).
+
+-- Warrior AQ40 T2.5 (Conqueror's Battlegear). Single itemization per token -
+-- no talent-tab branching, all 3 tabs share the same piece.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (20926, 20927, 20929) AND `class_id` = 1;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (20926, 1, 0, 21329, 0, 'Vek''nilash''s Circlet', 'Conqueror''s Crown', 'normal'),
+    (20926, 1, 1, 21329, 0, 'Vek''nilash''s Circlet', 'Conqueror''s Crown', 'normal'),
+    (20926, 1, 2, 21329, 0, 'Vek''nilash''s Circlet', 'Conqueror''s Crown', 'normal'),
+    (20927, 1, 0, 21332, 0, 'Ouro''s Intact Hide', 'Conqueror''s Legguards', 'normal'),
+    (20927, 1, 1, 21332, 0, 'Ouro''s Intact Hide', 'Conqueror''s Legguards', 'normal'),
+    (20927, 1, 2, 21332, 0, 'Ouro''s Intact Hide', 'Conqueror''s Legguards', 'normal'),
+    (20929, 1, 0, 21331, 0, 'Carapace of the Old God', 'Conqueror''s Breastplate', 'normal'),
+    (20929, 1, 1, 21331, 0, 'Carapace of the Old God', 'Conqueror''s Breastplate', 'normal'),
+    (20929, 1, 2, 21331, 0, 'Carapace of the Old God', 'Conqueror''s Breastplate', 'normal');
+
+-- Paladin AQ40 T2.5 (Avenger's Battlegear). Single itemization per token -
+-- no talent-tab branching, all 3 tabs share the same piece.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (20929, 20930, 20931) AND `class_id` = 2;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (20930, 2, 0, 21387, 0, 'Vek''lor''s Diadem', 'Avenger''s Crown', 'normal'),
+    (20930, 2, 1, 21387, 0, 'Vek''lor''s Diadem', 'Avenger''s Crown', 'normal'),
+    (20930, 2, 2, 21387, 0, 'Vek''lor''s Diadem', 'Avenger''s Crown', 'normal'),
+    (20931, 2, 0, 21390, 0, 'Skin of the Great Sandworm', 'Avenger''s Legguards', 'normal'),
+    (20931, 2, 1, 21390, 0, 'Skin of the Great Sandworm', 'Avenger''s Legguards', 'normal'),
+    (20931, 2, 2, 21390, 0, 'Skin of the Great Sandworm', 'Avenger''s Legguards', 'normal'),
+    (20929, 2, 0, 21389, 0, 'Carapace of the Old God', 'Avenger''s Breastplate', 'normal'),
+    (20929, 2, 1, 21389, 0, 'Carapace of the Old God', 'Avenger''s Breastplate', 'normal'),
+    (20929, 2, 2, 21389, 0, 'Carapace of the Old God', 'Avenger''s Breastplate', 'normal');
+
+-- Hunter AQ40 T2.5 (Striker's Garb). Single itemization per token -
+-- no talent-tab branching, all 3 tabs share the same piece.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (20929, 20930, 20931) AND `class_id` = 3;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (20930, 3, 0, 21366, 0, 'Vek''lor''s Diadem', 'Striker''s Diadem', 'normal'),
+    (20930, 3, 1, 21366, 0, 'Vek''lor''s Diadem', 'Striker''s Diadem', 'normal'),
+    (20930, 3, 2, 21366, 0, 'Vek''lor''s Diadem', 'Striker''s Diadem', 'normal'),
+    (20931, 3, 0, 21368, 0, 'Skin of the Great Sandworm', 'Striker''s Leggings', 'normal'),
+    (20931, 3, 1, 21368, 0, 'Skin of the Great Sandworm', 'Striker''s Leggings', 'normal'),
+    (20931, 3, 2, 21368, 0, 'Skin of the Great Sandworm', 'Striker''s Leggings', 'normal'),
+    (20929, 3, 0, 21370, 0, 'Carapace of the Old God', 'Striker''s Hauberk', 'normal'),
+    (20929, 3, 1, 21370, 0, 'Carapace of the Old God', 'Striker''s Hauberk', 'normal'),
+    (20929, 3, 2, 21370, 0, 'Carapace of the Old God', 'Striker''s Hauberk', 'normal');
+
+-- Rogue AQ40 T2.5 (Deathdealer's Embrace). Single itemization per token -
+-- no talent-tab branching, all 3 tabs share the same piece.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (20927, 20929, 20930) AND `class_id` = 4;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (20930, 4, 0, 21360, 0, 'Vek''lor''s Diadem', 'Deathdealer''s Helm', 'normal'),
+    (20930, 4, 1, 21360, 0, 'Vek''lor''s Diadem', 'Deathdealer''s Helm', 'normal'),
+    (20930, 4, 2, 21360, 0, 'Vek''lor''s Diadem', 'Deathdealer''s Helm', 'normal'),
+    (20927, 4, 0, 21362, 0, 'Ouro''s Intact Hide', 'Deathdealer''s Leggings', 'normal'),
+    (20927, 4, 1, 21362, 0, 'Ouro''s Intact Hide', 'Deathdealer''s Leggings', 'normal'),
+    (20927, 4, 2, 21362, 0, 'Ouro''s Intact Hide', 'Deathdealer''s Leggings', 'normal'),
+    (20929, 4, 0, 21364, 0, 'Carapace of the Old God', 'Deathdealer''s Vest', 'normal'),
+    (20929, 4, 1, 21364, 0, 'Carapace of the Old God', 'Deathdealer''s Vest', 'normal'),
+    (20929, 4, 2, 21364, 0, 'Carapace of the Old God', 'Deathdealer''s Vest', 'normal');
+
+-- Priest AQ40 T2.5 (Garments of the Oracle). Single itemization per token -
+-- no talent-tab branching, all 3 tabs share the same piece.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (20926, 20927, 20933) AND `class_id` = 5;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (20926, 5, 0, 21348, 0, 'Vek''nilash''s Circlet', 'Tiara of the Oracle', 'normal'),
+    (20926, 5, 1, 21348, 0, 'Vek''nilash''s Circlet', 'Tiara of the Oracle', 'normal'),
+    (20926, 5, 2, 21348, 0, 'Vek''nilash''s Circlet', 'Tiara of the Oracle', 'normal'),
+    (20927, 5, 0, 21352, 0, 'Ouro''s Intact Hide', 'Trousers of the Oracle', 'normal'),
+    (20927, 5, 1, 21352, 0, 'Ouro''s Intact Hide', 'Trousers of the Oracle', 'normal'),
+    (20927, 5, 2, 21352, 0, 'Ouro''s Intact Hide', 'Trousers of the Oracle', 'normal'),
+    (20933, 5, 0, 21351, 0, 'Husk of the Old God', 'Vestments of the Oracle', 'normal'),
+    (20933, 5, 1, 21351, 0, 'Husk of the Old God', 'Vestments of the Oracle', 'normal'),
+    (20933, 5, 2, 21351, 0, 'Husk of the Old God', 'Vestments of the Oracle', 'normal');
+
+-- Shaman AQ40 T2.5 (Stormcaller's Garb). Single itemization per token -
+-- no talent-tab branching, all 3 tabs share the same piece.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (20929, 20930, 20931) AND `class_id` = 7;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (20930, 7, 0, 21372, 0, 'Vek''lor''s Diadem', 'Stormcaller''s Diadem', 'normal'),
+    (20930, 7, 1, 21372, 0, 'Vek''lor''s Diadem', 'Stormcaller''s Diadem', 'normal'),
+    (20930, 7, 2, 21372, 0, 'Vek''lor''s Diadem', 'Stormcaller''s Diadem', 'normal'),
+    (20931, 7, 0, 21375, 0, 'Skin of the Great Sandworm', 'Stormcaller''s Leggings', 'normal'),
+    (20931, 7, 1, 21375, 0, 'Skin of the Great Sandworm', 'Stormcaller''s Leggings', 'normal'),
+    (20931, 7, 2, 21375, 0, 'Skin of the Great Sandworm', 'Stormcaller''s Leggings', 'normal'),
+    (20929, 7, 0, 21374, 0, 'Carapace of the Old God', 'Stormcaller''s Hauberk', 'normal'),
+    (20929, 7, 1, 21374, 0, 'Carapace of the Old God', 'Stormcaller''s Hauberk', 'normal'),
+    (20929, 7, 2, 21374, 0, 'Carapace of the Old God', 'Stormcaller''s Hauberk', 'normal');
+
+-- Mage AQ40 T2.5 (Enigma Vestments). Single itemization per token -
+-- no talent-tab branching, all 3 tabs share the same piece.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (20926, 20927, 20933) AND `class_id` = 8;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (20926, 8, 0, 21347, 0, 'Vek''nilash''s Circlet', 'Enigma Circlet', 'normal'),
+    (20926, 8, 1, 21347, 0, 'Vek''nilash''s Circlet', 'Enigma Circlet', 'normal'),
+    (20926, 8, 2, 21347, 0, 'Vek''nilash''s Circlet', 'Enigma Circlet', 'normal'),
+    (20927, 8, 0, 21346, 0, 'Ouro''s Intact Hide', 'Enigma Leggings', 'normal'),
+    (20927, 8, 1, 21346, 0, 'Ouro''s Intact Hide', 'Enigma Leggings', 'normal'),
+    (20927, 8, 2, 21346, 0, 'Ouro''s Intact Hide', 'Enigma Leggings', 'normal'),
+    (20933, 8, 0, 21343, 0, 'Husk of the Old God', 'Enigma Robes', 'normal'),
+    (20933, 8, 1, 21343, 0, 'Husk of the Old God', 'Enigma Robes', 'normal'),
+    (20933, 8, 2, 21343, 0, 'Husk of the Old God', 'Enigma Robes', 'normal');
+
+-- Warlock AQ40 T2.5 (Doomcaller's Attire). Single itemization per token -
+-- no talent-tab branching, all 3 tabs share the same piece.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (20926, 20931, 20933) AND `class_id` = 9;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (20926, 9, 0, 21337, 0, 'Vek''nilash''s Circlet', 'Doomcaller''s Circlet', 'normal'),
+    (20926, 9, 1, 21337, 0, 'Vek''nilash''s Circlet', 'Doomcaller''s Circlet', 'normal'),
+    (20926, 9, 2, 21337, 0, 'Vek''nilash''s Circlet', 'Doomcaller''s Circlet', 'normal'),
+    (20931, 9, 0, 21336, 0, 'Skin of the Great Sandworm', 'Doomcaller''s Trousers', 'normal'),
+    (20931, 9, 1, 21336, 0, 'Skin of the Great Sandworm', 'Doomcaller''s Trousers', 'normal'),
+    (20931, 9, 2, 21336, 0, 'Skin of the Great Sandworm', 'Doomcaller''s Trousers', 'normal'),
+    (20933, 9, 0, 21334, 0, 'Husk of the Old God', 'Doomcaller''s Robes', 'normal'),
+    (20933, 9, 1, 21334, 0, 'Husk of the Old God', 'Doomcaller''s Robes', 'normal'),
+    (20933, 9, 2, 21334, 0, 'Husk of the Old God', 'Doomcaller''s Robes', 'normal');
+
+-- Druid AQ40 T2.5 (Genesis Raiment). Single itemization per token -
+-- no talent-tab branching, all 3 tabs share the same piece.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (20930, 20931, 20933) AND `class_id` = 11;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (20930, 11, 0, 21353, 0, 'Vek''lor''s Diadem', 'Genesis Helm', 'normal'),
+    (20930, 11, 1, 21353, 0, 'Vek''lor''s Diadem', 'Genesis Helm', 'normal'),
+    (20930, 11, 2, 21353, 0, 'Vek''lor''s Diadem', 'Genesis Helm', 'normal'),
+    (20931, 11, 0, 21356, 0, 'Skin of the Great Sandworm', 'Genesis Trousers', 'normal'),
+    (20931, 11, 1, 21356, 0, 'Skin of the Great Sandworm', 'Genesis Trousers', 'normal'),
+    (20931, 11, 2, 21356, 0, 'Skin of the Great Sandworm', 'Genesis Trousers', 'normal'),
+    (20933, 11, 0, 21357, 0, 'Husk of the Old God', 'Genesis Vest', 'normal'),
+    (20933, 11, 1, 21357, 0, 'Husk of the Old God', 'Genesis Vest', 'normal'),
+    (20933, 11, 2, 21357, 0, 'Husk of the Old God', 'Genesis Vest', 'normal');
