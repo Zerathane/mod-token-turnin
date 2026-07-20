@@ -1252,3 +1252,464 @@ VALUES
     (40636, 6, 0, 40567, 7, 'Legplates of the Lost Vanquisher', 'Valorous Scourgeborne Legguards', '25'),
     (40636, 6, 1, 40556, 7, 'Legplates of the Lost Vanquisher', 'Valorous Scourgeborne Legplates', '25'),
     (40636, 6, 2, 40556, 7, 'Legplates of the Lost Vanquisher', 'Valorous Scourgeborne Legplates', '25');
+
+-- T8 (Ulduar) carries forward the exact same Conqueror/Protector/Vanquisher
+-- groups and class-tab mapping as T7. One real wrinkle: Blizzard's tier-
+-- prefix rotation means T8 10-man reuses the "Valorous" prefix (already used
+-- for T7 25-man) at a new ilvl (219, vs T7 25-man's 213) rather than
+-- introducing a new prefix; T8 25-man will be "Conqueror's" (ilvl 226).
+-- Token/result-item entries and class-tab mapping cross-checked directly
+-- against a live item_template (class mask, InventoryType per slot,
+-- ItemLevel=219, and the same word-per-role naming convention verified
+-- against T7's data for every hybrid class).
+
+-- Paladin T8 10-man (Valorous Aegis), Wayward Conqueror family. Holy
+-- (Regalia), Protection (Plate), Retribution (Battlegear) - all distinct.
+-- Word-per-slot convention (Headpiece/Faceguard/Helm for Holy/Prot/Ret helm,
+-- etc.) matches T7's Paladin sets exactly, role-for-role.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (45635, 45644, 45647, 45650, 45659) AND `class_id` = 2;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (45647, 2, 0, 45372, 8, 'Helm of the Wayward Conqueror', 'Valorous Aegis Headpiece', '10'),
+    (45647, 2, 1, 45382, 8, 'Helm of the Wayward Conqueror', 'Valorous Aegis Faceguard', '10'),
+    (45647, 2, 2, 45377, 8, 'Helm of the Wayward Conqueror', 'Valorous Aegis Helm', '10'),
+    (45659, 2, 0, 45373, 8, 'Spaulders of the Wayward Conqueror', 'Valorous Aegis Spaulders', '10'),
+    (45659, 2, 1, 45385, 8, 'Spaulders of the Wayward Conqueror', 'Valorous Aegis Shoulderguards', '10'),
+    (45659, 2, 2, 45380, 8, 'Spaulders of the Wayward Conqueror', 'Valorous Aegis Shoulderplates', '10'),
+    (45635, 2, 0, 45374, 8, 'Chestguard of the Wayward Conqueror', 'Valorous Aegis Tunic', '10'),
+    (45635, 2, 1, 45381, 8, 'Chestguard of the Wayward Conqueror', 'Valorous Aegis Breastplate', '10'),
+    (45635, 2, 2, 45375, 8, 'Chestguard of the Wayward Conqueror', 'Valorous Aegis Battleplate', '10'),
+    (45644, 2, 0, 45370, 8, 'Gloves of the Wayward Conqueror', 'Valorous Aegis Gloves', '10'),
+    (45644, 2, 1, 45383, 8, 'Gloves of the Wayward Conqueror', 'Valorous Aegis Handguards', '10'),
+    (45644, 2, 2, 45376, 8, 'Gloves of the Wayward Conqueror', 'Valorous Aegis Gauntlets', '10'),
+    (45650, 2, 0, 45371, 8, 'Leggings of the Wayward Conqueror', 'Valorous Aegis Greaves', '10'),
+    (45650, 2, 1, 45384, 8, 'Leggings of the Wayward Conqueror', 'Valorous Aegis Legguards', '10'),
+    (45650, 2, 2, 45379, 8, 'Leggings of the Wayward Conqueror', 'Valorous Aegis Legplates', '10');
+
+-- Priest T8 10-man (Valorous Sanctification), Wayward Conqueror family.
+-- Discipline/Holy share one itemization (Regalia of Faith equivalent),
+-- Shadow has its own (Garb of Faith equivalent).
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (45635, 45644, 45647, 45650, 45659) AND `class_id` = 5;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (45647, 5, 0, 45386, 8, 'Helm of the Wayward Conqueror', 'Valorous Cowl of Sanctification', '10'),
+    (45647, 5, 1, 45386, 8, 'Helm of the Wayward Conqueror', 'Valorous Cowl of Sanctification', '10'),
+    (45647, 5, 2, 45391, 8, 'Helm of the Wayward Conqueror', 'Valorous Circlet of Sanctification', '10'),
+    (45659, 5, 0, 45390, 8, 'Spaulders of the Wayward Conqueror', 'Valorous Shoulderpads of Sanctification', '10'),
+    (45659, 5, 1, 45390, 8, 'Spaulders of the Wayward Conqueror', 'Valorous Shoulderpads of Sanctification', '10'),
+    (45659, 5, 2, 45393, 8, 'Spaulders of the Wayward Conqueror', 'Valorous Mantle of Sanctification', '10'),
+    (45635, 5, 0, 45389, 8, 'Chestguard of the Wayward Conqueror', 'Valorous Robe of Sanctification', '10'),
+    (45635, 5, 1, 45389, 8, 'Chestguard of the Wayward Conqueror', 'Valorous Robe of Sanctification', '10'),
+    (45635, 5, 2, 45395, 8, 'Chestguard of the Wayward Conqueror', 'Valorous Raiments of Sanctification', '10'),
+    (45644, 5, 0, 45387, 8, 'Gloves of the Wayward Conqueror', 'Valorous Gloves of Sanctification', '10'),
+    (45644, 5, 1, 45387, 8, 'Gloves of the Wayward Conqueror', 'Valorous Gloves of Sanctification', '10'),
+    (45644, 5, 2, 45392, 8, 'Gloves of the Wayward Conqueror', 'Valorous Handwraps of Sanctification', '10'),
+    (45650, 5, 0, 45388, 8, 'Leggings of the Wayward Conqueror', 'Valorous Leggings of Sanctification', '10'),
+    (45650, 5, 1, 45388, 8, 'Leggings of the Wayward Conqueror', 'Valorous Leggings of Sanctification', '10'),
+    (45650, 5, 2, 45394, 8, 'Leggings of the Wayward Conqueror', 'Valorous Pants of Sanctification', '10');
+
+-- Warlock T8 10-man (Valorous Deathbringer), Wayward Conqueror family.
+-- All 3 specs are caster DPS - one itemization applies regardless of spec.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (45635, 45644, 45647, 45650, 45659) AND `class_id` = 9;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (45647, 9, 0, 45417, 8, 'Helm of the Wayward Conqueror', 'Valorous Deathbringer Hood', '10'),
+    (45647, 9, 1, 45417, 8, 'Helm of the Wayward Conqueror', 'Valorous Deathbringer Hood', '10'),
+    (45647, 9, 2, 45417, 8, 'Helm of the Wayward Conqueror', 'Valorous Deathbringer Hood', '10'),
+    (45659, 9, 0, 45422, 8, 'Spaulders of the Wayward Conqueror', 'Valorous Deathbringer Shoulderpads', '10'),
+    (45659, 9, 1, 45422, 8, 'Spaulders of the Wayward Conqueror', 'Valorous Deathbringer Shoulderpads', '10'),
+    (45659, 9, 2, 45422, 8, 'Spaulders of the Wayward Conqueror', 'Valorous Deathbringer Shoulderpads', '10'),
+    (45635, 9, 0, 45421, 8, 'Chestguard of the Wayward Conqueror', 'Valorous Deathbringer Robe', '10'),
+    (45635, 9, 1, 45421, 8, 'Chestguard of the Wayward Conqueror', 'Valorous Deathbringer Robe', '10'),
+    (45635, 9, 2, 45421, 8, 'Chestguard of the Wayward Conqueror', 'Valorous Deathbringer Robe', '10'),
+    (45644, 9, 0, 45419, 8, 'Gloves of the Wayward Conqueror', 'Valorous Deathbringer Gloves', '10'),
+    (45644, 9, 1, 45419, 8, 'Gloves of the Wayward Conqueror', 'Valorous Deathbringer Gloves', '10'),
+    (45644, 9, 2, 45419, 8, 'Gloves of the Wayward Conqueror', 'Valorous Deathbringer Gloves', '10'),
+    (45650, 9, 0, 45420, 8, 'Leggings of the Wayward Conqueror', 'Valorous Deathbringer Leggings', '10'),
+    (45650, 9, 1, 45420, 8, 'Leggings of the Wayward Conqueror', 'Valorous Deathbringer Leggings', '10'),
+    (45650, 9, 2, 45420, 8, 'Leggings of the Wayward Conqueror', 'Valorous Deathbringer Leggings', '10');
+
+-- Warrior T8 10-man (Valorous Siegebreaker), Wayward Protector family.
+-- Arms/Fury share one itemization (Battlegear), Protection has its own (Plate).
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (45636, 45645, 45648, 45651, 45660) AND `class_id` = 1;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (45648, 1, 0, 45431, 8, 'Helm of the Wayward Protector', 'Valorous Siegebreaker Helmet', '10'),
+    (45648, 1, 1, 45431, 8, 'Helm of the Wayward Protector', 'Valorous Siegebreaker Helmet', '10'),
+    (45648, 1, 2, 45425, 8, 'Helm of the Wayward Protector', 'Valorous Siegebreaker Greathelm', '10'),
+    (45660, 1, 0, 45433, 8, 'Spaulders of the Wayward Protector', 'Valorous Siegebreaker Shoulderplates', '10'),
+    (45660, 1, 1, 45433, 8, 'Spaulders of the Wayward Protector', 'Valorous Siegebreaker Shoulderplates', '10'),
+    (45660, 1, 2, 45428, 8, 'Spaulders of the Wayward Protector', 'Valorous Siegebreaker Pauldrons', '10'),
+    (45636, 1, 0, 45429, 8, 'Chestguard of the Wayward Protector', 'Valorous Siegebreaker Battleplate', '10'),
+    (45636, 1, 1, 45429, 8, 'Chestguard of the Wayward Protector', 'Valorous Siegebreaker Battleplate', '10'),
+    (45636, 1, 2, 45424, 8, 'Chestguard of the Wayward Protector', 'Valorous Siegebreaker Breastplate', '10'),
+    (45645, 1, 0, 45430, 8, 'Gloves of the Wayward Protector', 'Valorous Siegebreaker Gauntlets', '10'),
+    (45645, 1, 1, 45430, 8, 'Gloves of the Wayward Protector', 'Valorous Siegebreaker Gauntlets', '10'),
+    (45645, 1, 2, 45426, 8, 'Gloves of the Wayward Protector', 'Valorous Siegebreaker Handguards', '10'),
+    (45651, 1, 0, 45432, 8, 'Leggings of the Wayward Protector', 'Valorous Siegebreaker Legplates', '10'),
+    (45651, 1, 1, 45432, 8, 'Leggings of the Wayward Protector', 'Valorous Siegebreaker Legplates', '10'),
+    (45651, 1, 2, 45427, 8, 'Leggings of the Wayward Protector', 'Valorous Siegebreaker Legguards', '10');
+
+-- Hunter T8 10-man (Valorous Scourgestalker), Wayward Protector family.
+-- All 3 specs are ranged DPS - one itemization applies regardless of spec.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (45636, 45645, 45648, 45651, 45660) AND `class_id` = 3;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (45648, 3, 0, 45361, 8, 'Helm of the Wayward Protector', 'Valorous Scourgestalker Headpiece', '10'),
+    (45648, 3, 1, 45361, 8, 'Helm of the Wayward Protector', 'Valorous Scourgestalker Headpiece', '10'),
+    (45648, 3, 2, 45361, 8, 'Helm of the Wayward Protector', 'Valorous Scourgestalker Headpiece', '10'),
+    (45660, 3, 0, 45363, 8, 'Spaulders of the Wayward Protector', 'Valorous Scourgestalker Spaulders', '10'),
+    (45660, 3, 1, 45363, 8, 'Spaulders of the Wayward Protector', 'Valorous Scourgestalker Spaulders', '10'),
+    (45660, 3, 2, 45363, 8, 'Spaulders of the Wayward Protector', 'Valorous Scourgestalker Spaulders', '10'),
+    (45636, 3, 0, 45364, 8, 'Chestguard of the Wayward Protector', 'Valorous Scourgestalker Tunic', '10'),
+    (45636, 3, 1, 45364, 8, 'Chestguard of the Wayward Protector', 'Valorous Scourgestalker Tunic', '10'),
+    (45636, 3, 2, 45364, 8, 'Chestguard of the Wayward Protector', 'Valorous Scourgestalker Tunic', '10'),
+    (45645, 3, 0, 45360, 8, 'Gloves of the Wayward Protector', 'Valorous Scourgestalker Handguards', '10'),
+    (45645, 3, 1, 45360, 8, 'Gloves of the Wayward Protector', 'Valorous Scourgestalker Handguards', '10'),
+    (45645, 3, 2, 45360, 8, 'Gloves of the Wayward Protector', 'Valorous Scourgestalker Handguards', '10'),
+    (45651, 3, 0, 45362, 8, 'Leggings of the Wayward Protector', 'Valorous Scourgestalker Legguards', '10'),
+    (45651, 3, 1, 45362, 8, 'Leggings of the Wayward Protector', 'Valorous Scourgestalker Legguards', '10'),
+    (45651, 3, 2, 45362, 8, 'Leggings of the Wayward Protector', 'Valorous Scourgestalker Legguards', '10');
+
+-- Shaman T8 10-man (Valorous Worldbreaker), Wayward Protector family.
+-- Elemental (Garb), Enhancement (Battlegear), Restoration (Regalia) - all distinct.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (45636, 45645, 45648, 45651, 45660) AND `class_id` = 7;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (45648, 7, 0, 45408, 8, 'Helm of the Wayward Protector', 'Valorous Worldbreaker Helm', '10'),
+    (45648, 7, 1, 45412, 8, 'Helm of the Wayward Protector', 'Valorous Worldbreaker Faceguard', '10'),
+    (45648, 7, 2, 45402, 8, 'Helm of the Wayward Protector', 'Valorous Worldbreaker Headpiece', '10'),
+    (45660, 7, 0, 45410, 8, 'Spaulders of the Wayward Protector', 'Valorous Worldbreaker Shoulderpads', '10'),
+    (45660, 7, 1, 45415, 8, 'Spaulders of the Wayward Protector', 'Valorous Worldbreaker Shoulderguards', '10'),
+    (45660, 7, 2, 45404, 8, 'Spaulders of the Wayward Protector', 'Valorous Worldbreaker Spaulders', '10'),
+    (45636, 7, 0, 45411, 8, 'Chestguard of the Wayward Protector', 'Valorous Worldbreaker Hauberk', '10'),
+    (45636, 7, 1, 45413, 8, 'Chestguard of the Wayward Protector', 'Valorous Worldbreaker Chestguard', '10'),
+    (45636, 7, 2, 45405, 8, 'Chestguard of the Wayward Protector', 'Valorous Worldbreaker Tunic', '10'),
+    (45645, 7, 0, 45406, 8, 'Gloves of the Wayward Protector', 'Valorous Worldbreaker Gloves', '10'),
+    (45645, 7, 1, 45414, 8, 'Gloves of the Wayward Protector', 'Valorous Worldbreaker Grips', '10'),
+    (45645, 7, 2, 45401, 8, 'Gloves of the Wayward Protector', 'Valorous Worldbreaker Handguards', '10'),
+    (45651, 7, 0, 45409, 8, 'Leggings of the Wayward Protector', 'Valorous Worldbreaker Kilt', '10'),
+    (45651, 7, 1, 45416, 8, 'Leggings of the Wayward Protector', 'Valorous Worldbreaker War-Kilt', '10'),
+    (45651, 7, 2, 45403, 8, 'Leggings of the Wayward Protector', 'Valorous Worldbreaker Legguards', '10');
+
+-- Rogue T8 10-man (Valorous Terrorblade), Wayward Vanquisher family. All 3
+-- specs are melee DPS - one itemization applies regardless of spec.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (45637, 45646, 45649, 45652, 45661) AND `class_id` = 4;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (45649, 4, 0, 45398, 8, 'Helm of the Wayward Vanquisher', 'Valorous Terrorblade Helmet', '10'),
+    (45649, 4, 1, 45398, 8, 'Helm of the Wayward Vanquisher', 'Valorous Terrorblade Helmet', '10'),
+    (45649, 4, 2, 45398, 8, 'Helm of the Wayward Vanquisher', 'Valorous Terrorblade Helmet', '10'),
+    (45661, 4, 0, 45400, 8, 'Spaulders of the Wayward Vanquisher', 'Valorous Terrorblade Pauldrons', '10'),
+    (45661, 4, 1, 45400, 8, 'Spaulders of the Wayward Vanquisher', 'Valorous Terrorblade Pauldrons', '10'),
+    (45661, 4, 2, 45400, 8, 'Spaulders of the Wayward Vanquisher', 'Valorous Terrorblade Pauldrons', '10'),
+    (45637, 4, 0, 45396, 8, 'Chestguard of the Wayward Vanquisher', 'Valorous Terrorblade Breastplate', '10'),
+    (45637, 4, 1, 45396, 8, 'Chestguard of the Wayward Vanquisher', 'Valorous Terrorblade Breastplate', '10'),
+    (45637, 4, 2, 45396, 8, 'Chestguard of the Wayward Vanquisher', 'Valorous Terrorblade Breastplate', '10'),
+    (45646, 4, 0, 45397, 8, 'Gloves of the Wayward Vanquisher', 'Valorous Terrorblade Gauntlets', '10'),
+    (45646, 4, 1, 45397, 8, 'Gloves of the Wayward Vanquisher', 'Valorous Terrorblade Gauntlets', '10'),
+    (45646, 4, 2, 45397, 8, 'Gloves of the Wayward Vanquisher', 'Valorous Terrorblade Gauntlets', '10'),
+    (45652, 4, 0, 45399, 8, 'Leggings of the Wayward Vanquisher', 'Valorous Terrorblade Legplates', '10'),
+    (45652, 4, 1, 45399, 8, 'Leggings of the Wayward Vanquisher', 'Valorous Terrorblade Legplates', '10'),
+    (45652, 4, 2, 45399, 8, 'Leggings of the Wayward Vanquisher', 'Valorous Terrorblade Legplates', '10');
+
+-- Mage T8 10-man (Valorous Kirin Tor), Wayward Vanquisher family. All 3
+-- specs are caster DPS - one itemization applies regardless of spec.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (45637, 45646, 45649, 45652, 45661) AND `class_id` = 8;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (45649, 8, 0, 45365, 8, 'Helm of the Wayward Vanquisher', 'Valorous Kirin Tor Hood', '10'),
+    (45649, 8, 1, 45365, 8, 'Helm of the Wayward Vanquisher', 'Valorous Kirin Tor Hood', '10'),
+    (45649, 8, 2, 45365, 8, 'Helm of the Wayward Vanquisher', 'Valorous Kirin Tor Hood', '10'),
+    (45661, 8, 0, 45369, 8, 'Spaulders of the Wayward Vanquisher', 'Valorous Kirin Tor Shoulderpads', '10'),
+    (45661, 8, 1, 45369, 8, 'Spaulders of the Wayward Vanquisher', 'Valorous Kirin Tor Shoulderpads', '10'),
+    (45661, 8, 2, 45369, 8, 'Spaulders of the Wayward Vanquisher', 'Valorous Kirin Tor Shoulderpads', '10'),
+    (45637, 8, 0, 45368, 8, 'Chestguard of the Wayward Vanquisher', 'Valorous Kirin Tor Tunic', '10'),
+    (45637, 8, 1, 45368, 8, 'Chestguard of the Wayward Vanquisher', 'Valorous Kirin Tor Tunic', '10'),
+    (45637, 8, 2, 45368, 8, 'Chestguard of the Wayward Vanquisher', 'Valorous Kirin Tor Tunic', '10'),
+    (45646, 8, 0, 46131, 8, 'Gloves of the Wayward Vanquisher', 'Valorous Kirin Tor Gauntlets', '10'),
+    (45646, 8, 1, 46131, 8, 'Gloves of the Wayward Vanquisher', 'Valorous Kirin Tor Gauntlets', '10'),
+    (45646, 8, 2, 46131, 8, 'Gloves of the Wayward Vanquisher', 'Valorous Kirin Tor Gauntlets', '10'),
+    (45652, 8, 0, 45367, 8, 'Leggings of the Wayward Vanquisher', 'Valorous Kirin Tor Leggings', '10'),
+    (45652, 8, 1, 45367, 8, 'Leggings of the Wayward Vanquisher', 'Valorous Kirin Tor Leggings', '10'),
+    (45652, 8, 2, 45367, 8, 'Leggings of the Wayward Vanquisher', 'Valorous Kirin Tor Leggings', '10');
+
+-- Druid T8 10-man (Valorous Nightsong), Wayward Vanquisher family. Balance
+-- (Garb), Feral (Battlegear), Restoration (Regalia) - all distinct.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (45637, 45646, 45649, 45652, 45661) AND `class_id` = 11;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (45649, 11, 0, 46313, 8, 'Helm of the Wayward Vanquisher', 'Valorous Nightsong Cover', '10'),
+    (45649, 11, 1, 45356, 8, 'Helm of the Wayward Vanquisher', 'Valorous Nightsong Headguard', '10'),
+    (45649, 11, 2, 45346, 8, 'Helm of the Wayward Vanquisher', 'Valorous Nightsong Headpiece', '10'),
+    (45661, 11, 0, 45352, 8, 'Spaulders of the Wayward Vanquisher', 'Valorous Nightsong Mantle', '10'),
+    (45661, 11, 1, 45359, 8, 'Spaulders of the Wayward Vanquisher', 'Valorous Nightsong Shoulderpads', '10'),
+    (45661, 11, 2, 45349, 8, 'Spaulders of the Wayward Vanquisher', 'Valorous Nightsong Spaulders', '10'),
+    (45637, 11, 0, 45354, 8, 'Chestguard of the Wayward Vanquisher', 'Valorous Nightsong Vestments', '10'),
+    (45637, 11, 1, 45358, 8, 'Chestguard of the Wayward Vanquisher', 'Valorous Nightsong Raiments', '10'),
+    (45637, 11, 2, 45348, 8, 'Chestguard of the Wayward Vanquisher', 'Valorous Nightsong Robe', '10'),
+    (45646, 11, 0, 45351, 8, 'Gloves of the Wayward Vanquisher', 'Valorous Nightsong Gloves', '10'),
+    (45646, 11, 1, 45355, 8, 'Gloves of the Wayward Vanquisher', 'Valorous Nightsong Handgrips', '10'),
+    (45646, 11, 2, 45345, 8, 'Gloves of the Wayward Vanquisher', 'Valorous Nightsong Handguards', '10'),
+    (45652, 11, 0, 45353, 8, 'Leggings of the Wayward Vanquisher', 'Valorous Nightsong Trousers', '10'),
+    (45652, 11, 1, 45357, 8, 'Leggings of the Wayward Vanquisher', 'Valorous Nightsong Legguards', '10'),
+    (45652, 11, 2, 45347, 8, 'Leggings of the Wayward Vanquisher', 'Valorous Nightsong Leggings', '10');
+
+-- Death Knight T8 10-man (Valorous Darkruned), Wayward Vanquisher family.
+-- Blood (Plate, tank) has its own itemization; Frost/Unholy (Battlegear,
+-- DPS) share the other.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (45637, 45646, 45649, 45652, 45661) AND `class_id` = 6;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (45649, 6, 0, 45336, 8, 'Helm of the Wayward Vanquisher', 'Valorous Darkruned Faceguard', '10'),
+    (45649, 6, 1, 45342, 8, 'Helm of the Wayward Vanquisher', 'Valorous Darkruned Helmet', '10'),
+    (45649, 6, 2, 45342, 8, 'Helm of the Wayward Vanquisher', 'Valorous Darkruned Helmet', '10'),
+    (45661, 6, 0, 45339, 8, 'Spaulders of the Wayward Vanquisher', 'Valorous Darkruned Pauldrons', '10'),
+    (45661, 6, 1, 45344, 8, 'Spaulders of the Wayward Vanquisher', 'Valorous Darkruned Shoulderplates', '10'),
+    (45661, 6, 2, 45344, 8, 'Spaulders of the Wayward Vanquisher', 'Valorous Darkruned Shoulderplates', '10'),
+    (45637, 6, 0, 45335, 8, 'Chestguard of the Wayward Vanquisher', 'Valorous Darkruned Chestguard', '10'),
+    (45637, 6, 1, 45340, 8, 'Chestguard of the Wayward Vanquisher', 'Valorous Darkruned Battleplate', '10'),
+    (45637, 6, 2, 45340, 8, 'Chestguard of the Wayward Vanquisher', 'Valorous Darkruned Battleplate', '10'),
+    (45646, 6, 0, 45337, 8, 'Gloves of the Wayward Vanquisher', 'Valorous Darkruned Handguards', '10'),
+    (45646, 6, 1, 45341, 8, 'Gloves of the Wayward Vanquisher', 'Valorous Darkruned Gauntlets', '10'),
+    (45646, 6, 2, 45341, 8, 'Gloves of the Wayward Vanquisher', 'Valorous Darkruned Gauntlets', '10'),
+    (45652, 6, 0, 45338, 8, 'Leggings of the Wayward Vanquisher', 'Valorous Darkruned Legguards', '10'),
+    (45652, 6, 1, 45343, 8, 'Leggings of the Wayward Vanquisher', 'Valorous Darkruned Legplates', '10'),
+    (45652, 6, 2, 45343, 8, 'Leggings of the Wayward Vanquisher', 'Valorous Darkruned Legplates', '10');
+
+-- T8 25-man (Conqueror's, ilvl 226). Same groups/class-tab mapping as the
+-- 10-man data above; result-item entries resolved the same way (95 distinct
+-- pieces, several with duplicate item_template entries disambiguated via
+-- npc_vendor/reference_loot_template presence) and cross-checked against a
+-- live item_template (class mask, InventoryType per slot, ItemLevel=226).
+
+-- Paladin T8 25-man (Conqueror's Aegis), Wayward Conqueror family. Holy
+-- (Regalia), Protection (Plate), Retribution (Battlegear) - all distinct.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (45632, 45638, 45641, 45653, 45656) AND `class_id` = 2;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (45638, 2, 0, 46180, 8, 'Crown of the Wayward Conqueror', 'Conqueror''s Aegis Headpiece', '25'),
+    (45638, 2, 1, 46175, 8, 'Crown of the Wayward Conqueror', 'Conqueror''s Aegis Faceguard', '25'),
+    (45638, 2, 2, 46156, 8, 'Crown of the Wayward Conqueror', 'Conqueror''s Aegis Helm', '25'),
+    (45656, 2, 0, 46182, 8, 'Mantle of the Wayward Conqueror', 'Conqueror''s Aegis Spaulders', '25'),
+    (45656, 2, 1, 46177, 8, 'Mantle of the Wayward Conqueror', 'Conqueror''s Aegis Shoulderguards', '25'),
+    (45656, 2, 2, 46152, 8, 'Mantle of the Wayward Conqueror', 'Conqueror''s Aegis Shoulderplates', '25'),
+    (45632, 2, 0, 46178, 8, 'Breastplate of the Wayward Conqueror', 'Conqueror''s Aegis Tunic', '25'),
+    (45632, 2, 1, 46173, 8, 'Breastplate of the Wayward Conqueror', 'Conqueror''s Aegis Breastplate', '25'),
+    (45632, 2, 2, 46154, 8, 'Breastplate of the Wayward Conqueror', 'Conqueror''s Aegis Battleplate', '25'),
+    (45641, 2, 0, 46179, 8, 'Gauntlets of the Wayward Conqueror', 'Conqueror''s Aegis Gloves', '25'),
+    (45641, 2, 1, 46174, 8, 'Gauntlets of the Wayward Conqueror', 'Conqueror''s Aegis Handguards', '25'),
+    (45641, 2, 2, 46155, 8, 'Gauntlets of the Wayward Conqueror', 'Conqueror''s Aegis Gauntlets', '25'),
+    (45653, 2, 0, 46181, 8, 'Legplates of the Wayward Conqueror', 'Conqueror''s Aegis Greaves', '25'),
+    (45653, 2, 1, 46176, 8, 'Legplates of the Wayward Conqueror', 'Conqueror''s Aegis Legguards', '25'),
+    (45653, 2, 2, 46153, 8, 'Legplates of the Wayward Conqueror', 'Conqueror''s Aegis Legplates', '25');
+
+-- Priest T8 25-man (Conqueror's Sanctification), Wayward Conqueror family.
+-- Discipline/Holy share one itemization, Shadow has its own.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (45632, 45638, 45641, 45653, 45656) AND `class_id` = 5;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (45638, 5, 0, 46197, 8, 'Crown of the Wayward Conqueror', 'Conqueror''s Cowl of Sanctification', '25'),
+    (45638, 5, 1, 46197, 8, 'Crown of the Wayward Conqueror', 'Conqueror''s Cowl of Sanctification', '25'),
+    (45638, 5, 2, 46172, 8, 'Crown of the Wayward Conqueror', 'Conqueror''s Circlet of Sanctification', '25'),
+    (45656, 5, 0, 46190, 8, 'Mantle of the Wayward Conqueror', 'Conqueror''s Shoulderpads of Sanctification', '25'),
+    (45656, 5, 1, 46190, 8, 'Mantle of the Wayward Conqueror', 'Conqueror''s Shoulderpads of Sanctification', '25'),
+    (45656, 5, 2, 46165, 8, 'Mantle of the Wayward Conqueror', 'Conqueror''s Mantle of Sanctification', '25'),
+    (45632, 5, 0, 46193, 8, 'Breastplate of the Wayward Conqueror', 'Conqueror''s Robe of Sanctification', '25'),
+    (45632, 5, 1, 46193, 8, 'Breastplate of the Wayward Conqueror', 'Conqueror''s Robe of Sanctification', '25'),
+    (45632, 5, 2, 46168, 8, 'Breastplate of the Wayward Conqueror', 'Conqueror''s Raiments of Sanctification', '25'),
+    (45641, 5, 0, 46188, 8, 'Gauntlets of the Wayward Conqueror', 'Conqueror''s Gloves of Sanctification', '25'),
+    (45641, 5, 1, 46188, 8, 'Gauntlets of the Wayward Conqueror', 'Conqueror''s Gloves of Sanctification', '25'),
+    (45641, 5, 2, 46163, 8, 'Gauntlets of the Wayward Conqueror', 'Conqueror''s Handwraps of Sanctification', '25'),
+    (45653, 5, 0, 46195, 8, 'Legplates of the Wayward Conqueror', 'Conqueror''s Leggings of Sanctification', '25'),
+    (45653, 5, 1, 46195, 8, 'Legplates of the Wayward Conqueror', 'Conqueror''s Leggings of Sanctification', '25'),
+    (45653, 5, 2, 46170, 8, 'Legplates of the Wayward Conqueror', 'Conqueror''s Pants of Sanctification', '25');
+
+-- Warlock T8 25-man (Conqueror's Deathbringer), Wayward Conqueror family.
+-- All 3 specs are caster DPS - one itemization applies regardless of spec.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (45632, 45638, 45641, 45653, 45656) AND `class_id` = 9;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (45638, 9, 0, 46140, 8, 'Crown of the Wayward Conqueror', 'Conqueror''s Deathbringer Hood', '25'),
+    (45638, 9, 1, 46140, 8, 'Crown of the Wayward Conqueror', 'Conqueror''s Deathbringer Hood', '25'),
+    (45638, 9, 2, 46140, 8, 'Crown of the Wayward Conqueror', 'Conqueror''s Deathbringer Hood', '25'),
+    (45656, 9, 0, 46136, 8, 'Mantle of the Wayward Conqueror', 'Conqueror''s Deathbringer Shoulderpads', '25'),
+    (45656, 9, 1, 46136, 8, 'Mantle of the Wayward Conqueror', 'Conqueror''s Deathbringer Shoulderpads', '25'),
+    (45656, 9, 2, 46136, 8, 'Mantle of the Wayward Conqueror', 'Conqueror''s Deathbringer Shoulderpads', '25'),
+    (45632, 9, 0, 46137, 8, 'Breastplate of the Wayward Conqueror', 'Conqueror''s Deathbringer Robe', '25'),
+    (45632, 9, 1, 46137, 8, 'Breastplate of the Wayward Conqueror', 'Conqueror''s Deathbringer Robe', '25'),
+    (45632, 9, 2, 46137, 8, 'Breastplate of the Wayward Conqueror', 'Conqueror''s Deathbringer Robe', '25'),
+    (45641, 9, 0, 46135, 8, 'Gauntlets of the Wayward Conqueror', 'Conqueror''s Deathbringer Gloves', '25'),
+    (45641, 9, 1, 46135, 8, 'Gauntlets of the Wayward Conqueror', 'Conqueror''s Deathbringer Gloves', '25'),
+    (45641, 9, 2, 46135, 8, 'Gauntlets of the Wayward Conqueror', 'Conqueror''s Deathbringer Gloves', '25'),
+    (45653, 9, 0, 46139, 8, 'Legplates of the Wayward Conqueror', 'Conqueror''s Deathbringer Leggings', '25'),
+    (45653, 9, 1, 46139, 8, 'Legplates of the Wayward Conqueror', 'Conqueror''s Deathbringer Leggings', '25'),
+    (45653, 9, 2, 46139, 8, 'Legplates of the Wayward Conqueror', 'Conqueror''s Deathbringer Leggings', '25');
+
+-- Warrior T8 25-man (Conqueror's Siegebreaker), Wayward Protector family.
+-- Arms/Fury share one itemization (Battlegear), Protection has its own (Plate).
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (45633, 45639, 45642, 45654, 45657) AND `class_id` = 1;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (45639, 1, 0, 46151, 8, 'Crown of the Wayward Protector', 'Conqueror''s Siegebreaker Helmet', '25'),
+    (45639, 1, 1, 46151, 8, 'Crown of the Wayward Protector', 'Conqueror''s Siegebreaker Helmet', '25'),
+    (45639, 1, 2, 46166, 8, 'Crown of the Wayward Protector', 'Conqueror''s Siegebreaker Greathelm', '25'),
+    (45657, 1, 0, 46149, 8, 'Mantle of the Wayward Protector', 'Conqueror''s Siegebreaker Shoulderplates', '25'),
+    (45657, 1, 1, 46149, 8, 'Mantle of the Wayward Protector', 'Conqueror''s Siegebreaker Shoulderplates', '25'),
+    (45657, 1, 2, 46167, 8, 'Mantle of the Wayward Protector', 'Conqueror''s Siegebreaker Pauldrons', '25'),
+    (45633, 1, 0, 46146, 8, 'Breastplate of the Wayward Protector', 'Conqueror''s Siegebreaker Battleplate', '25'),
+    (45633, 1, 1, 46146, 8, 'Breastplate of the Wayward Protector', 'Conqueror''s Siegebreaker Battleplate', '25'),
+    (45633, 1, 2, 46162, 8, 'Breastplate of the Wayward Protector', 'Conqueror''s Siegebreaker Breastplate', '25'),
+    (45642, 1, 0, 46148, 8, 'Gauntlets of the Wayward Protector', 'Conqueror''s Siegebreaker Gauntlets', '25'),
+    (45642, 1, 1, 46148, 8, 'Gauntlets of the Wayward Protector', 'Conqueror''s Siegebreaker Gauntlets', '25'),
+    (45642, 1, 2, 46164, 8, 'Gauntlets of the Wayward Protector', 'Conqueror''s Siegebreaker Handguards', '25'),
+    (45654, 1, 0, 46150, 8, 'Legplates of the Wayward Protector', 'Conqueror''s Siegebreaker Legplates', '25'),
+    (45654, 1, 1, 46150, 8, 'Legplates of the Wayward Protector', 'Conqueror''s Siegebreaker Legplates', '25'),
+    (45654, 1, 2, 46169, 8, 'Legplates of the Wayward Protector', 'Conqueror''s Siegebreaker Legguards', '25');
+
+-- Hunter T8 25-man (Conqueror's Scourgestalker), Wayward Protector family.
+-- All 3 specs are ranged DPS - one itemization applies regardless of spec.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (45633, 45639, 45642, 45654, 45657) AND `class_id` = 3;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (45639, 3, 0, 46143, 8, 'Crown of the Wayward Protector', 'Conqueror''s Scourgestalker Headpiece', '25'),
+    (45639, 3, 1, 46143, 8, 'Crown of the Wayward Protector', 'Conqueror''s Scourgestalker Headpiece', '25'),
+    (45639, 3, 2, 46143, 8, 'Crown of the Wayward Protector', 'Conqueror''s Scourgestalker Headpiece', '25'),
+    (45657, 3, 0, 46145, 8, 'Mantle of the Wayward Protector', 'Conqueror''s Scourgestalker Spaulders', '25'),
+    (45657, 3, 1, 46145, 8, 'Mantle of the Wayward Protector', 'Conqueror''s Scourgestalker Spaulders', '25'),
+    (45657, 3, 2, 46145, 8, 'Mantle of the Wayward Protector', 'Conqueror''s Scourgestalker Spaulders', '25'),
+    (45633, 3, 0, 46141, 8, 'Breastplate of the Wayward Protector', 'Conqueror''s Scourgestalker Tunic', '25'),
+    (45633, 3, 1, 46141, 8, 'Breastplate of the Wayward Protector', 'Conqueror''s Scourgestalker Tunic', '25'),
+    (45633, 3, 2, 46141, 8, 'Breastplate of the Wayward Protector', 'Conqueror''s Scourgestalker Tunic', '25'),
+    (45642, 3, 0, 46142, 8, 'Gauntlets of the Wayward Protector', 'Conqueror''s Scourgestalker Handguards', '25'),
+    (45642, 3, 1, 46142, 8, 'Gauntlets of the Wayward Protector', 'Conqueror''s Scourgestalker Handguards', '25'),
+    (45642, 3, 2, 46142, 8, 'Gauntlets of the Wayward Protector', 'Conqueror''s Scourgestalker Handguards', '25'),
+    (45654, 3, 0, 46144, 8, 'Legplates of the Wayward Protector', 'Conqueror''s Scourgestalker Legguards', '25'),
+    (45654, 3, 1, 46144, 8, 'Legplates of the Wayward Protector', 'Conqueror''s Scourgestalker Legguards', '25'),
+    (45654, 3, 2, 46144, 8, 'Legplates of the Wayward Protector', 'Conqueror''s Scourgestalker Legguards', '25');
+
+-- Shaman T8 25-man (Conqueror's Worldbreaker), Wayward Protector family.
+-- Elemental (Garb), Enhancement (Battlegear), Restoration (Regalia) - all distinct.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (45633, 45639, 45642, 45654, 45657) AND `class_id` = 7;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (45639, 7, 0, 46209, 8, 'Crown of the Wayward Protector', 'Conqueror''s Worldbreaker Helm', '25'),
+    (45639, 7, 1, 46212, 8, 'Crown of the Wayward Protector', 'Conqueror''s Worldbreaker Faceguard', '25'),
+    (45639, 7, 2, 46201, 8, 'Crown of the Wayward Protector', 'Conqueror''s Worldbreaker Headpiece', '25'),
+    (45657, 7, 0, 46211, 8, 'Mantle of the Wayward Protector', 'Conqueror''s Worldbreaker Shoulderpads', '25'),
+    (45657, 7, 1, 46203, 8, 'Mantle of the Wayward Protector', 'Conqueror''s Worldbreaker Shoulderguards', '25'),
+    (45657, 7, 2, 46204, 8, 'Mantle of the Wayward Protector', 'Conqueror''s Worldbreaker Spaulders', '25'),
+    (45633, 7, 0, 46206, 8, 'Breastplate of the Wayward Protector', 'Conqueror''s Worldbreaker Hauberk', '25'),
+    (45633, 7, 1, 46205, 8, 'Breastplate of the Wayward Protector', 'Conqueror''s Worldbreaker Chestguard', '25'),
+    (45633, 7, 2, 46198, 8, 'Breastplate of the Wayward Protector', 'Conqueror''s Worldbreaker Tunic', '25'),
+    (45642, 7, 0, 46207, 8, 'Gauntlets of the Wayward Protector', 'Conqueror''s Worldbreaker Gloves', '25'),
+    (45642, 7, 1, 46200, 8, 'Gauntlets of the Wayward Protector', 'Conqueror''s Worldbreaker Grips', '25'),
+    (45642, 7, 2, 46199, 8, 'Gauntlets of the Wayward Protector', 'Conqueror''s Worldbreaker Handguards', '25'),
+    (45654, 7, 0, 46210, 8, 'Legplates of the Wayward Protector', 'Conqueror''s Worldbreaker Kilt', '25'),
+    (45654, 7, 1, 46208, 8, 'Legplates of the Wayward Protector', 'Conqueror''s Worldbreaker War-Kilt', '25'),
+    (45654, 7, 2, 46202, 8, 'Legplates of the Wayward Protector', 'Conqueror''s Worldbreaker Legguards', '25');
+
+-- Rogue T8 25-man (Conqueror's Terrorblade), Wayward Vanquisher family. All
+-- 3 specs are melee DPS - one itemization applies regardless of spec.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (45634, 45640, 45643, 45655, 45658) AND `class_id` = 4;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (45640, 4, 0, 46125, 8, 'Crown of the Wayward Vanquisher', 'Conqueror''s Terrorblade Helmet', '25'),
+    (45640, 4, 1, 46125, 8, 'Crown of the Wayward Vanquisher', 'Conqueror''s Terrorblade Helmet', '25'),
+    (45640, 4, 2, 46125, 8, 'Crown of the Wayward Vanquisher', 'Conqueror''s Terrorblade Helmet', '25'),
+    (45658, 4, 0, 46127, 8, 'Mantle of the Wayward Vanquisher', 'Conqueror''s Terrorblade Pauldrons', '25'),
+    (45658, 4, 1, 46127, 8, 'Mantle of the Wayward Vanquisher', 'Conqueror''s Terrorblade Pauldrons', '25'),
+    (45658, 4, 2, 46127, 8, 'Mantle of the Wayward Vanquisher', 'Conqueror''s Terrorblade Pauldrons', '25'),
+    (45634, 4, 0, 46123, 8, 'Breastplate of the Wayward Vanquisher', 'Conqueror''s Terrorblade Breastplate', '25'),
+    (45634, 4, 1, 46123, 8, 'Breastplate of the Wayward Vanquisher', 'Conqueror''s Terrorblade Breastplate', '25'),
+    (45634, 4, 2, 46123, 8, 'Breastplate of the Wayward Vanquisher', 'Conqueror''s Terrorblade Breastplate', '25'),
+    (45643, 4, 0, 46124, 8, 'Gauntlets of the Wayward Vanquisher', 'Conqueror''s Terrorblade Gauntlets', '25'),
+    (45643, 4, 1, 46124, 8, 'Gauntlets of the Wayward Vanquisher', 'Conqueror''s Terrorblade Gauntlets', '25'),
+    (45643, 4, 2, 46124, 8, 'Gauntlets of the Wayward Vanquisher', 'Conqueror''s Terrorblade Gauntlets', '25'),
+    (45655, 4, 0, 46126, 8, 'Legplates of the Wayward Vanquisher', 'Conqueror''s Terrorblade Legplates', '25'),
+    (45655, 4, 1, 46126, 8, 'Legplates of the Wayward Vanquisher', 'Conqueror''s Terrorblade Legplates', '25'),
+    (45655, 4, 2, 46126, 8, 'Legplates of the Wayward Vanquisher', 'Conqueror''s Terrorblade Legplates', '25');
+
+-- Mage T8 25-man (Conqueror's Kirin Tor), Wayward Vanquisher family. All 3
+-- specs are caster DPS - one itemization applies regardless of spec.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (45634, 45640, 45643, 45655, 45658) AND `class_id` = 8;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (45640, 8, 0, 46129, 8, 'Crown of the Wayward Vanquisher', 'Conqueror''s Kirin Tor Hood', '25'),
+    (45640, 8, 1, 46129, 8, 'Crown of the Wayward Vanquisher', 'Conqueror''s Kirin Tor Hood', '25'),
+    (45640, 8, 2, 46129, 8, 'Crown of the Wayward Vanquisher', 'Conqueror''s Kirin Tor Hood', '25'),
+    (45658, 8, 0, 46134, 8, 'Mantle of the Wayward Vanquisher', 'Conqueror''s Kirin Tor Shoulderpads', '25'),
+    (45658, 8, 1, 46134, 8, 'Mantle of the Wayward Vanquisher', 'Conqueror''s Kirin Tor Shoulderpads', '25'),
+    (45658, 8, 2, 46134, 8, 'Mantle of the Wayward Vanquisher', 'Conqueror''s Kirin Tor Shoulderpads', '25'),
+    (45634, 8, 0, 46130, 8, 'Breastplate of the Wayward Vanquisher', 'Conqueror''s Kirin Tor Tunic', '25'),
+    (45634, 8, 1, 46130, 8, 'Breastplate of the Wayward Vanquisher', 'Conqueror''s Kirin Tor Tunic', '25'),
+    (45634, 8, 2, 46130, 8, 'Breastplate of the Wayward Vanquisher', 'Conqueror''s Kirin Tor Tunic', '25'),
+    (45643, 8, 0, 46132, 8, 'Gauntlets of the Wayward Vanquisher', 'Conqueror''s Kirin Tor Gauntlets', '25'),
+    (45643, 8, 1, 46132, 8, 'Gauntlets of the Wayward Vanquisher', 'Conqueror''s Kirin Tor Gauntlets', '25'),
+    (45643, 8, 2, 46132, 8, 'Gauntlets of the Wayward Vanquisher', 'Conqueror''s Kirin Tor Gauntlets', '25'),
+    (45655, 8, 0, 46133, 8, 'Legplates of the Wayward Vanquisher', 'Conqueror''s Kirin Tor Leggings', '25'),
+    (45655, 8, 1, 46133, 8, 'Legplates of the Wayward Vanquisher', 'Conqueror''s Kirin Tor Leggings', '25'),
+    (45655, 8, 2, 46133, 8, 'Legplates of the Wayward Vanquisher', 'Conqueror''s Kirin Tor Leggings', '25');
+
+-- Druid T8 25-man (Conqueror's Nightsong), Wayward Vanquisher family.
+-- Balance (Garb), Feral (Battlegear), Restoration (Regalia) - all distinct.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (45634, 45640, 45643, 45655, 45658) AND `class_id` = 11;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (45640, 11, 0, 46191, 8, 'Crown of the Wayward Vanquisher', 'Conqueror''s Nightsong Cover', '25'),
+    (45640, 11, 1, 46161, 8, 'Crown of the Wayward Vanquisher', 'Conqueror''s Nightsong Headguard', '25'),
+    (45640, 11, 2, 46184, 8, 'Crown of the Wayward Vanquisher', 'Conqueror''s Nightsong Headpiece', '25'),
+    (45658, 11, 0, 46196, 8, 'Mantle of the Wayward Vanquisher', 'Conqueror''s Nightsong Mantle', '25'),
+    (45658, 11, 1, 46157, 8, 'Mantle of the Wayward Vanquisher', 'Conqueror''s Nightsong Shoulderpads', '25'),
+    (45658, 11, 2, 46187, 8, 'Mantle of the Wayward Vanquisher', 'Conqueror''s Nightsong Spaulders', '25'),
+    (45634, 11, 0, 46194, 8, 'Breastplate of the Wayward Vanquisher', 'Conqueror''s Nightsong Vestments', '25'),
+    (45634, 11, 1, 46159, 8, 'Breastplate of the Wayward Vanquisher', 'Conqueror''s Nightsong Raiments', '25'),
+    (45634, 11, 2, 46186, 8, 'Breastplate of the Wayward Vanquisher', 'Conqueror''s Nightsong Robe', '25'),
+    (45643, 11, 0, 46189, 8, 'Gauntlets of the Wayward Vanquisher', 'Conqueror''s Nightsong Gloves', '25'),
+    (45643, 11, 1, 46158, 8, 'Gauntlets of the Wayward Vanquisher', 'Conqueror''s Nightsong Handgrips', '25'),
+    (45643, 11, 2, 46183, 8, 'Gauntlets of the Wayward Vanquisher', 'Conqueror''s Nightsong Handguards', '25'),
+    (45655, 11, 0, 46192, 8, 'Legplates of the Wayward Vanquisher', 'Conqueror''s Nightsong Trousers', '25'),
+    (45655, 11, 1, 46160, 8, 'Legplates of the Wayward Vanquisher', 'Conqueror''s Nightsong Legguards', '25'),
+    (45655, 11, 2, 46185, 8, 'Legplates of the Wayward Vanquisher', 'Conqueror''s Nightsong Leggings', '25');
+
+-- Death Knight T8 25-man (Conqueror's Darkruned), Wayward Vanquisher family.
+-- Blood (Plate, tank) has its own itemization; Frost/Unholy (Battlegear,
+-- DPS) share the other.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (45634, 45640, 45643, 45655, 45658) AND `class_id` = 6;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (45640, 6, 0, 46120, 8, 'Crown of the Wayward Vanquisher', 'Conqueror''s Darkruned Faceguard', '25'),
+    (45640, 6, 1, 46115, 8, 'Crown of the Wayward Vanquisher', 'Conqueror''s Darkruned Helmet', '25'),
+    (45640, 6, 2, 46115, 8, 'Crown of the Wayward Vanquisher', 'Conqueror''s Darkruned Helmet', '25'),
+    (45658, 6, 0, 46122, 8, 'Mantle of the Wayward Vanquisher', 'Conqueror''s Darkruned Pauldrons', '25'),
+    (45658, 6, 1, 46117, 8, 'Mantle of the Wayward Vanquisher', 'Conqueror''s Darkruned Shoulderplates', '25'),
+    (45658, 6, 2, 46117, 8, 'Mantle of the Wayward Vanquisher', 'Conqueror''s Darkruned Shoulderplates', '25'),
+    (45634, 6, 0, 46118, 8, 'Breastplate of the Wayward Vanquisher', 'Conqueror''s Darkruned Chestguard', '25'),
+    (45634, 6, 1, 46111, 8, 'Breastplate of the Wayward Vanquisher', 'Conqueror''s Darkruned Battleplate', '25'),
+    (45634, 6, 2, 46111, 8, 'Breastplate of the Wayward Vanquisher', 'Conqueror''s Darkruned Battleplate', '25'),
+    (45643, 6, 0, 46119, 8, 'Gauntlets of the Wayward Vanquisher', 'Conqueror''s Darkruned Handguards', '25'),
+    (45643, 6, 1, 46113, 8, 'Gauntlets of the Wayward Vanquisher', 'Conqueror''s Darkruned Gauntlets', '25'),
+    (45643, 6, 2, 46113, 8, 'Gauntlets of the Wayward Vanquisher', 'Conqueror''s Darkruned Gauntlets', '25'),
+    (45655, 6, 0, 46121, 8, 'Legplates of the Wayward Vanquisher', 'Conqueror''s Darkruned Legguards', '25'),
+    (45655, 6, 1, 46116, 8, 'Legplates of the Wayward Vanquisher', 'Conqueror''s Darkruned Legplates', '25'),
+    (45655, 6, 2, 46116, 8, 'Legplates of the Wayward Vanquisher', 'Conqueror''s Darkruned Legplates', '25');
