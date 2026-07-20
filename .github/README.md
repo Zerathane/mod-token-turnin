@@ -4,8 +4,6 @@
 
 **An AzerothCore module for [mod-playerbots](https://github.com/liyunfan1223/mod-playerbots) that turns tier tokens into gear — no vendor trip, no alt login, no manual per-bot busywork.**
 
-[English](README.md)
-
 ## Overview
 
 Playerbots loot tier tokens just like real players, but unlike real players they can't walk themselves to a vendor and turn them in. Left alone, those tokens just sit in bag slots until someone logs into that specific character and does it manually — impractical when you're managing a full raid of bots.
@@ -97,7 +95,7 @@ Tier token data is added incrementally, tier by tier, and verified in-game befor
 |---|---|---|---|
 | ZG, AQ20 | Zul'Gurub, The Ruins of Ahn'Qiraj | 20 man | 🔜 Planned |
 | T2.5 | The Temple of Ahn'Qiraj | 40 man | 🔜 Planned |
-| T3 | Naxxramas | 40 man | 🔜 Planned |
+| T3 | Naxxramas | 40 man | ✅ Implemented |
 | T4 | Karazhan / Gruul's Lair / Magtheridon's Lair | 10 man & 25 man | ✅ Implemented |
 | T5 | Serpentshrine Cavern / The Eye | 25 man | ✅ Implemented |
 | T6 | Black Temple / Hyjal Summit / Sunwell Plateau | 25 man | ✅ Implemented |
