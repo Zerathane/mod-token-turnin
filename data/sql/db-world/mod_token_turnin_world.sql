@@ -1713,3 +1713,302 @@ VALUES
     (45655, 6, 0, 46121, 8, 'Legplates of the Wayward Vanquisher', 'Conqueror''s Darkruned Legguards', '25'),
     (45655, 6, 1, 46116, 8, 'Legplates of the Wayward Vanquisher', 'Conqueror''s Darkruned Legplates', '25'),
     (45655, 6, 2, 46116, 8, 'Legplates of the Wayward Vanquisher', 'Conqueror''s Darkruned Legplates', '25');
+
+-- T3 (Naxxramas, vanilla-era tier set). Structurally different from T4+:
+-- only 8 slots (Helm/Shoulder/Chest/Hands/Wrist/Waist/Legs/Feet - no ring,
+-- rings drop directly from Kel'Thuzad and aren't part of this module's
+-- scope), and each class has exactly one itemization (no talent-tab
+-- branching - all 3 tabs resolve to the same piece).
+--
+-- Class groupings are new and were NOT assumed from T4-T8's Conqueror/
+-- Protector/Vanquisher convention - they're read directly off the real
+-- `Desecrated <slot>` tokens' AllowableClass in item_template: mask 9
+-- (Warrior+Rogue), mask 400 (Priest+Mage+Warlock), mask 1094
+-- (Paladin+Hunter+Shaman+Druid). A 2/3/4 split, not 3/3/3.
+--
+-- Real Vanilla acquisition is a quest turn-in (to a class-specific NPC)
+-- that also consumes crafting materials (Wartorn Scraps, profession mats,
+-- gold) alongside the token. Decided out of scope for this module -
+-- redeem just needs the token, materials/quest waived entirely. Same
+-- reasoning as every other tier: the module's value is cutting bag-
+-- management overhead for a full bot roster, not replicating the exact
+-- acquisition mechanic.
+
+-- Warrior T3 (Dreadnaught), Warrior+Rogue family. Single itemization -
+-- no talent-tab branching, all 3 tabs share the same piece per slot.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (22349, 22352, 22353, 22354, 22355, 22356, 22357, 22358) AND `class_id` = 1;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (22353, 1, 0, 22418, 3, 'Desecrated Helmet', 'Dreadnaught Helmet', 'normal'),
+    (22353, 1, 1, 22418, 3, 'Desecrated Helmet', 'Dreadnaught Helmet', 'normal'),
+    (22353, 1, 2, 22418, 3, 'Desecrated Helmet', 'Dreadnaught Helmet', 'normal'),
+    (22354, 1, 0, 22419, 3, 'Desecrated Pauldrons', 'Dreadnaught Pauldrons', 'normal'),
+    (22354, 1, 1, 22419, 3, 'Desecrated Pauldrons', 'Dreadnaught Pauldrons', 'normal'),
+    (22354, 1, 2, 22419, 3, 'Desecrated Pauldrons', 'Dreadnaught Pauldrons', 'normal'),
+    (22349, 1, 0, 22416, 3, 'Desecrated Breastplate', 'Dreadnaught Breastplate', 'normal'),
+    (22349, 1, 1, 22416, 3, 'Desecrated Breastplate', 'Dreadnaught Breastplate', 'normal'),
+    (22349, 1, 2, 22416, 3, 'Desecrated Breastplate', 'Dreadnaught Breastplate', 'normal'),
+    (22357, 1, 0, 22421, 3, 'Desecrated Gauntlets', 'Dreadnaught Gauntlets', 'normal'),
+    (22357, 1, 1, 22421, 3, 'Desecrated Gauntlets', 'Dreadnaught Gauntlets', 'normal'),
+    (22357, 1, 2, 22421, 3, 'Desecrated Gauntlets', 'Dreadnaught Gauntlets', 'normal'),
+    (22355, 1, 0, 22423, 3, 'Desecrated Bracers', 'Dreadnaught Bracers', 'normal'),
+    (22355, 1, 1, 22423, 3, 'Desecrated Bracers', 'Dreadnaught Bracers', 'normal'),
+    (22355, 1, 2, 22423, 3, 'Desecrated Bracers', 'Dreadnaught Bracers', 'normal'),
+    (22356, 1, 0, 22422, 3, 'Desecrated Waistguard', 'Dreadnaught Waistguard', 'normal'),
+    (22356, 1, 1, 22422, 3, 'Desecrated Waistguard', 'Dreadnaught Waistguard', 'normal'),
+    (22356, 1, 2, 22422, 3, 'Desecrated Waistguard', 'Dreadnaught Waistguard', 'normal'),
+    (22352, 1, 0, 22417, 3, 'Desecrated Legplates', 'Dreadnaught Legplates', 'normal'),
+    (22352, 1, 1, 22417, 3, 'Desecrated Legplates', 'Dreadnaught Legplates', 'normal'),
+    (22352, 1, 2, 22417, 3, 'Desecrated Legplates', 'Dreadnaught Legplates', 'normal'),
+    (22358, 1, 0, 22420, 3, 'Desecrated Sabatons', 'Dreadnaught Sabatons', 'normal'),
+    (22358, 1, 1, 22420, 3, 'Desecrated Sabatons', 'Dreadnaught Sabatons', 'normal'),
+    (22358, 1, 2, 22420, 3, 'Desecrated Sabatons', 'Dreadnaught Sabatons', 'normal');
+
+-- Rogue T3 (Bonescythe), Warrior+Rogue family. Single itemization -
+-- no talent-tab branching, all 3 tabs share the same piece per slot.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (22349, 22352, 22353, 22354, 22355, 22356, 22357, 22358) AND `class_id` = 4;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (22353, 4, 0, 22478, 3, 'Desecrated Helmet', 'Bonescythe Helmet', 'normal'),
+    (22353, 4, 1, 22478, 3, 'Desecrated Helmet', 'Bonescythe Helmet', 'normal'),
+    (22353, 4, 2, 22478, 3, 'Desecrated Helmet', 'Bonescythe Helmet', 'normal'),
+    (22354, 4, 0, 22479, 3, 'Desecrated Pauldrons', 'Bonescythe Pauldrons', 'normal'),
+    (22354, 4, 1, 22479, 3, 'Desecrated Pauldrons', 'Bonescythe Pauldrons', 'normal'),
+    (22354, 4, 2, 22479, 3, 'Desecrated Pauldrons', 'Bonescythe Pauldrons', 'normal'),
+    (22349, 4, 0, 22476, 3, 'Desecrated Breastplate', 'Bonescythe Breastplate', 'normal'),
+    (22349, 4, 1, 22476, 3, 'Desecrated Breastplate', 'Bonescythe Breastplate', 'normal'),
+    (22349, 4, 2, 22476, 3, 'Desecrated Breastplate', 'Bonescythe Breastplate', 'normal'),
+    (22357, 4, 0, 22481, 3, 'Desecrated Gauntlets', 'Bonescythe Gauntlets', 'normal'),
+    (22357, 4, 1, 22481, 3, 'Desecrated Gauntlets', 'Bonescythe Gauntlets', 'normal'),
+    (22357, 4, 2, 22481, 3, 'Desecrated Gauntlets', 'Bonescythe Gauntlets', 'normal'),
+    (22355, 4, 0, 22483, 3, 'Desecrated Bracers', 'Bonescythe Bracers', 'normal'),
+    (22355, 4, 1, 22483, 3, 'Desecrated Bracers', 'Bonescythe Bracers', 'normal'),
+    (22355, 4, 2, 22483, 3, 'Desecrated Bracers', 'Bonescythe Bracers', 'normal'),
+    (22356, 4, 0, 22482, 3, 'Desecrated Waistguard', 'Bonescythe Waistguard', 'normal'),
+    (22356, 4, 1, 22482, 3, 'Desecrated Waistguard', 'Bonescythe Waistguard', 'normal'),
+    (22356, 4, 2, 22482, 3, 'Desecrated Waistguard', 'Bonescythe Waistguard', 'normal'),
+    (22352, 4, 0, 22477, 3, 'Desecrated Legplates', 'Bonescythe Legplates', 'normal'),
+    (22352, 4, 1, 22477, 3, 'Desecrated Legplates', 'Bonescythe Legplates', 'normal'),
+    (22352, 4, 2, 22477, 3, 'Desecrated Legplates', 'Bonescythe Legplates', 'normal'),
+    (22358, 4, 0, 22480, 3, 'Desecrated Sabatons', 'Bonescythe Sabatons', 'normal'),
+    (22358, 4, 1, 22480, 3, 'Desecrated Sabatons', 'Bonescythe Sabatons', 'normal'),
+    (22358, 4, 2, 22480, 3, 'Desecrated Sabatons', 'Bonescythe Sabatons', 'normal');
+
+-- Priest T3 (Faith), Priest+Mage+Warlock family. Single itemization -
+-- no talent-tab branching, all 3 tabs share the same piece per slot.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (22351, 22366, 22367, 22368, 22369, 22370, 22371, 22372) AND `class_id` = 5;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (22367, 5, 0, 22514, 3, 'Desecrated Circlet', 'Circlet of Faith', 'normal'),
+    (22367, 5, 1, 22514, 3, 'Desecrated Circlet', 'Circlet of Faith', 'normal'),
+    (22367, 5, 2, 22514, 3, 'Desecrated Circlet', 'Circlet of Faith', 'normal'),
+    (22368, 5, 0, 22515, 3, 'Desecrated Shoulderpads', 'Shoulderpads of Faith', 'normal'),
+    (22368, 5, 1, 22515, 3, 'Desecrated Shoulderpads', 'Shoulderpads of Faith', 'normal'),
+    (22368, 5, 2, 22515, 3, 'Desecrated Shoulderpads', 'Shoulderpads of Faith', 'normal'),
+    (22351, 5, 0, 22512, 3, 'Desecrated Robe', 'Robe of Faith', 'normal'),
+    (22351, 5, 1, 22512, 3, 'Desecrated Robe', 'Robe of Faith', 'normal'),
+    (22351, 5, 2, 22512, 3, 'Desecrated Robe', 'Robe of Faith', 'normal'),
+    (22371, 5, 0, 22517, 3, 'Desecrated Gloves', 'Gloves of Faith', 'normal'),
+    (22371, 5, 1, 22517, 3, 'Desecrated Gloves', 'Gloves of Faith', 'normal'),
+    (22371, 5, 2, 22517, 3, 'Desecrated Gloves', 'Gloves of Faith', 'normal'),
+    (22369, 5, 0, 22519, 3, 'Desecrated Bindings', 'Bindings of Faith', 'normal'),
+    (22369, 5, 1, 22519, 3, 'Desecrated Bindings', 'Bindings of Faith', 'normal'),
+    (22369, 5, 2, 22519, 3, 'Desecrated Bindings', 'Bindings of Faith', 'normal'),
+    (22370, 5, 0, 22518, 3, 'Desecrated Belt', 'Belt of Faith', 'normal'),
+    (22370, 5, 1, 22518, 3, 'Desecrated Belt', 'Belt of Faith', 'normal'),
+    (22370, 5, 2, 22518, 3, 'Desecrated Belt', 'Belt of Faith', 'normal'),
+    (22366, 5, 0, 22513, 3, 'Desecrated Leggings', 'Leggings of Faith', 'normal'),
+    (22366, 5, 1, 22513, 3, 'Desecrated Leggings', 'Leggings of Faith', 'normal'),
+    (22366, 5, 2, 22513, 3, 'Desecrated Leggings', 'Leggings of Faith', 'normal'),
+    (22372, 5, 0, 22516, 3, 'Desecrated Sandals', 'Sandals of Faith', 'normal'),
+    (22372, 5, 1, 22516, 3, 'Desecrated Sandals', 'Sandals of Faith', 'normal'),
+    (22372, 5, 2, 22516, 3, 'Desecrated Sandals', 'Sandals of Faith', 'normal');
+
+-- Mage T3 (Frostfire), Priest+Mage+Warlock family. Single itemization -
+-- no talent-tab branching, all 3 tabs share the same piece per slot.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (22351, 22366, 22367, 22368, 22369, 22370, 22371, 22372) AND `class_id` = 8;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (22367, 8, 0, 22498, 3, 'Desecrated Circlet', 'Frostfire Circlet', 'normal'),
+    (22367, 8, 1, 22498, 3, 'Desecrated Circlet', 'Frostfire Circlet', 'normal'),
+    (22367, 8, 2, 22498, 3, 'Desecrated Circlet', 'Frostfire Circlet', 'normal'),
+    (22368, 8, 0, 22499, 3, 'Desecrated Shoulderpads', 'Frostfire Shoulderpads', 'normal'),
+    (22368, 8, 1, 22499, 3, 'Desecrated Shoulderpads', 'Frostfire Shoulderpads', 'normal'),
+    (22368, 8, 2, 22499, 3, 'Desecrated Shoulderpads', 'Frostfire Shoulderpads', 'normal'),
+    (22351, 8, 0, 22496, 3, 'Desecrated Robe', 'Frostfire Robe', 'normal'),
+    (22351, 8, 1, 22496, 3, 'Desecrated Robe', 'Frostfire Robe', 'normal'),
+    (22351, 8, 2, 22496, 3, 'Desecrated Robe', 'Frostfire Robe', 'normal'),
+    (22371, 8, 0, 22501, 3, 'Desecrated Gloves', 'Frostfire Gloves', 'normal'),
+    (22371, 8, 1, 22501, 3, 'Desecrated Gloves', 'Frostfire Gloves', 'normal'),
+    (22371, 8, 2, 22501, 3, 'Desecrated Gloves', 'Frostfire Gloves', 'normal'),
+    (22369, 8, 0, 22503, 3, 'Desecrated Bindings', 'Frostfire Bindings', 'normal'),
+    (22369, 8, 1, 22503, 3, 'Desecrated Bindings', 'Frostfire Bindings', 'normal'),
+    (22369, 8, 2, 22503, 3, 'Desecrated Bindings', 'Frostfire Bindings', 'normal'),
+    (22370, 8, 0, 22502, 3, 'Desecrated Belt', 'Frostfire Belt', 'normal'),
+    (22370, 8, 1, 22502, 3, 'Desecrated Belt', 'Frostfire Belt', 'normal'),
+    (22370, 8, 2, 22502, 3, 'Desecrated Belt', 'Frostfire Belt', 'normal'),
+    (22366, 8, 0, 22497, 3, 'Desecrated Leggings', 'Frostfire Leggings', 'normal'),
+    (22366, 8, 1, 22497, 3, 'Desecrated Leggings', 'Frostfire Leggings', 'normal'),
+    (22366, 8, 2, 22497, 3, 'Desecrated Leggings', 'Frostfire Leggings', 'normal'),
+    (22372, 8, 0, 22500, 3, 'Desecrated Sandals', 'Frostfire Sandals', 'normal'),
+    (22372, 8, 1, 22500, 3, 'Desecrated Sandals', 'Frostfire Sandals', 'normal'),
+    (22372, 8, 2, 22500, 3, 'Desecrated Sandals', 'Frostfire Sandals', 'normal');
+
+-- Warlock T3 (Plagueheart), Priest+Mage+Warlock family. Single itemization -
+-- no talent-tab branching, all 3 tabs share the same piece per slot.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (22351, 22366, 22367, 22368, 22369, 22370, 22371, 22372) AND `class_id` = 9;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (22367, 9, 0, 22506, 3, 'Desecrated Circlet', 'Plagueheart Circlet', 'normal'),
+    (22367, 9, 1, 22506, 3, 'Desecrated Circlet', 'Plagueheart Circlet', 'normal'),
+    (22367, 9, 2, 22506, 3, 'Desecrated Circlet', 'Plagueheart Circlet', 'normal'),
+    (22368, 9, 0, 22507, 3, 'Desecrated Shoulderpads', 'Plagueheart Shoulderpads', 'normal'),
+    (22368, 9, 1, 22507, 3, 'Desecrated Shoulderpads', 'Plagueheart Shoulderpads', 'normal'),
+    (22368, 9, 2, 22507, 3, 'Desecrated Shoulderpads', 'Plagueheart Shoulderpads', 'normal'),
+    (22351, 9, 0, 22504, 3, 'Desecrated Robe', 'Plagueheart Robe', 'normal'),
+    (22351, 9, 1, 22504, 3, 'Desecrated Robe', 'Plagueheart Robe', 'normal'),
+    (22351, 9, 2, 22504, 3, 'Desecrated Robe', 'Plagueheart Robe', 'normal'),
+    (22371, 9, 0, 22509, 3, 'Desecrated Gloves', 'Plagueheart Gloves', 'normal'),
+    (22371, 9, 1, 22509, 3, 'Desecrated Gloves', 'Plagueheart Gloves', 'normal'),
+    (22371, 9, 2, 22509, 3, 'Desecrated Gloves', 'Plagueheart Gloves', 'normal'),
+    (22369, 9, 0, 22511, 3, 'Desecrated Bindings', 'Plagueheart Bindings', 'normal'),
+    (22369, 9, 1, 22511, 3, 'Desecrated Bindings', 'Plagueheart Bindings', 'normal'),
+    (22369, 9, 2, 22511, 3, 'Desecrated Bindings', 'Plagueheart Bindings', 'normal'),
+    (22370, 9, 0, 22510, 3, 'Desecrated Belt', 'Plagueheart Belt', 'normal'),
+    (22370, 9, 1, 22510, 3, 'Desecrated Belt', 'Plagueheart Belt', 'normal'),
+    (22370, 9, 2, 22510, 3, 'Desecrated Belt', 'Plagueheart Belt', 'normal'),
+    (22366, 9, 0, 22505, 3, 'Desecrated Leggings', 'Plagueheart Leggings', 'normal'),
+    (22366, 9, 1, 22505, 3, 'Desecrated Leggings', 'Plagueheart Leggings', 'normal'),
+    (22366, 9, 2, 22505, 3, 'Desecrated Leggings', 'Plagueheart Leggings', 'normal'),
+    (22372, 9, 0, 22508, 3, 'Desecrated Sandals', 'Plagueheart Sandals', 'normal'),
+    (22372, 9, 1, 22508, 3, 'Desecrated Sandals', 'Plagueheart Sandals', 'normal'),
+    (22372, 9, 2, 22508, 3, 'Desecrated Sandals', 'Plagueheart Sandals', 'normal');
+
+-- Paladin T3 (Redemption), Paladin+Hunter+Shaman+Druid family. Single itemization -
+-- no talent-tab branching, all 3 tabs share the same piece per slot.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (22350, 22359, 22360, 22361, 22362, 22363, 22364, 22365) AND `class_id` = 2;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (22360, 2, 0, 22428, 3, 'Desecrated Headpiece', 'Redemption Headpiece', 'normal'),
+    (22360, 2, 1, 22428, 3, 'Desecrated Headpiece', 'Redemption Headpiece', 'normal'),
+    (22360, 2, 2, 22428, 3, 'Desecrated Headpiece', 'Redemption Headpiece', 'normal'),
+    (22361, 2, 0, 22429, 3, 'Desecrated Spaulders', 'Redemption Spaulders', 'normal'),
+    (22361, 2, 1, 22429, 3, 'Desecrated Spaulders', 'Redemption Spaulders', 'normal'),
+    (22361, 2, 2, 22429, 3, 'Desecrated Spaulders', 'Redemption Spaulders', 'normal'),
+    (22350, 2, 0, 22425, 3, 'Desecrated Tunic', 'Redemption Tunic', 'normal'),
+    (22350, 2, 1, 22425, 3, 'Desecrated Tunic', 'Redemption Tunic', 'normal'),
+    (22350, 2, 2, 22425, 3, 'Desecrated Tunic', 'Redemption Tunic', 'normal'),
+    (22364, 2, 0, 22426, 3, 'Desecrated Handguards', 'Redemption Handguards', 'normal'),
+    (22364, 2, 1, 22426, 3, 'Desecrated Handguards', 'Redemption Handguards', 'normal'),
+    (22364, 2, 2, 22426, 3, 'Desecrated Handguards', 'Redemption Handguards', 'normal'),
+    (22362, 2, 0, 22424, 3, 'Desecrated Wristguards', 'Redemption Wristguards', 'normal'),
+    (22362, 2, 1, 22424, 3, 'Desecrated Wristguards', 'Redemption Wristguards', 'normal'),
+    (22362, 2, 2, 22424, 3, 'Desecrated Wristguards', 'Redemption Wristguards', 'normal'),
+    (22363, 2, 0, 22431, 3, 'Desecrated Girdle', 'Redemption Girdle', 'normal'),
+    (22363, 2, 1, 22431, 3, 'Desecrated Girdle', 'Redemption Girdle', 'normal'),
+    (22363, 2, 2, 22431, 3, 'Desecrated Girdle', 'Redemption Girdle', 'normal'),
+    (22359, 2, 0, 22427, 3, 'Desecrated Legguards', 'Redemption Legguards', 'normal'),
+    (22359, 2, 1, 22427, 3, 'Desecrated Legguards', 'Redemption Legguards', 'normal'),
+    (22359, 2, 2, 22427, 3, 'Desecrated Legguards', 'Redemption Legguards', 'normal'),
+    (22365, 2, 0, 22430, 3, 'Desecrated Boots', 'Redemption Boots', 'normal'),
+    (22365, 2, 1, 22430, 3, 'Desecrated Boots', 'Redemption Boots', 'normal'),
+    (22365, 2, 2, 22430, 3, 'Desecrated Boots', 'Redemption Boots', 'normal');
+
+-- Hunter T3 (Cryptstalker), Paladin+Hunter+Shaman+Druid family. Single itemization -
+-- no talent-tab branching, all 3 tabs share the same piece per slot.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (22350, 22359, 22360, 22361, 22362, 22363, 22364, 22365) AND `class_id` = 3;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (22360, 3, 0, 22438, 3, 'Desecrated Headpiece', 'Cryptstalker Headpiece', 'normal'),
+    (22360, 3, 1, 22438, 3, 'Desecrated Headpiece', 'Cryptstalker Headpiece', 'normal'),
+    (22360, 3, 2, 22438, 3, 'Desecrated Headpiece', 'Cryptstalker Headpiece', 'normal'),
+    (22361, 3, 0, 22439, 3, 'Desecrated Spaulders', 'Cryptstalker Spaulders', 'normal'),
+    (22361, 3, 1, 22439, 3, 'Desecrated Spaulders', 'Cryptstalker Spaulders', 'normal'),
+    (22361, 3, 2, 22439, 3, 'Desecrated Spaulders', 'Cryptstalker Spaulders', 'normal'),
+    (22350, 3, 0, 22436, 3, 'Desecrated Tunic', 'Cryptstalker Tunic', 'normal'),
+    (22350, 3, 1, 22436, 3, 'Desecrated Tunic', 'Cryptstalker Tunic', 'normal'),
+    (22350, 3, 2, 22436, 3, 'Desecrated Tunic', 'Cryptstalker Tunic', 'normal'),
+    (22364, 3, 0, 22441, 3, 'Desecrated Handguards', 'Cryptstalker Handguards', 'normal'),
+    (22364, 3, 1, 22441, 3, 'Desecrated Handguards', 'Cryptstalker Handguards', 'normal'),
+    (22364, 3, 2, 22441, 3, 'Desecrated Handguards', 'Cryptstalker Handguards', 'normal'),
+    (22362, 3, 0, 22443, 3, 'Desecrated Wristguards', 'Cryptstalker Wristguards', 'normal'),
+    (22362, 3, 1, 22443, 3, 'Desecrated Wristguards', 'Cryptstalker Wristguards', 'normal'),
+    (22362, 3, 2, 22443, 3, 'Desecrated Wristguards', 'Cryptstalker Wristguards', 'normal'),
+    (22363, 3, 0, 22442, 3, 'Desecrated Girdle', 'Cryptstalker Girdle', 'normal'),
+    (22363, 3, 1, 22442, 3, 'Desecrated Girdle', 'Cryptstalker Girdle', 'normal'),
+    (22363, 3, 2, 22442, 3, 'Desecrated Girdle', 'Cryptstalker Girdle', 'normal'),
+    (22359, 3, 0, 22437, 3, 'Desecrated Legguards', 'Cryptstalker Legguards', 'normal'),
+    (22359, 3, 1, 22437, 3, 'Desecrated Legguards', 'Cryptstalker Legguards', 'normal'),
+    (22359, 3, 2, 22437, 3, 'Desecrated Legguards', 'Cryptstalker Legguards', 'normal'),
+    (22365, 3, 0, 22440, 3, 'Desecrated Boots', 'Cryptstalker Boots', 'normal'),
+    (22365, 3, 1, 22440, 3, 'Desecrated Boots', 'Cryptstalker Boots', 'normal'),
+    (22365, 3, 2, 22440, 3, 'Desecrated Boots', 'Cryptstalker Boots', 'normal');
+
+-- Shaman T3 (Earthshatterer), Paladin+Hunter+Shaman+Druid family. Single itemization -
+-- no talent-tab branching, all 3 tabs share the same piece per slot.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (22350, 22359, 22360, 22361, 22362, 22363, 22364, 22365) AND `class_id` = 7;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (22360, 7, 0, 22466, 3, 'Desecrated Headpiece', 'Earthshatter Headpiece', 'normal'),
+    (22360, 7, 1, 22466, 3, 'Desecrated Headpiece', 'Earthshatter Headpiece', 'normal'),
+    (22360, 7, 2, 22466, 3, 'Desecrated Headpiece', 'Earthshatter Headpiece', 'normal'),
+    (22361, 7, 0, 22467, 3, 'Desecrated Spaulders', 'Earthshatter Spaulders', 'normal'),
+    (22361, 7, 1, 22467, 3, 'Desecrated Spaulders', 'Earthshatter Spaulders', 'normal'),
+    (22361, 7, 2, 22467, 3, 'Desecrated Spaulders', 'Earthshatter Spaulders', 'normal'),
+    (22350, 7, 0, 22464, 3, 'Desecrated Tunic', 'Earthshatter Tunic', 'normal'),
+    (22350, 7, 1, 22464, 3, 'Desecrated Tunic', 'Earthshatter Tunic', 'normal'),
+    (22350, 7, 2, 22464, 3, 'Desecrated Tunic', 'Earthshatter Tunic', 'normal'),
+    (22364, 7, 0, 22469, 3, 'Desecrated Handguards', 'Earthshatter Handguards', 'normal'),
+    (22364, 7, 1, 22469, 3, 'Desecrated Handguards', 'Earthshatter Handguards', 'normal'),
+    (22364, 7, 2, 22469, 3, 'Desecrated Handguards', 'Earthshatter Handguards', 'normal'),
+    (22362, 7, 0, 22471, 3, 'Desecrated Wristguards', 'Earthshatter Wristguards', 'normal'),
+    (22362, 7, 1, 22471, 3, 'Desecrated Wristguards', 'Earthshatter Wristguards', 'normal'),
+    (22362, 7, 2, 22471, 3, 'Desecrated Wristguards', 'Earthshatter Wristguards', 'normal'),
+    (22363, 7, 0, 22470, 3, 'Desecrated Girdle', 'Earthshatter Girdle', 'normal'),
+    (22363, 7, 1, 22470, 3, 'Desecrated Girdle', 'Earthshatter Girdle', 'normal'),
+    (22363, 7, 2, 22470, 3, 'Desecrated Girdle', 'Earthshatter Girdle', 'normal'),
+    (22359, 7, 0, 22465, 3, 'Desecrated Legguards', 'Earthshatter Legguards', 'normal'),
+    (22359, 7, 1, 22465, 3, 'Desecrated Legguards', 'Earthshatter Legguards', 'normal'),
+    (22359, 7, 2, 22465, 3, 'Desecrated Legguards', 'Earthshatter Legguards', 'normal'),
+    (22365, 7, 0, 22468, 3, 'Desecrated Boots', 'Earthshatter Boots', 'normal'),
+    (22365, 7, 1, 22468, 3, 'Desecrated Boots', 'Earthshatter Boots', 'normal'),
+    (22365, 7, 2, 22468, 3, 'Desecrated Boots', 'Earthshatter Boots', 'normal');
+
+-- Druid T3 (Dreamwalker), Paladin+Hunter+Shaman+Druid family. Single itemization -
+-- no talent-tab branching, all 3 tabs share the same piece per slot.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (22350, 22359, 22360, 22361, 22362, 22363, 22364, 22365) AND `class_id` = 11;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (22360, 11, 0, 22490, 3, 'Desecrated Headpiece', 'Dreamwalker Headpiece', 'normal'),
+    (22360, 11, 1, 22490, 3, 'Desecrated Headpiece', 'Dreamwalker Headpiece', 'normal'),
+    (22360, 11, 2, 22490, 3, 'Desecrated Headpiece', 'Dreamwalker Headpiece', 'normal'),
+    (22361, 11, 0, 22491, 3, 'Desecrated Spaulders', 'Dreamwalker Spaulders', 'normal'),
+    (22361, 11, 1, 22491, 3, 'Desecrated Spaulders', 'Dreamwalker Spaulders', 'normal'),
+    (22361, 11, 2, 22491, 3, 'Desecrated Spaulders', 'Dreamwalker Spaulders', 'normal'),
+    (22350, 11, 0, 22488, 3, 'Desecrated Tunic', 'Dreamwalker Tunic', 'normal'),
+    (22350, 11, 1, 22488, 3, 'Desecrated Tunic', 'Dreamwalker Tunic', 'normal'),
+    (22350, 11, 2, 22488, 3, 'Desecrated Tunic', 'Dreamwalker Tunic', 'normal'),
+    (22364, 11, 0, 22493, 3, 'Desecrated Handguards', 'Dreamwalker Handguards', 'normal'),
+    (22364, 11, 1, 22493, 3, 'Desecrated Handguards', 'Dreamwalker Handguards', 'normal'),
+    (22364, 11, 2, 22493, 3, 'Desecrated Handguards', 'Dreamwalker Handguards', 'normal'),
+    (22362, 11, 0, 22495, 3, 'Desecrated Wristguards', 'Dreamwalker Wristguards', 'normal'),
+    (22362, 11, 1, 22495, 3, 'Desecrated Wristguards', 'Dreamwalker Wristguards', 'normal'),
+    (22362, 11, 2, 22495, 3, 'Desecrated Wristguards', 'Dreamwalker Wristguards', 'normal'),
+    (22363, 11, 0, 22494, 3, 'Desecrated Girdle', 'Dreamwalker Girdle', 'normal'),
+    (22363, 11, 1, 22494, 3, 'Desecrated Girdle', 'Dreamwalker Girdle', 'normal'),
+    (22363, 11, 2, 22494, 3, 'Desecrated Girdle', 'Dreamwalker Girdle', 'normal'),
+    (22359, 11, 0, 22489, 3, 'Desecrated Legguards', 'Dreamwalker Legguards', 'normal'),
+    (22359, 11, 1, 22489, 3, 'Desecrated Legguards', 'Dreamwalker Legguards', 'normal'),
+    (22359, 11, 2, 22489, 3, 'Desecrated Legguards', 'Dreamwalker Legguards', 'normal'),
+    (22365, 11, 0, 22492, 3, 'Desecrated Boots', 'Dreamwalker Boots', 'normal'),
+    (22365, 11, 1, 22492, 3, 'Desecrated Boots', 'Dreamwalker Boots', 'normal'),
+    (22365, 11, 2, 22492, 3, 'Desecrated Boots', 'Dreamwalker Boots', 'normal');
