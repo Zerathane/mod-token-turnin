@@ -95,10 +95,12 @@ Tier token data is added incrementally, tier by tier, and verified in-game befor
 
 | Tier | Raid(s) | Difficulty | Status |
 |---|---|---|---|
-| T3, Zul'Gurub, AQ20/AQ40 | — | — | 🔜 Planned |
-| T4 | Karazhan / Gruul's Lair / Magtheridon's Lair | Normal | ✅ Implemented |
-| T5 | Serpentshrine Cavern / The Eye | Normal | ✅ Implemented |
-| T6 | Black Temple / Hyjal Summit / Sunwell Plateau | Normal | ✅ Implemented |
+| ZG, AQ20 | Zul'Gurub, The Ruins of Ahn'Qiraj | 20 man | 🔜 Planned |
+| T2.5 | The Temple of Ahn'Qiraj | 40 man | 🔜 Planned |
+| T3 | Naxxramas | 40 man | 🔜 Planned |
+| T4 | Karazhan / Gruul's Lair / Magtheridon's Lair | 10 man & 25 man | ✅ Implemented |
+| T5 | Serpentshrine Cavern / The Eye | 25 man | ✅ Implemented |
+| T6 | Black Temple / Hyjal Summit / Sunwell Plateau | 25 man | ✅ Implemented |
 | T7 | Naxxramas / The Eye of Eternity / The Obsidian Sanctum | 10-man & 25-man | ✅ Implemented |
 | T8 | Ulduar | 10-man & 25-man | ✅ Implemented |
 | T9, T10 | Trial of the Crusader / Icecrown Citadel | — | ❌ Out of scope — see below |
