@@ -93,15 +93,18 @@ Tier token data is added incrementally, tier by tier, and verified in-game befor
 
 | Tier | Raid(s) | Difficulty | Status |
 |---|---|---|---|
-| ZG, AQ20 | Zul'Gurub, The Ruins of Ahn'Qiraj | 20 man | 🔜 Planned |
-| T2.5 | The Temple of Ahn'Qiraj | 40 man | 🔜 Planned |
+| ZG, AQ20 | Zul'Gurub, The Ruins of Ahn'Qiraj | 20-man | ✅ Implemented |
+| T2.5 | The Temple of Ahn'Qiraj | 40-man | ❌ — see below |
 | T3 | Naxxramas | 40 man | ✅ Implemented |
-| T4 | Karazhan / Gruul's Lair / Magtheridon's Lair | 10 man & 25 man | ✅ Implemented |
-| T5 | Serpentshrine Cavern / The Eye | 25 man | ✅ Implemented |
-| T6 | Black Temple / Hyjal Summit / Sunwell Plateau | 25 man | ✅ Implemented |
+| T4 | Karazhan / Gruul's Lair / Magtheridon's Lair | 10-man & 25-man | ✅ Implemented |
+| T5 | Serpentshrine Cavern / The Eye | 25-man | ✅ Implemented |
+| T6 | Black Temple / Hyjal Summit / Sunwell Plateau | 25-man | ✅ Implemented |
 | T7 | Naxxramas / The Eye of Eternity / The Obsidian Sanctum | 10-man & 25-man | ✅ Implemented |
 | T8 | Ulduar | 10-man & 25-man | ✅ Implemented |
-| T9, T10 | Trial of the Crusader / Icecrown Citadel | — | ❌ Out of scope — see below |
+| T9 | Trial of the Crusader | 10-man & 25-man | ❌ Out of scope — see below |
+| T10 | Icecrown Citadel | 10-man & 25-man | ❌ Out of scope — see below |
+
+**T2.5 has a unique token sharing issue.** The two AQ40 "Bindings" tokens aren't a direct token-for-item swap — Each Binding can be used to complete a quest rewarding either a shoulder or feet item. This ambiguity makes it difficult to map an item to a reward.
 
 **T9/T10 are intentionally out of scope.** In those tiers, base tier gear is purchased from a vendor with emblem currency rather than looted as a token, and the heroic upgrade item isn't slot-specific — it requires a player's choice of which piece to upgrade. Neither mechanic fits this module's "find token, destroy it, award its paired item" model without inventing behavior the player never asked for.
 

@@ -2012,3 +2012,329 @@ VALUES
     (22365, 11, 0, 22492, 3, 'Desecrated Boots', 'Dreamwalker Boots', 'normal'),
     (22365, 11, 1, 22492, 3, 'Desecrated Boots', 'Dreamwalker Boots', 'normal'),
     (22365, 11, 2, 22492, 3, 'Desecrated Boots', 'Dreamwalker Boots', 'normal');
+
+-- Zul'Gurub ("Tier 0.5"). Structurally unlike every other tier: 4 possible
+-- slots (Bracer/Belt/Chest/Shoulder), but each class only has 3 of the 4 -
+-- a different 3 per class, not a fixed set. The 9 "Primal Hakkari" tokens
+-- are shared 3-classes-at-a-time per their real AllowableClass mask, but
+-- which SLOT a given token resolves to depends on the redeeming class -
+-- e.g. Primal Hakkari Shawl is Belt for Paladin/Hunter but Shoulder for
+-- Mage, because Mage has no Belt piece in their personal 3-slot set at
+-- all. Still fits the schema cleanly: (token_entry, class_id) resolves to
+-- exactly one item, no ambiguity like T2.5 had. No talent-tab branching -
+-- all 3 tabs share the same item per class/token, same as T3. Cross-
+-- checked against a live item_template (class mask, real in-game names)
+-- and confirmed via the real token->class->slot->item table (not just
+-- assumed from naming). Two chest results (Mage's and Warlock's Robe)
+-- have a second, explicitly-named `... Robe DEPRECATED` entry in the DB;
+-- the non-deprecated entries (20034, 20033) are used here.
+--
+-- `tier` is 0 for all ZG rows - a bookkeeping placeholder only (the
+-- column can't represent the community's "Tier 0.5" label as an
+-- integer), it has no effect on lookup logic.
+
+-- Warrior ZG (Vindicator). Single itemization per token -
+-- no talent-tab branching, all 3 tabs share the same piece.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (19717, 19719, 19723) AND `class_id` = 1;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (19717, 1, 0, 19824, 0, 'Primal Hakkari Armsplint', 'Zandalar Vindicator''s Armguards', 'normal'),
+    (19717, 1, 1, 19824, 0, 'Primal Hakkari Armsplint', 'Zandalar Vindicator''s Armguards', 'normal'),
+    (19717, 1, 2, 19824, 0, 'Primal Hakkari Armsplint', 'Zandalar Vindicator''s Armguards', 'normal'),
+    (19719, 1, 0, 19823, 0, 'Primal Hakkari Girdle', 'Zandalar Vindicator''s Belt', 'normal'),
+    (19719, 1, 1, 19823, 0, 'Primal Hakkari Girdle', 'Zandalar Vindicator''s Belt', 'normal'),
+    (19719, 1, 2, 19823, 0, 'Primal Hakkari Girdle', 'Zandalar Vindicator''s Belt', 'normal'),
+    (19723, 1, 0, 19822, 0, 'Primal Hakkari Kossack', 'Zandalar Vindicator''s Breastplate', 'normal'),
+    (19723, 1, 1, 19822, 0, 'Primal Hakkari Kossack', 'Zandalar Vindicator''s Breastplate', 'normal'),
+    (19723, 1, 2, 19822, 0, 'Primal Hakkari Kossack', 'Zandalar Vindicator''s Breastplate', 'normal');
+
+-- Paladin ZG (Freethinker). Single itemization per token -
+-- no talent-tab branching, all 3 tabs share the same piece.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (19716, 19721, 19722) AND `class_id` = 2;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (19716, 2, 0, 19827, 0, 'Primal Hakkari Bindings', 'Zandalar Freethinker''s Armguards', 'normal'),
+    (19716, 2, 1, 19827, 0, 'Primal Hakkari Bindings', 'Zandalar Freethinker''s Armguards', 'normal'),
+    (19716, 2, 2, 19827, 0, 'Primal Hakkari Bindings', 'Zandalar Freethinker''s Armguards', 'normal'),
+    (19721, 2, 0, 19826, 0, 'Primal Hakkari Shawl', 'Zandalar Freethinker''s Belt', 'normal'),
+    (19721, 2, 1, 19826, 0, 'Primal Hakkari Shawl', 'Zandalar Freethinker''s Belt', 'normal'),
+    (19721, 2, 2, 19826, 0, 'Primal Hakkari Shawl', 'Zandalar Freethinker''s Belt', 'normal'),
+    (19722, 2, 0, 19825, 0, 'Primal Hakkari Tabard', 'Zandalar Freethinker''s Breastplate', 'normal'),
+    (19722, 2, 1, 19825, 0, 'Primal Hakkari Tabard', 'Zandalar Freethinker''s Breastplate', 'normal'),
+    (19722, 2, 2, 19825, 0, 'Primal Hakkari Tabard', 'Zandalar Freethinker''s Breastplate', 'normal');
+
+-- Hunter ZG (Predator). Single itemization per token -
+-- no talent-tab branching, all 3 tabs share the same piece.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (19716, 19721, 19724) AND `class_id` = 3;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (19716, 3, 0, 19833, 0, 'Primal Hakkari Bindings', 'Zandalar Predator''s Bracers', 'normal'),
+    (19716, 3, 1, 19833, 0, 'Primal Hakkari Bindings', 'Zandalar Predator''s Bracers', 'normal'),
+    (19716, 3, 2, 19833, 0, 'Primal Hakkari Bindings', 'Zandalar Predator''s Bracers', 'normal'),
+    (19721, 3, 0, 19832, 0, 'Primal Hakkari Shawl', 'Zandalar Predator''s Belt', 'normal'),
+    (19721, 3, 1, 19832, 0, 'Primal Hakkari Shawl', 'Zandalar Predator''s Belt', 'normal'),
+    (19721, 3, 2, 19832, 0, 'Primal Hakkari Shawl', 'Zandalar Predator''s Belt', 'normal'),
+    (19724, 3, 0, 19831, 0, 'Primal Hakkari Aegis', 'Zandalar Predator''s Mantle', 'normal'),
+    (19724, 3, 1, 19831, 0, 'Primal Hakkari Aegis', 'Zandalar Predator''s Mantle', 'normal'),
+    (19724, 3, 2, 19831, 0, 'Primal Hakkari Aegis', 'Zandalar Predator''s Mantle', 'normal');
+
+-- Rogue ZG (Madcap). Single itemization per token -
+-- no talent-tab branching, all 3 tabs share the same piece.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (19717, 19719, 19724) AND `class_id` = 4;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (19717, 4, 0, 19836, 0, 'Primal Hakkari Armsplint', 'Zandalar Madcap''s Bracers', 'normal'),
+    (19717, 4, 1, 19836, 0, 'Primal Hakkari Armsplint', 'Zandalar Madcap''s Bracers', 'normal'),
+    (19717, 4, 2, 19836, 0, 'Primal Hakkari Armsplint', 'Zandalar Madcap''s Bracers', 'normal'),
+    (19719, 4, 0, 19835, 0, 'Primal Hakkari Girdle', 'Zandalar Madcap''s Mantle', 'normal'),
+    (19719, 4, 1, 19835, 0, 'Primal Hakkari Girdle', 'Zandalar Madcap''s Mantle', 'normal'),
+    (19719, 4, 2, 19835, 0, 'Primal Hakkari Girdle', 'Zandalar Madcap''s Mantle', 'normal'),
+    (19724, 4, 0, 19834, 0, 'Primal Hakkari Aegis', 'Zandalar Madcap''s Tunic', 'normal'),
+    (19724, 4, 1, 19834, 0, 'Primal Hakkari Aegis', 'Zandalar Madcap''s Tunic', 'normal'),
+    (19724, 4, 2, 19834, 0, 'Primal Hakkari Aegis', 'Zandalar Madcap''s Tunic', 'normal');
+
+-- Priest ZG (Confessor). Single itemization per token -
+-- no talent-tab branching, all 3 tabs share the same piece.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (19718, 19720, 19724) AND `class_id` = 5;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (19718, 5, 0, 19843, 0, 'Primal Hakkari Stanchion', 'Zandalar Confessor''s Wraps', 'normal'),
+    (19718, 5, 1, 19843, 0, 'Primal Hakkari Stanchion', 'Zandalar Confessor''s Wraps', 'normal'),
+    (19718, 5, 2, 19843, 0, 'Primal Hakkari Stanchion', 'Zandalar Confessor''s Wraps', 'normal'),
+    (19720, 5, 0, 19842, 0, 'Primal Hakkari Sash', 'Zandalar Confessor''s Bindings', 'normal'),
+    (19720, 5, 1, 19842, 0, 'Primal Hakkari Sash', 'Zandalar Confessor''s Bindings', 'normal'),
+    (19720, 5, 2, 19842, 0, 'Primal Hakkari Sash', 'Zandalar Confessor''s Bindings', 'normal'),
+    (19724, 5, 0, 19841, 0, 'Primal Hakkari Aegis', 'Zandalar Confessor''s Mantle', 'normal'),
+    (19724, 5, 1, 19841, 0, 'Primal Hakkari Aegis', 'Zandalar Confessor''s Mantle', 'normal'),
+    (19724, 5, 2, 19841, 0, 'Primal Hakkari Aegis', 'Zandalar Confessor''s Mantle', 'normal');
+
+-- Shaman ZG (Augur). Single itemization per token -
+-- no talent-tab branching, all 3 tabs share the same piece.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (19717, 19719, 19722) AND `class_id` = 7;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (19717, 7, 0, 19830, 0, 'Primal Hakkari Armsplint', 'Zandalar Augur''s Bracers', 'normal'),
+    (19717, 7, 1, 19830, 0, 'Primal Hakkari Armsplint', 'Zandalar Augur''s Bracers', 'normal'),
+    (19717, 7, 2, 19830, 0, 'Primal Hakkari Armsplint', 'Zandalar Augur''s Bracers', 'normal'),
+    (19719, 7, 0, 19829, 0, 'Primal Hakkari Girdle', 'Zandalar Augur''s Belt', 'normal'),
+    (19719, 7, 1, 19829, 0, 'Primal Hakkari Girdle', 'Zandalar Augur''s Belt', 'normal'),
+    (19719, 7, 2, 19829, 0, 'Primal Hakkari Girdle', 'Zandalar Augur''s Belt', 'normal'),
+    (19722, 7, 0, 19828, 0, 'Primal Hakkari Tabard', 'Zandalar Augur''s Hauberk', 'normal'),
+    (19722, 7, 1, 19828, 0, 'Primal Hakkari Tabard', 'Zandalar Augur''s Hauberk', 'normal'),
+    (19722, 7, 2, 19828, 0, 'Primal Hakkari Tabard', 'Zandalar Augur''s Hauberk', 'normal');
+
+-- Mage ZG (Illusionist). Single itemization per token -
+-- no talent-tab branching, all 3 tabs share the same piece.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (19716, 19721, 19723) AND `class_id` = 8;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (19716, 8, 0, 19846, 0, 'Primal Hakkari Bindings', 'Zandalar Illusionist''s Wraps', 'normal'),
+    (19716, 8, 1, 19846, 0, 'Primal Hakkari Bindings', 'Zandalar Illusionist''s Wraps', 'normal'),
+    (19716, 8, 2, 19846, 0, 'Primal Hakkari Bindings', 'Zandalar Illusionist''s Wraps', 'normal'),
+    (19721, 8, 0, 19845, 0, 'Primal Hakkari Shawl', 'Zandalar Illusionist''s Mantle', 'normal'),
+    (19721, 8, 1, 19845, 0, 'Primal Hakkari Shawl', 'Zandalar Illusionist''s Mantle', 'normal'),
+    (19721, 8, 2, 19845, 0, 'Primal Hakkari Shawl', 'Zandalar Illusionist''s Mantle', 'normal'),
+    (19723, 8, 0, 20034, 0, 'Primal Hakkari Kossack', 'Zandalar Illusionist''s Robe', 'normal'),
+    (19723, 8, 1, 20034, 0, 'Primal Hakkari Kossack', 'Zandalar Illusionist''s Robe', 'normal'),
+    (19723, 8, 2, 20034, 0, 'Primal Hakkari Kossack', 'Zandalar Illusionist''s Robe', 'normal');
+
+-- Warlock ZG (Demoniac). Single itemization per token -
+-- no talent-tab branching, all 3 tabs share the same piece.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (19718, 19720, 19723) AND `class_id` = 9;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (19718, 9, 0, 19848, 0, 'Primal Hakkari Stanchion', 'Zandalar Demoniac''s Wraps', 'normal'),
+    (19718, 9, 1, 19848, 0, 'Primal Hakkari Stanchion', 'Zandalar Demoniac''s Wraps', 'normal'),
+    (19718, 9, 2, 19848, 0, 'Primal Hakkari Stanchion', 'Zandalar Demoniac''s Wraps', 'normal'),
+    (19720, 9, 0, 19849, 0, 'Primal Hakkari Sash', 'Zandalar Demoniac''s Mantle', 'normal'),
+    (19720, 9, 1, 19849, 0, 'Primal Hakkari Sash', 'Zandalar Demoniac''s Mantle', 'normal'),
+    (19720, 9, 2, 19849, 0, 'Primal Hakkari Sash', 'Zandalar Demoniac''s Mantle', 'normal'),
+    (19723, 9, 0, 20033, 0, 'Primal Hakkari Kossack', 'Zandalar Demoniac''s Robe', 'normal'),
+    (19723, 9, 1, 20033, 0, 'Primal Hakkari Kossack', 'Zandalar Demoniac''s Robe', 'normal'),
+    (19723, 9, 2, 20033, 0, 'Primal Hakkari Kossack', 'Zandalar Demoniac''s Robe', 'normal');
+
+-- Druid ZG (Haruspex). Single itemization per token -
+-- no talent-tab branching, all 3 tabs share the same piece.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (19718, 19720, 19722) AND `class_id` = 11;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (19718, 11, 0, 19840, 0, 'Primal Hakkari Stanchion', 'Zandalar Haruspex''s Bracers', 'normal'),
+    (19718, 11, 1, 19840, 0, 'Primal Hakkari Stanchion', 'Zandalar Haruspex''s Bracers', 'normal'),
+    (19718, 11, 2, 19840, 0, 'Primal Hakkari Stanchion', 'Zandalar Haruspex''s Bracers', 'normal'),
+    (19720, 11, 0, 19839, 0, 'Primal Hakkari Sash', 'Zandalar Haruspex''s Belt', 'normal'),
+    (19720, 11, 1, 19839, 0, 'Primal Hakkari Sash', 'Zandalar Haruspex''s Belt', 'normal'),
+    (19720, 11, 2, 19839, 0, 'Primal Hakkari Sash', 'Zandalar Haruspex''s Belt', 'normal'),
+    (19722, 11, 0, 19838, 0, 'Primal Hakkari Tabard', 'Zandalar Haruspex''s Tunic', 'normal'),
+    (19722, 11, 1, 19838, 0, 'Primal Hakkari Tabard', 'Zandalar Haruspex''s Tunic', 'normal'),
+    (19722, 11, 2, 19838, 0, 'Primal Hakkari Tabard', 'Zandalar Haruspex''s Tunic', 'normal');
+
+-- Ruins of Ahn'Qiraj (AQ20, "Cenarion Circle" set). Small 3-piece set:
+-- Ring, Cloak, and a 1H weapon (varies by class - sword/mace/axe/dagger).
+-- No spec branching (confirmed) - all 3 talent tabs share the same item.
+-- Class groupings differ per slot again, same pattern as ZG, but simpler:
+-- each of the 6 real "Qiraji ..." tokens resolves to exactly one slot for
+-- every class that can use it (no per-class slot-shifting like ZG's Shawl/
+-- Sash/Girdle had) - Magisterial/Ceremonial Ring always -> Ring,
+-- Regal/Martial Drape always -> Cloak, Ornate/Spiked Hilt always -> weapon.
+-- Cross-checked class groupings against live item_template AllowableClass
+-- on the real tokens and against the real per-class token/item table (not
+-- assumed from naming). Real acquisition is a quest turn-in requiring the
+-- token plus class-specific Idols/Scarabs and a Cenarion Circle reputation
+-- tier; materials/reputation waived per this module's standing "no
+-- materials" stance - token in, item out.
+--
+-- `tier` is 0, same placeholder convention as ZG (this predates T3 and
+-- isn't part of the T3-T10 numbering).
+
+-- Warrior AQ20 (Battlegear of Unyielding Strength). Single itemization per token -
+-- no talent-tab branching, all 3 tabs share the same piece.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (20884, 20885, 20886) AND `class_id` = 1;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (20884, 1, 0, 21393, 0, 'Qiraji Magisterial Ring', 'Signet of Unyielding Strength', 'normal'),
+    (20884, 1, 1, 21393, 0, 'Qiraji Magisterial Ring', 'Signet of Unyielding Strength', 'normal'),
+    (20884, 1, 2, 21393, 0, 'Qiraji Magisterial Ring', 'Signet of Unyielding Strength', 'normal'),
+    (20885, 1, 0, 21394, 0, 'Qiraji Martial Drape', 'Drape of Unyielding Strength', 'normal'),
+    (20885, 1, 1, 21394, 0, 'Qiraji Martial Drape', 'Drape of Unyielding Strength', 'normal'),
+    (20885, 1, 2, 21394, 0, 'Qiraji Martial Drape', 'Drape of Unyielding Strength', 'normal'),
+    (20886, 1, 0, 21392, 0, 'Qiraji Spiked Hilt', 'Sickle of Unyielding Strength', 'normal'),
+    (20886, 1, 1, 21392, 0, 'Qiraji Spiked Hilt', 'Sickle of Unyielding Strength', 'normal'),
+    (20886, 1, 2, 21392, 0, 'Qiraji Spiked Hilt', 'Sickle of Unyielding Strength', 'normal');
+
+-- Paladin AQ20 (Battlegear of Eternal Justice). Single itemization per token -
+-- no talent-tab branching, all 3 tabs share the same piece.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (20884, 20886, 20889) AND `class_id` = 2;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (20884, 2, 0, 21396, 0, 'Qiraji Magisterial Ring', 'Ring of Eternal Justice', 'normal'),
+    (20884, 2, 1, 21396, 0, 'Qiraji Magisterial Ring', 'Ring of Eternal Justice', 'normal'),
+    (20884, 2, 2, 21396, 0, 'Qiraji Magisterial Ring', 'Ring of Eternal Justice', 'normal'),
+    (20889, 2, 0, 21397, 0, 'Qiraji Regal Drape', 'Cape of Eternal Justice', 'normal'),
+    (20889, 2, 1, 21397, 0, 'Qiraji Regal Drape', 'Cape of Eternal Justice', 'normal'),
+    (20889, 2, 2, 21397, 0, 'Qiraji Regal Drape', 'Cape of Eternal Justice', 'normal'),
+    (20886, 2, 0, 21395, 0, 'Qiraji Spiked Hilt', 'Blade of Eternal Justice', 'normal'),
+    (20886, 2, 1, 21395, 0, 'Qiraji Spiked Hilt', 'Blade of Eternal Justice', 'normal'),
+    (20886, 2, 2, 21395, 0, 'Qiraji Spiked Hilt', 'Blade of Eternal Justice', 'normal');
+
+-- Hunter AQ20 (Trappings of the Unseen Path). Single itemization per token -
+-- no talent-tab branching, all 3 tabs share the same piece.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (20886, 20888, 20889) AND `class_id` = 3;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (20888, 3, 0, 21402, 0, 'Qiraji Ceremonial Ring', 'Signet of the Unseen Path', 'normal'),
+    (20888, 3, 1, 21402, 0, 'Qiraji Ceremonial Ring', 'Signet of the Unseen Path', 'normal'),
+    (20888, 3, 2, 21402, 0, 'Qiraji Ceremonial Ring', 'Signet of the Unseen Path', 'normal'),
+    (20889, 3, 0, 21403, 0, 'Qiraji Regal Drape', 'Cloak of the Unseen Path', 'normal'),
+    (20889, 3, 1, 21403, 0, 'Qiraji Regal Drape', 'Cloak of the Unseen Path', 'normal'),
+    (20889, 3, 2, 21403, 0, 'Qiraji Regal Drape', 'Cloak of the Unseen Path', 'normal'),
+    (20886, 3, 0, 21401, 0, 'Qiraji Spiked Hilt', 'Scythe of the Unseen Path', 'normal'),
+    (20886, 3, 1, 21401, 0, 'Qiraji Spiked Hilt', 'Scythe of the Unseen Path', 'normal'),
+    (20886, 3, 2, 21401, 0, 'Qiraji Spiked Hilt', 'Scythe of the Unseen Path', 'normal');
+
+-- Rogue AQ20 (Emblems of Veiled Shadows). Single itemization per token -
+-- no talent-tab branching, all 3 tabs share the same piece.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (20885, 20886, 20888) AND `class_id` = 4;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (20888, 4, 0, 21405, 0, 'Qiraji Ceremonial Ring', 'Band of Veiled Shadows', 'normal'),
+    (20888, 4, 1, 21405, 0, 'Qiraji Ceremonial Ring', 'Band of Veiled Shadows', 'normal'),
+    (20888, 4, 2, 21405, 0, 'Qiraji Ceremonial Ring', 'Band of Veiled Shadows', 'normal'),
+    (20885, 4, 0, 21406, 0, 'Qiraji Martial Drape', 'Cloak of Veiled Shadows', 'normal'),
+    (20885, 4, 1, 21406, 0, 'Qiraji Martial Drape', 'Cloak of Veiled Shadows', 'normal'),
+    (20885, 4, 2, 21406, 0, 'Qiraji Martial Drape', 'Cloak of Veiled Shadows', 'normal'),
+    (20886, 4, 0, 21404, 0, 'Qiraji Spiked Hilt', 'Dagger of Veiled Shadows', 'normal'),
+    (20886, 4, 1, 21404, 0, 'Qiraji Spiked Hilt', 'Dagger of Veiled Shadows', 'normal'),
+    (20886, 4, 2, 21404, 0, 'Qiraji Spiked Hilt', 'Dagger of Veiled Shadows', 'normal');
+
+-- Priest AQ20 (Finery of Infinite Wisdom). Single itemization per token -
+-- no talent-tab branching, all 3 tabs share the same piece.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (20885, 20888, 20890) AND `class_id` = 5;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (20888, 5, 0, 21411, 0, 'Qiraji Ceremonial Ring', 'Ring of Infinite Wisdom', 'normal'),
+    (20888, 5, 1, 21411, 0, 'Qiraji Ceremonial Ring', 'Ring of Infinite Wisdom', 'normal'),
+    (20888, 5, 2, 21411, 0, 'Qiraji Ceremonial Ring', 'Ring of Infinite Wisdom', 'normal'),
+    (20885, 5, 0, 21412, 0, 'Qiraji Martial Drape', 'Shroud of Infinite Wisdom', 'normal'),
+    (20885, 5, 1, 21412, 0, 'Qiraji Martial Drape', 'Shroud of Infinite Wisdom', 'normal'),
+    (20885, 5, 2, 21412, 0, 'Qiraji Martial Drape', 'Shroud of Infinite Wisdom', 'normal'),
+    (20890, 5, 0, 21410, 0, 'Qiraji Ornate Hilt', 'Gavel of Infinite Wisdom', 'normal'),
+    (20890, 5, 1, 21410, 0, 'Qiraji Ornate Hilt', 'Gavel of Infinite Wisdom', 'normal'),
+    (20890, 5, 2, 21410, 0, 'Qiraji Ornate Hilt', 'Gavel of Infinite Wisdom', 'normal');
+
+-- Shaman AQ20 (Gift of the Gathering Storm). Single itemization per token -
+-- no talent-tab branching, all 3 tabs share the same piece.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (20884, 20886, 20889) AND `class_id` = 7;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (20884, 7, 0, 21399, 0, 'Qiraji Magisterial Ring', 'Ring of the Gathering Storm', 'normal'),
+    (20884, 7, 1, 21399, 0, 'Qiraji Magisterial Ring', 'Ring of the Gathering Storm', 'normal'),
+    (20884, 7, 2, 21399, 0, 'Qiraji Magisterial Ring', 'Ring of the Gathering Storm', 'normal'),
+    (20889, 7, 0, 21400, 0, 'Qiraji Regal Drape', 'Cloak of the Gathering Storm', 'normal'),
+    (20889, 7, 1, 21400, 0, 'Qiraji Regal Drape', 'Cloak of the Gathering Storm', 'normal'),
+    (20889, 7, 2, 21400, 0, 'Qiraji Regal Drape', 'Cloak of the Gathering Storm', 'normal'),
+    (20886, 7, 0, 21398, 0, 'Qiraji Spiked Hilt', 'Hammer of the Gathering Storm', 'normal'),
+    (20886, 7, 1, 21398, 0, 'Qiraji Spiked Hilt', 'Hammer of the Gathering Storm', 'normal'),
+    (20886, 7, 2, 21398, 0, 'Qiraji Spiked Hilt', 'Hammer of the Gathering Storm', 'normal');
+
+-- Mage AQ20 (Trappings of Vaulted Secrets). Single itemization per token -
+-- no talent-tab branching, all 3 tabs share the same piece.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (20884, 20885, 20890) AND `class_id` = 8;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (20884, 8, 0, 21414, 0, 'Qiraji Magisterial Ring', 'Band of Vaulted Secrets', 'normal'),
+    (20884, 8, 1, 21414, 0, 'Qiraji Magisterial Ring', 'Band of Vaulted Secrets', 'normal'),
+    (20884, 8, 2, 21414, 0, 'Qiraji Magisterial Ring', 'Band of Vaulted Secrets', 'normal'),
+    (20885, 8, 0, 21415, 0, 'Qiraji Martial Drape', 'Drape of Vaulted Secrets', 'normal'),
+    (20885, 8, 1, 21415, 0, 'Qiraji Martial Drape', 'Drape of Vaulted Secrets', 'normal'),
+    (20885, 8, 2, 21415, 0, 'Qiraji Martial Drape', 'Drape of Vaulted Secrets', 'normal'),
+    (20890, 8, 0, 21413, 0, 'Qiraji Ornate Hilt', 'Blade of Vaulted Secrets', 'normal'),
+    (20890, 8, 1, 21413, 0, 'Qiraji Ornate Hilt', 'Blade of Vaulted Secrets', 'normal'),
+    (20890, 8, 2, 21413, 0, 'Qiraji Ornate Hilt', 'Blade of Vaulted Secrets', 'normal');
+
+-- Warlock AQ20 (Implements of Unspoken Names). Single itemization per token -
+-- no talent-tab branching, all 3 tabs share the same piece.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (20888, 20889, 20890) AND `class_id` = 9;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (20888, 9, 0, 21417, 0, 'Qiraji Ceremonial Ring', 'Ring of Unspoken Names', 'normal'),
+    (20888, 9, 1, 21417, 0, 'Qiraji Ceremonial Ring', 'Ring of Unspoken Names', 'normal'),
+    (20888, 9, 2, 21417, 0, 'Qiraji Ceremonial Ring', 'Ring of Unspoken Names', 'normal'),
+    (20889, 9, 0, 21418, 0, 'Qiraji Regal Drape', 'Shroud of Unspoken Names', 'normal'),
+    (20889, 9, 1, 21418, 0, 'Qiraji Regal Drape', 'Shroud of Unspoken Names', 'normal'),
+    (20889, 9, 2, 21418, 0, 'Qiraji Regal Drape', 'Shroud of Unspoken Names', 'normal'),
+    (20890, 9, 0, 21416, 0, 'Qiraji Ornate Hilt', 'Kris of Unspoken Names', 'normal'),
+    (20890, 9, 1, 21416, 0, 'Qiraji Ornate Hilt', 'Kris of Unspoken Names', 'normal'),
+    (20890, 9, 2, 21416, 0, 'Qiraji Ornate Hilt', 'Kris of Unspoken Names', 'normal');
+
+-- Druid AQ20 (Symbols of Unending Life). Single itemization per token -
+-- no talent-tab branching, all 3 tabs share the same piece.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (20884, 20889, 20890) AND `class_id` = 11;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (20884, 11, 0, 21408, 0, 'Qiraji Magisterial Ring', 'Band of Unending Life', 'normal'),
+    (20884, 11, 1, 21408, 0, 'Qiraji Magisterial Ring', 'Band of Unending Life', 'normal'),
+    (20884, 11, 2, 21408, 0, 'Qiraji Magisterial Ring', 'Band of Unending Life', 'normal'),
+    (20889, 11, 0, 21409, 0, 'Qiraji Regal Drape', 'Cloak of Unending Life', 'normal'),
+    (20889, 11, 1, 21409, 0, 'Qiraji Regal Drape', 'Cloak of Unending Life', 'normal'),
+    (20889, 11, 2, 21409, 0, 'Qiraji Regal Drape', 'Cloak of Unending Life', 'normal'),
+    (20890, 11, 0, 21407, 0, 'Qiraji Ornate Hilt', 'Mace of Unending Life', 'normal'),
+    (20890, 11, 1, 21407, 0, 'Qiraji Ornate Hilt', 'Mace of Unending Life', 'normal'),
+    (20890, 11, 2, 21407, 0, 'Qiraji Ornate Hilt', 'Mace of Unending Life', 'normal');
