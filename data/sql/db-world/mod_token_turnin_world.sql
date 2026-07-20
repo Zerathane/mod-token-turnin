@@ -786,3 +786,469 @@ VALUES
     (34856, 9, 0, 34564, 6, 'Boots of the Forgotten Conqueror', 'Boots of the Malefic', 'normal'),
     (34856, 9, 1, 34564, 6, 'Boots of the Forgotten Conqueror', 'Boots of the Malefic', 'normal'),
     (34856, 9, 2, 34564, 6, 'Boots of the Forgotten Conqueror', 'Boots of the Malefic', 'normal');
+
+-- T7 introduces Death Knight into the token model and reverts to the classic
+-- 5 slots (Helm/Shoulder/Chest/Hands/Legs) - no extra belt/feet/wrist tokens
+-- this tier. Groups carry the T6 masks forward (Conqueror/Protector/
+-- Vanquisher), but Death Knight joins Vanquisher rather than forming its own
+-- group. Token prefix is "Lost" for T7 10-man; result items are "Heroes' ...".
+-- Confirmed class-tab mapping per class via each item set's set-bonus text
+-- (e.g. "Water Shield" = Restoration, "Lightning Bolt" = Elemental), not
+-- assumed from naming alone.
+
+-- Paladin T7 10-man (Heroes' Redemption), Lost Conqueror family. Holy
+-- (Regalia), Protection (Plate), Retribution (Battlegear) - all distinct.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (40616, 40622, 40610, 40613, 40619) AND `class_id` = 2;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    -- Helm of the Lost Conqueror
+    (40616, 2, 0, 39628, 7, 'Helm of the Lost Conqueror', 'Heroes'' Redemption Headpiece', '10'),
+    (40616, 2, 1, 39640, 7, 'Helm of the Lost Conqueror', 'Heroes'' Redemption Faceguard', '10'),
+    (40616, 2, 2, 39635, 7, 'Helm of the Lost Conqueror', 'Heroes'' Redemption Helm', '10'),
+    -- Spaulders of the Lost Conqueror
+    (40622, 2, 0, 39631, 7, 'Spaulders of the Lost Conqueror', 'Heroes'' Redemption Spaulders', '10'),
+    (40622, 2, 1, 39642, 7, 'Spaulders of the Lost Conqueror', 'Heroes'' Redemption Shoulderguards', '10'),
+    (40622, 2, 2, 39637, 7, 'Spaulders of the Lost Conqueror', 'Heroes'' Redemption Shoulderplates', '10'),
+    -- Chestguard of the Lost Conqueror
+    (40610, 2, 0, 39629, 7, 'Chestguard of the Lost Conqueror', 'Heroes'' Redemption Tunic', '10'),
+    (40610, 2, 1, 39638, 7, 'Chestguard of the Lost Conqueror', 'Heroes'' Redemption Breastplate', '10'),
+    (40610, 2, 2, 39633, 7, 'Chestguard of the Lost Conqueror', 'Heroes'' Redemption Chestpiece', '10'),
+    -- Gloves of the Lost Conqueror
+    (40613, 2, 0, 39632, 7, 'Gloves of the Lost Conqueror', 'Heroes'' Redemption Gloves', '10'),
+    (40613, 2, 1, 39639, 7, 'Gloves of the Lost Conqueror', 'Heroes'' Redemption Handguards', '10'),
+    (40613, 2, 2, 39634, 7, 'Gloves of the Lost Conqueror', 'Heroes'' Redemption Gauntlets', '10'),
+    -- Leggings of the Lost Conqueror
+    (40619, 2, 0, 39630, 7, 'Leggings of the Lost Conqueror', 'Heroes'' Redemption Greaves', '10'),
+    (40619, 2, 1, 39641, 7, 'Leggings of the Lost Conqueror', 'Heroes'' Redemption Legguards', '10'),
+    (40619, 2, 2, 39636, 7, 'Leggings of the Lost Conqueror', 'Heroes'' Redemption Legplates', '10');
+
+-- Priest T7 10-man (Heroes' Faith), Lost Conqueror family. Discipline/Holy
+-- share one itemization (Regalia of Faith), Shadow has its own (Garb of Faith).
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (40616, 40622, 40610, 40613, 40619) AND `class_id` = 5;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (40616, 5, 0, 39514, 7, 'Helm of the Lost Conqueror', 'Heroes'' Crown of Faith', '10'),
+    (40616, 5, 1, 39514, 7, 'Helm of the Lost Conqueror', 'Heroes'' Crown of Faith', '10'),
+    (40616, 5, 2, 39521, 7, 'Helm of the Lost Conqueror', 'Heroes'' Circlet of Faith', '10'),
+    (40622, 5, 0, 39518, 7, 'Spaulders of the Lost Conqueror', 'Heroes'' Shoulderpads of Faith', '10'),
+    (40622, 5, 1, 39518, 7, 'Spaulders of the Lost Conqueror', 'Heroes'' Shoulderpads of Faith', '10'),
+    (40622, 5, 2, 39529, 7, 'Spaulders of the Lost Conqueror', 'Heroes'' Mantle of Faith', '10'),
+    (40610, 5, 0, 39515, 7, 'Chestguard of the Lost Conqueror', 'Heroes'' Robe of Faith', '10'),
+    (40610, 5, 1, 39515, 7, 'Chestguard of the Lost Conqueror', 'Heroes'' Robe of Faith', '10'),
+    (40610, 5, 2, 39523, 7, 'Chestguard of the Lost Conqueror', 'Heroes'' Raiments of Faith', '10'),
+    (40613, 5, 0, 39519, 7, 'Gloves of the Lost Conqueror', 'Heroes'' Gloves of Faith', '10'),
+    (40613, 5, 1, 39519, 7, 'Gloves of the Lost Conqueror', 'Heroes'' Gloves of Faith', '10'),
+    (40613, 5, 2, 39530, 7, 'Gloves of the Lost Conqueror', 'Heroes'' Handwraps of Faith', '10'),
+    (40619, 5, 0, 39517, 7, 'Leggings of the Lost Conqueror', 'Heroes'' Leggings of Faith', '10'),
+    (40619, 5, 1, 39517, 7, 'Leggings of the Lost Conqueror', 'Heroes'' Leggings of Faith', '10'),
+    (40619, 5, 2, 39528, 7, 'Leggings of the Lost Conqueror', 'Heroes'' Pants of Faith', '10');
+
+-- Warlock T7 10-man (Heroes' Plagueheart), Lost Conqueror family. All 3
+-- specs are caster DPS - one itemization applies regardless of spec.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (40616, 40622, 40610, 40613, 40619) AND `class_id` = 9;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (40616, 9, 0, 39496, 7, 'Helm of the Lost Conqueror', 'Heroes'' Plagueheart Circlet', '10'),
+    (40616, 9, 1, 39496, 7, 'Helm of the Lost Conqueror', 'Heroes'' Plagueheart Circlet', '10'),
+    (40616, 9, 2, 39496, 7, 'Helm of the Lost Conqueror', 'Heroes'' Plagueheart Circlet', '10'),
+    (40622, 9, 0, 39499, 7, 'Spaulders of the Lost Conqueror', 'Heroes'' Plagueheart Shoulderpads', '10'),
+    (40622, 9, 1, 39499, 7, 'Spaulders of the Lost Conqueror', 'Heroes'' Plagueheart Shoulderpads', '10'),
+    (40622, 9, 2, 39499, 7, 'Spaulders of the Lost Conqueror', 'Heroes'' Plagueheart Shoulderpads', '10'),
+    (40610, 9, 0, 39497, 7, 'Chestguard of the Lost Conqueror', 'Heroes'' Plagueheart Robe', '10'),
+    (40610, 9, 1, 39497, 7, 'Chestguard of the Lost Conqueror', 'Heroes'' Plagueheart Robe', '10'),
+    (40610, 9, 2, 39497, 7, 'Chestguard of the Lost Conqueror', 'Heroes'' Plagueheart Robe', '10'),
+    (40613, 9, 0, 39500, 7, 'Gloves of the Lost Conqueror', 'Heroes'' Plagueheart Gloves', '10'),
+    (40613, 9, 1, 39500, 7, 'Gloves of the Lost Conqueror', 'Heroes'' Plagueheart Gloves', '10'),
+    (40613, 9, 2, 39500, 7, 'Gloves of the Lost Conqueror', 'Heroes'' Plagueheart Gloves', '10'),
+    (40619, 9, 0, 39498, 7, 'Leggings of the Lost Conqueror', 'Heroes'' Plagueheart Leggings', '10'),
+    (40619, 9, 1, 39498, 7, 'Leggings of the Lost Conqueror', 'Heroes'' Plagueheart Leggings', '10'),
+    (40619, 9, 2, 39498, 7, 'Leggings of the Lost Conqueror', 'Heroes'' Plagueheart Leggings', '10');
+
+-- Warrior T7 10-man (Heroes' Dreadnaught), Lost Protector family. Arms/Fury
+-- share one itemization (Battlegear), Protection has its own (Plate).
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (40617, 40623, 40611, 40614, 40620) AND `class_id` = 1;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (40617, 1, 0, 39605, 7, 'Helm of the Lost Protector', 'Heroes'' Dreadnaught Helmet', '10'),
+    (40617, 1, 1, 39605, 7, 'Helm of the Lost Protector', 'Heroes'' Dreadnaught Helmet', '10'),
+    (40617, 1, 2, 39610, 7, 'Helm of the Lost Protector', 'Heroes'' Dreadnaught Greathelm', '10'),
+    (40623, 1, 0, 39608, 7, 'Spaulders of the Lost Protector', 'Heroes'' Dreadnaught Shoulderplates', '10'),
+    (40623, 1, 1, 39608, 7, 'Spaulders of the Lost Protector', 'Heroes'' Dreadnaught Shoulderplates', '10'),
+    (40623, 1, 2, 39613, 7, 'Spaulders of the Lost Protector', 'Heroes'' Dreadnaught Pauldrons', '10'),
+    (40611, 1, 0, 39606, 7, 'Chestguard of the Lost Protector', 'Heroes'' Dreadnaught Battleplate', '10'),
+    (40611, 1, 1, 39606, 7, 'Chestguard of the Lost Protector', 'Heroes'' Dreadnaught Battleplate', '10'),
+    (40611, 1, 2, 39611, 7, 'Chestguard of the Lost Protector', 'Heroes'' Dreadnaught Breastplate', '10'),
+    (40614, 1, 0, 39609, 7, 'Gloves of the Lost Protector', 'Heroes'' Dreadnaught Gauntlets', '10'),
+    (40614, 1, 1, 39609, 7, 'Gloves of the Lost Protector', 'Heroes'' Dreadnaught Gauntlets', '10'),
+    (40614, 1, 2, 39622, 7, 'Gloves of the Lost Protector', 'Heroes'' Dreadnaught Handguards', '10'),
+    (40620, 1, 0, 39607, 7, 'Leggings of the Lost Protector', 'Heroes'' Dreadnaught Legplates', '10'),
+    (40620, 1, 1, 39607, 7, 'Leggings of the Lost Protector', 'Heroes'' Dreadnaught Legplates', '10'),
+    (40620, 1, 2, 39612, 7, 'Leggings of the Lost Protector', 'Heroes'' Dreadnaught Legguards', '10');
+
+-- Hunter T7 10-man (Heroes' Cryptstalker), Lost Protector family. All 3
+-- specs are ranged DPS - one itemization applies regardless of spec.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (40617, 40623, 40611, 40614, 40620) AND `class_id` = 3;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (40617, 3, 0, 39578, 7, 'Helm of the Lost Protector', 'Heroes'' Cryptstalker Headpiece', '10'),
+    (40617, 3, 1, 39578, 7, 'Helm of the Lost Protector', 'Heroes'' Cryptstalker Headpiece', '10'),
+    (40617, 3, 2, 39578, 7, 'Helm of the Lost Protector', 'Heroes'' Cryptstalker Headpiece', '10'),
+    (40623, 3, 0, 39581, 7, 'Spaulders of the Lost Protector', 'Heroes'' Cryptstalker Spaulders', '10'),
+    (40623, 3, 1, 39581, 7, 'Spaulders of the Lost Protector', 'Heroes'' Cryptstalker Spaulders', '10'),
+    (40623, 3, 2, 39581, 7, 'Spaulders of the Lost Protector', 'Heroes'' Cryptstalker Spaulders', '10'),
+    (40611, 3, 0, 39579, 7, 'Chestguard of the Lost Protector', 'Heroes'' Cryptstalker Tunic', '10'),
+    (40611, 3, 1, 39579, 7, 'Chestguard of the Lost Protector', 'Heroes'' Cryptstalker Tunic', '10'),
+    (40611, 3, 2, 39579, 7, 'Chestguard of the Lost Protector', 'Heroes'' Cryptstalker Tunic', '10'),
+    (40614, 3, 0, 39582, 7, 'Gloves of the Lost Protector', 'Heroes'' Cryptstalker Handguards', '10'),
+    (40614, 3, 1, 39582, 7, 'Gloves of the Lost Protector', 'Heroes'' Cryptstalker Handguards', '10'),
+    (40614, 3, 2, 39582, 7, 'Gloves of the Lost Protector', 'Heroes'' Cryptstalker Handguards', '10'),
+    (40620, 3, 0, 39580, 7, 'Leggings of the Lost Protector', 'Heroes'' Cryptstalker Legguards', '10'),
+    (40620, 3, 1, 39580, 7, 'Leggings of the Lost Protector', 'Heroes'' Cryptstalker Legguards', '10'),
+    (40620, 3, 2, 39580, 7, 'Leggings of the Lost Protector', 'Heroes'' Cryptstalker Legguards', '10');
+
+-- Shaman T7 10-man (Heroes' Earthshatter), Lost Protector family. Elemental
+-- (Garb), Enhancement (Battlegear), Restoration (Regalia) - all distinct.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (40617, 40623, 40611, 40614, 40620) AND `class_id` = 7;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (40617, 7, 0, 39594, 7, 'Helm of the Lost Protector', 'Heroes'' Earthshatter Helm', '10'),
+    (40617, 7, 1, 39602, 7, 'Helm of the Lost Protector', 'Heroes'' Earthshatter Faceguard', '10'),
+    (40617, 7, 2, 39583, 7, 'Helm of the Lost Protector', 'Heroes'' Earthshatter Headpiece', '10'),
+    (40623, 7, 0, 39596, 7, 'Spaulders of the Lost Protector', 'Heroes'' Earthshatter Shoulderpads', '10'),
+    (40623, 7, 1, 39604, 7, 'Spaulders of the Lost Protector', 'Heroes'' Earthshatter Shoulderguards', '10'),
+    (40623, 7, 2, 39590, 7, 'Spaulders of the Lost Protector', 'Heroes'' Earthshatter Spaulders', '10'),
+    (40611, 7, 0, 39592, 7, 'Chestguard of the Lost Protector', 'Heroes'' Earthshatter Hauberk', '10'),
+    (40611, 7, 1, 39597, 7, 'Chestguard of the Lost Protector', 'Heroes'' Earthshatter Chestguard', '10'),
+    (40611, 7, 2, 39588, 7, 'Chestguard of the Lost Protector', 'Heroes'' Earthshatter Tunic', '10'),
+    (40614, 7, 0, 39593, 7, 'Gloves of the Lost Protector', 'Heroes'' Earthshatter Gloves', '10'),
+    (40614, 7, 1, 39601, 7, 'Gloves of the Lost Protector', 'Heroes'' Earthshatter Grips', '10'),
+    (40614, 7, 2, 39591, 7, 'Gloves of the Lost Protector', 'Heroes'' Earthshatter Handguards', '10'),
+    (40620, 7, 0, 39595, 7, 'Leggings of the Lost Protector', 'Heroes'' Earthshatter Kilt', '10'),
+    (40620, 7, 1, 39603, 7, 'Leggings of the Lost Protector', 'Heroes'' Earthshatter War-Kilt', '10'),
+    (40620, 7, 2, 39589, 7, 'Leggings of the Lost Protector', 'Heroes'' Earthshatter Legguards', '10');
+
+-- Rogue T7 10-man (Heroes' Bonescythe), Lost Vanquisher family. All 3 specs
+-- are melee DPS - one itemization applies regardless of spec.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (40618, 40624, 40612, 40615, 40621) AND `class_id` = 4;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (40618, 4, 0, 39561, 7, 'Helm of the Lost Vanquisher', 'Heroes'' Bonescythe Helmet', '10'),
+    (40618, 4, 1, 39561, 7, 'Helm of the Lost Vanquisher', 'Heroes'' Bonescythe Helmet', '10'),
+    (40618, 4, 2, 39561, 7, 'Helm of the Lost Vanquisher', 'Heroes'' Bonescythe Helmet', '10'),
+    (40624, 4, 0, 39565, 7, 'Spaulders of the Lost Vanquisher', 'Heroes'' Bonescythe Pauldrons', '10'),
+    (40624, 4, 1, 39565, 7, 'Spaulders of the Lost Vanquisher', 'Heroes'' Bonescythe Pauldrons', '10'),
+    (40624, 4, 2, 39565, 7, 'Spaulders of the Lost Vanquisher', 'Heroes'' Bonescythe Pauldrons', '10'),
+    (40612, 4, 0, 39558, 7, 'Chestguard of the Lost Vanquisher', 'Heroes'' Bonescythe Breastplate', '10'),
+    (40612, 4, 1, 39558, 7, 'Chestguard of the Lost Vanquisher', 'Heroes'' Bonescythe Breastplate', '10'),
+    (40612, 4, 2, 39558, 7, 'Chestguard of the Lost Vanquisher', 'Heroes'' Bonescythe Breastplate', '10'),
+    (40615, 4, 0, 39560, 7, 'Gloves of the Lost Vanquisher', 'Heroes'' Bonescythe Gauntlets', '10'),
+    (40615, 4, 1, 39560, 7, 'Gloves of the Lost Vanquisher', 'Heroes'' Bonescythe Gauntlets', '10'),
+    (40615, 4, 2, 39560, 7, 'Gloves of the Lost Vanquisher', 'Heroes'' Bonescythe Gauntlets', '10'),
+    (40621, 4, 0, 39564, 7, 'Leggings of the Lost Vanquisher', 'Heroes'' Bonescythe Legplates', '10'),
+    (40621, 4, 1, 39564, 7, 'Leggings of the Lost Vanquisher', 'Heroes'' Bonescythe Legplates', '10'),
+    (40621, 4, 2, 39564, 7, 'Leggings of the Lost Vanquisher', 'Heroes'' Bonescythe Legplates', '10');
+
+-- Mage T7 10-man (Heroes' Frostfire), Lost Vanquisher family. All 3 specs
+-- are caster DPS - one itemization applies regardless of spec.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (40618, 40624, 40612, 40615, 40621) AND `class_id` = 8;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (40618, 8, 0, 39491, 7, 'Helm of the Lost Vanquisher', 'Heroes'' Frostfire Circlet', '10'),
+    (40618, 8, 1, 39491, 7, 'Helm of the Lost Vanquisher', 'Heroes'' Frostfire Circlet', '10'),
+    (40618, 8, 2, 39491, 7, 'Helm of the Lost Vanquisher', 'Heroes'' Frostfire Circlet', '10'),
+    (40624, 8, 0, 39494, 7, 'Spaulders of the Lost Vanquisher', 'Heroes'' Frostfire Shoulderpads', '10'),
+    (40624, 8, 1, 39494, 7, 'Spaulders of the Lost Vanquisher', 'Heroes'' Frostfire Shoulderpads', '10'),
+    (40624, 8, 2, 39494, 7, 'Spaulders of the Lost Vanquisher', 'Heroes'' Frostfire Shoulderpads', '10'),
+    (40612, 8, 0, 39492, 7, 'Chestguard of the Lost Vanquisher', 'Heroes'' Frostfire Robe', '10'),
+    (40612, 8, 1, 39492, 7, 'Chestguard of the Lost Vanquisher', 'Heroes'' Frostfire Robe', '10'),
+    (40612, 8, 2, 39492, 7, 'Chestguard of the Lost Vanquisher', 'Heroes'' Frostfire Robe', '10'),
+    (40615, 8, 0, 39495, 7, 'Gloves of the Lost Vanquisher', 'Heroes'' Frostfire Gloves', '10'),
+    (40615, 8, 1, 39495, 7, 'Gloves of the Lost Vanquisher', 'Heroes'' Frostfire Gloves', '10'),
+    (40615, 8, 2, 39495, 7, 'Gloves of the Lost Vanquisher', 'Heroes'' Frostfire Gloves', '10'),
+    (40621, 8, 0, 39493, 7, 'Leggings of the Lost Vanquisher', 'Heroes'' Frostfire Leggings', '10'),
+    (40621, 8, 1, 39493, 7, 'Leggings of the Lost Vanquisher', 'Heroes'' Frostfire Leggings', '10'),
+    (40621, 8, 2, 39493, 7, 'Leggings of the Lost Vanquisher', 'Heroes'' Frostfire Leggings', '10');
+
+-- Druid T7 10-man (Heroes' Dreamwalker), Lost Vanquisher family. Balance
+-- (Garb), Feral (Battlegear), Restoration (Regalia) - all distinct.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (40618, 40624, 40612, 40615, 40621) AND `class_id` = 11;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (40618, 11, 0, 39545, 7, 'Helm of the Lost Vanquisher', 'Heroes'' Dreamwalker Cover', '10'),
+    (40618, 11, 1, 39553, 7, 'Helm of the Lost Vanquisher', 'Heroes'' Dreamwalker Headguard', '10'),
+    (40618, 11, 2, 39531, 7, 'Helm of the Lost Vanquisher', 'Heroes'' Dreamwalker Headpiece', '10'),
+    (40624, 11, 0, 39548, 7, 'Spaulders of the Lost Vanquisher', 'Heroes'' Dreamwalker Mantle', '10'),
+    (40624, 11, 1, 39556, 7, 'Spaulders of the Lost Vanquisher', 'Heroes'' Dreamwalker Shoulderpads', '10'),
+    (40624, 11, 2, 39542, 7, 'Spaulders of the Lost Vanquisher', 'Heroes'' Dreamwalker Spaulders', '10'),
+    (40612, 11, 0, 39547, 7, 'Chestguard of the Lost Vanquisher', 'Heroes'' Dreamwalker Vestments', '10'),
+    (40612, 11, 1, 39554, 7, 'Chestguard of the Lost Vanquisher', 'Heroes'' Dreamwalker Raiments', '10'),
+    (40612, 11, 2, 39538, 7, 'Chestguard of the Lost Vanquisher', 'Heroes'' Dreamwalker Robe', '10'),
+    (40615, 11, 0, 39544, 7, 'Gloves of the Lost Vanquisher', 'Heroes'' Dreamwalker Gloves', '10'),
+    (40615, 11, 1, 39557, 7, 'Gloves of the Lost Vanquisher', 'Heroes'' Dreamwalker Handgrips', '10'),
+    (40615, 11, 2, 39543, 7, 'Gloves of the Lost Vanquisher', 'Heroes'' Dreamwalker Handguards', '10'),
+    (40621, 11, 0, 39546, 7, 'Leggings of the Lost Vanquisher', 'Heroes'' Dreamwalker Trousers', '10'),
+    (40621, 11, 1, 39555, 7, 'Leggings of the Lost Vanquisher', 'Heroes'' Dreamwalker Legguards', '10'),
+    (40621, 11, 2, 39539, 7, 'Leggings of the Lost Vanquisher', 'Heroes'' Dreamwalker Leggings', '10');
+
+-- Death Knight T7 10-man (Heroes' Scourgeborne), Lost Vanquisher family.
+-- First class to join the token model: pre-T7 tier tokens never dropped for
+-- DK, so no historical data was needed for tiers 3-6. Blood (Plate, tank)
+-- has its own itemization; Frost/Unholy (Battlegear, DPS) share the other.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (40618, 40624, 40612, 40615, 40621) AND `class_id` = 6;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (40618, 6, 0, 39625, 7, 'Helm of the Lost Vanquisher', 'Heroes'' Scourgeborne Faceguard', '10'),
+    (40618, 6, 1, 39619, 7, 'Helm of the Lost Vanquisher', 'Heroes'' Scourgeborne Helmet', '10'),
+    (40618, 6, 2, 39619, 7, 'Helm of the Lost Vanquisher', 'Heroes'' Scourgeborne Helmet', '10'),
+    (40624, 6, 0, 39627, 7, 'Spaulders of the Lost Vanquisher', 'Heroes'' Scourgeborne Pauldrons', '10'),
+    (40624, 6, 1, 39621, 7, 'Spaulders of the Lost Vanquisher', 'Heroes'' Scourgeborne Shoulderplates', '10'),
+    (40624, 6, 2, 39621, 7, 'Spaulders of the Lost Vanquisher', 'Heroes'' Scourgeborne Shoulderplates', '10'),
+    (40612, 6, 0, 39623, 7, 'Chestguard of the Lost Vanquisher', 'Heroes'' Scourgeborne Chestguard', '10'),
+    (40612, 6, 1, 39617, 7, 'Chestguard of the Lost Vanquisher', 'Heroes'' Scourgeborne Battleplate', '10'),
+    (40612, 6, 2, 39617, 7, 'Chestguard of the Lost Vanquisher', 'Heroes'' Scourgeborne Battleplate', '10'),
+    (40615, 6, 0, 39624, 7, 'Gloves of the Lost Vanquisher', 'Heroes'' Scourgeborne Handguards', '10'),
+    (40615, 6, 1, 39618, 7, 'Gloves of the Lost Vanquisher', 'Heroes'' Scourgeborne Gauntlets', '10'),
+    (40615, 6, 2, 39618, 7, 'Gloves of the Lost Vanquisher', 'Heroes'' Scourgeborne Gauntlets', '10'),
+    (40621, 6, 0, 39626, 7, 'Leggings of the Lost Vanquisher', 'Heroes'' Scourgeborne Legguards', '10'),
+    (40621, 6, 1, 39620, 7, 'Leggings of the Lost Vanquisher', 'Heroes'' Scourgeborne Legplates', '10'),
+    (40621, 6, 2, 39620, 7, 'Leggings of the Lost Vanquisher', 'Heroes'' Scourgeborne Legplates', '10');
+
+-- T7 25-man (Valorous). Same Lost Conqueror/Protector/Vanquisher groups and
+-- class-tab mapping as the 10-man data above, at the ilvl 213 tier and a
+-- distinct set of token/result item_template entries. All entries below were
+-- sourced and cross-checked directly against a live item_template (class
+-- mask, InventoryType per slot, and ItemLevel=213), not carried over from
+-- the 10-man research.
+
+-- Paladin T7 25-man (Valorous Redemption), Lost Conqueror family. Holy
+-- (Regalia), Protection (Plate), Retribution (Battlegear) - all distinct.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (40625, 40628, 40631, 40634, 40637) AND `class_id` = 2;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (40631, 2, 0, 40571, 7, 'Crown of the Lost Conqueror', 'Valorous Redemption Headpiece', '25'),
+    (40631, 2, 1, 40581, 7, 'Crown of the Lost Conqueror', 'Valorous Redemption Faceguard', '25'),
+    (40631, 2, 2, 40576, 7, 'Crown of the Lost Conqueror', 'Valorous Redemption Helm', '25'),
+    (40637, 2, 0, 40573, 7, 'Mantle of the Lost Conqueror', 'Valorous Redemption Spaulders', '25'),
+    (40637, 2, 1, 40584, 7, 'Mantle of the Lost Conqueror', 'Valorous Redemption Shoulderguards', '25'),
+    (40637, 2, 2, 40578, 7, 'Mantle of the Lost Conqueror', 'Valorous Redemption Shoulderplates', '25'),
+    (40625, 2, 0, 40569, 7, 'Breastplate of the Lost Conqueror', 'Valorous Redemption Tunic', '25'),
+    (40625, 2, 1, 40579, 7, 'Breastplate of the Lost Conqueror', 'Valorous Redemption Breastplate', '25'),
+    (40625, 2, 2, 40574, 7, 'Breastplate of the Lost Conqueror', 'Valorous Redemption Chestpiece', '25'),
+    (40628, 2, 0, 40570, 7, 'Gauntlets of the Lost Conqueror', 'Valorous Redemption Gloves', '25'),
+    (40628, 2, 1, 40580, 7, 'Gauntlets of the Lost Conqueror', 'Valorous Redemption Handguards', '25'),
+    (40628, 2, 2, 40575, 7, 'Gauntlets of the Lost Conqueror', 'Valorous Redemption Gauntlets', '25'),
+    (40634, 2, 0, 40572, 7, 'Legplates of the Lost Conqueror', 'Valorous Redemption Greaves', '25'),
+    (40634, 2, 1, 40583, 7, 'Legplates of the Lost Conqueror', 'Valorous Redemption Legguards', '25'),
+    (40634, 2, 2, 40577, 7, 'Legplates of the Lost Conqueror', 'Valorous Redemption Legplates', '25');
+
+-- Priest T7 25-man (Valorous Faith), Lost Conqueror family. Discipline/Holy
+-- share one itemization (Regalia of Faith), Shadow has its own (Garb of Faith).
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (40625, 40628, 40631, 40634, 40637) AND `class_id` = 5;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (40631, 5, 0, 40447, 7, 'Crown of the Lost Conqueror', 'Valorous Crown of Faith', '25'),
+    (40631, 5, 1, 40447, 7, 'Crown of the Lost Conqueror', 'Valorous Crown of Faith', '25'),
+    (40631, 5, 2, 40456, 7, 'Crown of the Lost Conqueror', 'Valorous Circlet of Faith', '25'),
+    (40637, 5, 0, 40450, 7, 'Mantle of the Lost Conqueror', 'Valorous Shoulderpads of Faith', '25'),
+    (40637, 5, 1, 40450, 7, 'Mantle of the Lost Conqueror', 'Valorous Shoulderpads of Faith', '25'),
+    (40637, 5, 2, 40459, 7, 'Mantle of the Lost Conqueror', 'Valorous Mantle of Faith', '25'),
+    (40625, 5, 0, 40449, 7, 'Breastplate of the Lost Conqueror', 'Valorous Robe of Faith', '25'),
+    (40625, 5, 1, 40449, 7, 'Breastplate of the Lost Conqueror', 'Valorous Robe of Faith', '25'),
+    (40625, 5, 2, 40458, 7, 'Breastplate of the Lost Conqueror', 'Valorous Raiments of Faith', '25'),
+    (40628, 5, 0, 40445, 7, 'Gauntlets of the Lost Conqueror', 'Valorous Gloves of Faith', '25'),
+    (40628, 5, 1, 40445, 7, 'Gauntlets of the Lost Conqueror', 'Valorous Gloves of Faith', '25'),
+    (40628, 5, 2, 40454, 7, 'Gauntlets of the Lost Conqueror', 'Valorous Handwraps of Faith', '25'),
+    (40634, 5, 0, 40448, 7, 'Legplates of the Lost Conqueror', 'Valorous Leggings of Faith', '25'),
+    (40634, 5, 1, 40448, 7, 'Legplates of the Lost Conqueror', 'Valorous Leggings of Faith', '25'),
+    (40634, 5, 2, 40457, 7, 'Legplates of the Lost Conqueror', 'Valorous Pants of Faith', '25');
+
+-- Warlock T7 25-man (Valorous Plagueheart), Lost Conqueror family. All 3
+-- specs are caster DPS - one itemization applies regardless of spec.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (40625, 40628, 40631, 40634, 40637) AND `class_id` = 9;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (40631, 9, 0, 40421, 7, 'Crown of the Lost Conqueror', 'Valorous Plagueheart Circlet', '25'),
+    (40631, 9, 1, 40421, 7, 'Crown of the Lost Conqueror', 'Valorous Plagueheart Circlet', '25'),
+    (40631, 9, 2, 40421, 7, 'Crown of the Lost Conqueror', 'Valorous Plagueheart Circlet', '25'),
+    (40637, 9, 0, 40424, 7, 'Mantle of the Lost Conqueror', 'Valorous Plagueheart Shoulderpads', '25'),
+    (40637, 9, 1, 40424, 7, 'Mantle of the Lost Conqueror', 'Valorous Plagueheart Shoulderpads', '25'),
+    (40637, 9, 2, 40424, 7, 'Mantle of the Lost Conqueror', 'Valorous Plagueheart Shoulderpads', '25'),
+    (40625, 9, 0, 40423, 7, 'Breastplate of the Lost Conqueror', 'Valorous Plagueheart Robe', '25'),
+    (40625, 9, 1, 40423, 7, 'Breastplate of the Lost Conqueror', 'Valorous Plagueheart Robe', '25'),
+    (40625, 9, 2, 40423, 7, 'Breastplate of the Lost Conqueror', 'Valorous Plagueheart Robe', '25'),
+    (40628, 9, 0, 40420, 7, 'Gauntlets of the Lost Conqueror', 'Valorous Plagueheart Gloves', '25'),
+    (40628, 9, 1, 40420, 7, 'Gauntlets of the Lost Conqueror', 'Valorous Plagueheart Gloves', '25'),
+    (40628, 9, 2, 40420, 7, 'Gauntlets of the Lost Conqueror', 'Valorous Plagueheart Gloves', '25'),
+    (40634, 9, 0, 40422, 7, 'Legplates of the Lost Conqueror', 'Valorous Plagueheart Leggings', '25'),
+    (40634, 9, 1, 40422, 7, 'Legplates of the Lost Conqueror', 'Valorous Plagueheart Leggings', '25'),
+    (40634, 9, 2, 40422, 7, 'Legplates of the Lost Conqueror', 'Valorous Plagueheart Leggings', '25');
+
+-- Warrior T7 25-man (Valorous Dreadnaught), Lost Protector family. Arms/Fury
+-- share one itemization (Battlegear), Protection has its own (Plate).
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (40626, 40629, 40632, 40635, 40638) AND `class_id` = 1;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (40632, 1, 0, 40528, 7, 'Crown of the Lost Protector', 'Valorous Dreadnaught Helmet', '25'),
+    (40632, 1, 1, 40528, 7, 'Crown of the Lost Protector', 'Valorous Dreadnaught Helmet', '25'),
+    (40632, 1, 2, 40546, 7, 'Crown of the Lost Protector', 'Valorous Dreadnaught Greathelm', '25'),
+    (40638, 1, 0, 40530, 7, 'Mantle of the Lost Protector', 'Valorous Dreadnaught Shoulderplates', '25'),
+    (40638, 1, 1, 40530, 7, 'Mantle of the Lost Protector', 'Valorous Dreadnaught Shoulderplates', '25'),
+    (40638, 1, 2, 40548, 7, 'Mantle of the Lost Protector', 'Valorous Dreadnaught Pauldrons', '25'),
+    (40626, 1, 0, 40525, 7, 'Breastplate of the Lost Protector', 'Valorous Dreadnaught Battleplate', '25'),
+    (40626, 1, 1, 40525, 7, 'Breastplate of the Lost Protector', 'Valorous Dreadnaught Battleplate', '25'),
+    (40626, 1, 2, 40544, 7, 'Breastplate of the Lost Protector', 'Valorous Dreadnaught Breastplate', '25'),
+    (40629, 1, 0, 40527, 7, 'Gauntlets of the Lost Protector', 'Valorous Dreadnaught Gauntlets', '25'),
+    (40629, 1, 1, 40527, 7, 'Gauntlets of the Lost Protector', 'Valorous Dreadnaught Gauntlets', '25'),
+    (40629, 1, 2, 40545, 7, 'Gauntlets of the Lost Protector', 'Valorous Dreadnaught Handguards', '25'),
+    (40635, 1, 0, 40529, 7, 'Legplates of the Lost Protector', 'Valorous Dreadnaught Legplates', '25'),
+    (40635, 1, 1, 40529, 7, 'Legplates of the Lost Protector', 'Valorous Dreadnaught Legplates', '25'),
+    (40635, 1, 2, 40547, 7, 'Legplates of the Lost Protector', 'Valorous Dreadnaught Legguards', '25');
+
+-- Hunter T7 25-man (Valorous Cryptstalker), Lost Protector family. All 3
+-- specs are ranged DPS - one itemization applies regardless of spec.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (40626, 40629, 40632, 40635, 40638) AND `class_id` = 3;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (40632, 3, 0, 40505, 7, 'Crown of the Lost Protector', 'Valorous Cryptstalker Headpiece', '25'),
+    (40632, 3, 1, 40505, 7, 'Crown of the Lost Protector', 'Valorous Cryptstalker Headpiece', '25'),
+    (40632, 3, 2, 40505, 7, 'Crown of the Lost Protector', 'Valorous Cryptstalker Headpiece', '25'),
+    (40638, 3, 0, 40507, 7, 'Mantle of the Lost Protector', 'Valorous Cryptstalker Spaulders', '25'),
+    (40638, 3, 1, 40507, 7, 'Mantle of the Lost Protector', 'Valorous Cryptstalker Spaulders', '25'),
+    (40638, 3, 2, 40507, 7, 'Mantle of the Lost Protector', 'Valorous Cryptstalker Spaulders', '25'),
+    (40626, 3, 0, 40503, 7, 'Breastplate of the Lost Protector', 'Valorous Cryptstalker Tunic', '25'),
+    (40626, 3, 1, 40503, 7, 'Breastplate of the Lost Protector', 'Valorous Cryptstalker Tunic', '25'),
+    (40626, 3, 2, 40503, 7, 'Breastplate of the Lost Protector', 'Valorous Cryptstalker Tunic', '25'),
+    (40629, 3, 0, 40504, 7, 'Gauntlets of the Lost Protector', 'Valorous Cryptstalker Handguards', '25'),
+    (40629, 3, 1, 40504, 7, 'Gauntlets of the Lost Protector', 'Valorous Cryptstalker Handguards', '25'),
+    (40629, 3, 2, 40504, 7, 'Gauntlets of the Lost Protector', 'Valorous Cryptstalker Handguards', '25'),
+    (40635, 3, 0, 40506, 7, 'Legplates of the Lost Protector', 'Valorous Cryptstalker Legguards', '25'),
+    (40635, 3, 1, 40506, 7, 'Legplates of the Lost Protector', 'Valorous Cryptstalker Legguards', '25'),
+    (40635, 3, 2, 40506, 7, 'Legplates of the Lost Protector', 'Valorous Cryptstalker Legguards', '25');
+
+-- Shaman T7 25-man (Valorous Earthshatter), Lost Protector family. Elemental
+-- (Garb), Enhancement (Battlegear), Restoration (Regalia) - all distinct.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (40626, 40629, 40632, 40635, 40638) AND `class_id` = 7;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (40632, 7, 0, 40516, 7, 'Crown of the Lost Protector', 'Valorous Earthshatter Helm', '25'),
+    (40632, 7, 1, 40521, 7, 'Crown of the Lost Protector', 'Valorous Earthshatter Faceguard', '25'),
+    (40632, 7, 2, 40510, 7, 'Crown of the Lost Protector', 'Valorous Earthshatter Headpiece', '25'),
+    (40638, 7, 0, 40518, 7, 'Mantle of the Lost Protector', 'Valorous Earthshatter Shoulderpads', '25'),
+    (40638, 7, 1, 40524, 7, 'Mantle of the Lost Protector', 'Valorous Earthshatter Shoulderguards', '25'),
+    (40638, 7, 2, 40513, 7, 'Mantle of the Lost Protector', 'Valorous Earthshatter Spaulders', '25'),
+    (40626, 7, 0, 40514, 7, 'Breastplate of the Lost Protector', 'Valorous Earthshatter Hauberk', '25'),
+    (40626, 7, 1, 40523, 7, 'Breastplate of the Lost Protector', 'Valorous Earthshatter Chestguard', '25'),
+    (40626, 7, 2, 40508, 7, 'Breastplate of the Lost Protector', 'Valorous Earthshatter Tunic', '25'),
+    (40629, 7, 0, 40515, 7, 'Gauntlets of the Lost Protector', 'Valorous Earthshatter Gloves', '25'),
+    (40629, 7, 1, 40520, 7, 'Gauntlets of the Lost Protector', 'Valorous Earthshatter Grips', '25'),
+    (40629, 7, 2, 40509, 7, 'Gauntlets of the Lost Protector', 'Valorous Earthshatter Handguards', '25'),
+    (40635, 7, 0, 40517, 7, 'Legplates of the Lost Protector', 'Valorous Earthshatter Kilt', '25'),
+    (40635, 7, 1, 40522, 7, 'Legplates of the Lost Protector', 'Valorous Earthshatter War-Kilt', '25'),
+    (40635, 7, 2, 40512, 7, 'Legplates of the Lost Protector', 'Valorous Earthshatter Legguards', '25');
+
+-- Rogue T7 25-man (Valorous Bonescythe), Lost Vanquisher family. All 3 specs
+-- are melee DPS - one itemization applies regardless of spec. (DB has a
+-- second, unused duplicate entry per piece with a different displayid; the
+-- entries used here are the ones actually wired into npc_vendor/loot.)
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (40627, 40630, 40633, 40636, 40639) AND `class_id` = 4;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (40633, 4, 0, 40499, 7, 'Crown of the Lost Vanquisher', 'Valorous Bonescythe Helmet', '25'),
+    (40633, 4, 1, 40499, 7, 'Crown of the Lost Vanquisher', 'Valorous Bonescythe Helmet', '25'),
+    (40633, 4, 2, 40499, 7, 'Crown of the Lost Vanquisher', 'Valorous Bonescythe Helmet', '25'),
+    (40639, 4, 0, 40502, 7, 'Mantle of the Lost Vanquisher', 'Valorous Bonescythe Pauldrons', '25'),
+    (40639, 4, 1, 40502, 7, 'Mantle of the Lost Vanquisher', 'Valorous Bonescythe Pauldrons', '25'),
+    (40639, 4, 2, 40502, 7, 'Mantle of the Lost Vanquisher', 'Valorous Bonescythe Pauldrons', '25'),
+    (40627, 4, 0, 40495, 7, 'Breastplate of the Lost Vanquisher', 'Valorous Bonescythe Breastplate', '25'),
+    (40627, 4, 1, 40495, 7, 'Breastplate of the Lost Vanquisher', 'Valorous Bonescythe Breastplate', '25'),
+    (40627, 4, 2, 40495, 7, 'Breastplate of the Lost Vanquisher', 'Valorous Bonescythe Breastplate', '25'),
+    (40630, 4, 0, 40496, 7, 'Gauntlets of the Lost Vanquisher', 'Valorous Bonescythe Gauntlets', '25'),
+    (40630, 4, 1, 40496, 7, 'Gauntlets of the Lost Vanquisher', 'Valorous Bonescythe Gauntlets', '25'),
+    (40630, 4, 2, 40496, 7, 'Gauntlets of the Lost Vanquisher', 'Valorous Bonescythe Gauntlets', '25'),
+    (40636, 4, 0, 40500, 7, 'Legplates of the Lost Vanquisher', 'Valorous Bonescythe Legplates', '25'),
+    (40636, 4, 1, 40500, 7, 'Legplates of the Lost Vanquisher', 'Valorous Bonescythe Legplates', '25'),
+    (40636, 4, 2, 40500, 7, 'Legplates of the Lost Vanquisher', 'Valorous Bonescythe Legplates', '25');
+
+-- Mage T7 25-man (Valorous Frostfire), Lost Vanquisher family. All 3 specs
+-- are caster DPS - one itemization applies regardless of spec.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (40627, 40630, 40633, 40636, 40639) AND `class_id` = 8;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (40633, 8, 0, 40416, 7, 'Crown of the Lost Vanquisher', 'Valorous Frostfire Circlet', '25'),
+    (40633, 8, 1, 40416, 7, 'Crown of the Lost Vanquisher', 'Valorous Frostfire Circlet', '25'),
+    (40633, 8, 2, 40416, 7, 'Crown of the Lost Vanquisher', 'Valorous Frostfire Circlet', '25'),
+    (40639, 8, 0, 40419, 7, 'Mantle of the Lost Vanquisher', 'Valorous Frostfire Shoulderpads', '25'),
+    (40639, 8, 1, 40419, 7, 'Mantle of the Lost Vanquisher', 'Valorous Frostfire Shoulderpads', '25'),
+    (40639, 8, 2, 40419, 7, 'Mantle of the Lost Vanquisher', 'Valorous Frostfire Shoulderpads', '25'),
+    (40627, 8, 0, 40418, 7, 'Breastplate of the Lost Vanquisher', 'Valorous Frostfire Robe', '25'),
+    (40627, 8, 1, 40418, 7, 'Breastplate of the Lost Vanquisher', 'Valorous Frostfire Robe', '25'),
+    (40627, 8, 2, 40418, 7, 'Breastplate of the Lost Vanquisher', 'Valorous Frostfire Robe', '25'),
+    (40630, 8, 0, 40415, 7, 'Gauntlets of the Lost Vanquisher', 'Valorous Frostfire Gloves', '25'),
+    (40630, 8, 1, 40415, 7, 'Gauntlets of the Lost Vanquisher', 'Valorous Frostfire Gloves', '25'),
+    (40630, 8, 2, 40415, 7, 'Gauntlets of the Lost Vanquisher', 'Valorous Frostfire Gloves', '25'),
+    (40636, 8, 0, 40417, 7, 'Legplates of the Lost Vanquisher', 'Valorous Frostfire Leggings', '25'),
+    (40636, 8, 1, 40417, 7, 'Legplates of the Lost Vanquisher', 'Valorous Frostfire Leggings', '25'),
+    (40636, 8, 2, 40417, 7, 'Legplates of the Lost Vanquisher', 'Valorous Frostfire Leggings', '25');
+
+-- Druid T7 25-man (Valorous Dreamwalker), Lost Vanquisher family. Balance
+-- (Garb), Feral (Battlegear), Restoration (Regalia) - all distinct.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (40627, 40630, 40633, 40636, 40639) AND `class_id` = 11;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (40633, 11, 0, 40467, 7, 'Crown of the Lost Vanquisher', 'Valorous Dreamwalker Cover', '25'),
+    (40633, 11, 1, 40473, 7, 'Crown of the Lost Vanquisher', 'Valorous Dreamwalker Headguard', '25'),
+    (40633, 11, 2, 40461, 7, 'Crown of the Lost Vanquisher', 'Valorous Dreamwalker Headpiece', '25'),
+    (40639, 11, 0, 40470, 7, 'Mantle of the Lost Vanquisher', 'Valorous Dreamwalker Mantle', '25'),
+    (40639, 11, 1, 40494, 7, 'Mantle of the Lost Vanquisher', 'Valorous Dreamwalker Shoulderpads', '25'),
+    (40639, 11, 2, 40465, 7, 'Mantle of the Lost Vanquisher', 'Valorous Dreamwalker Spaulders', '25'),
+    (40627, 11, 0, 40469, 7, 'Breastplate of the Lost Vanquisher', 'Valorous Dreamwalker Vestments', '25'),
+    (40627, 11, 1, 40471, 7, 'Breastplate of the Lost Vanquisher', 'Valorous Dreamwalker Raiments', '25'),
+    (40627, 11, 2, 40463, 7, 'Breastplate of the Lost Vanquisher', 'Valorous Dreamwalker Robe', '25'),
+    (40630, 11, 0, 40466, 7, 'Gauntlets of the Lost Vanquisher', 'Valorous Dreamwalker Gloves', '25'),
+    (40630, 11, 1, 40472, 7, 'Gauntlets of the Lost Vanquisher', 'Valorous Dreamwalker Handgrips', '25'),
+    (40630, 11, 2, 40460, 7, 'Gauntlets of the Lost Vanquisher', 'Valorous Dreamwalker Handguards', '25'),
+    (40636, 11, 0, 40468, 7, 'Legplates of the Lost Vanquisher', 'Valorous Dreamwalker Trousers', '25'),
+    (40636, 11, 1, 40493, 7, 'Legplates of the Lost Vanquisher', 'Valorous Dreamwalker Legguards', '25'),
+    (40636, 11, 2, 40462, 7, 'Legplates of the Lost Vanquisher', 'Valorous Dreamwalker Leggings', '25');
+
+-- Death Knight T7 25-man (Valorous Scourgeborne), Lost Vanquisher family.
+-- Blood (Plate, tank) has its own itemization; Frost/Unholy (Battlegear,
+-- DPS) share the other.
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (40627, 40630, 40633, 40636, 40639) AND `class_id` = 6;
+INSERT INTO `mod_token_turnin_tokens`
+    (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
+VALUES
+    (40633, 6, 0, 40565, 7, 'Crown of the Lost Vanquisher', 'Valorous Scourgeborne Faceguard', '25'),
+    (40633, 6, 1, 40554, 7, 'Crown of the Lost Vanquisher', 'Valorous Scourgeborne Helmet', '25'),
+    (40633, 6, 2, 40554, 7, 'Crown of the Lost Vanquisher', 'Valorous Scourgeborne Helmet', '25'),
+    (40639, 6, 0, 40568, 7, 'Mantle of the Lost Vanquisher', 'Valorous Scourgeborne Pauldrons', '25'),
+    (40639, 6, 1, 40557, 7, 'Mantle of the Lost Vanquisher', 'Valorous Scourgeborne Shoulderplates', '25'),
+    (40639, 6, 2, 40557, 7, 'Mantle of the Lost Vanquisher', 'Valorous Scourgeborne Shoulderplates', '25'),
+    (40627, 6, 0, 40559, 7, 'Breastplate of the Lost Vanquisher', 'Valorous Scourgeborne Chestguard', '25'),
+    (40627, 6, 1, 40550, 7, 'Breastplate of the Lost Vanquisher', 'Valorous Scourgeborne Battleplate', '25'),
+    (40627, 6, 2, 40550, 7, 'Breastplate of the Lost Vanquisher', 'Valorous Scourgeborne Battleplate', '25'),
+    (40630, 6, 0, 40563, 7, 'Gauntlets of the Lost Vanquisher', 'Valorous Scourgeborne Handguards', '25'),
+    (40630, 6, 1, 40552, 7, 'Gauntlets of the Lost Vanquisher', 'Valorous Scourgeborne Gauntlets', '25'),
+    (40630, 6, 2, 40552, 7, 'Gauntlets of the Lost Vanquisher', 'Valorous Scourgeborne Gauntlets', '25'),
+    (40636, 6, 0, 40567, 7, 'Legplates of the Lost Vanquisher', 'Valorous Scourgeborne Legguards', '25'),
+    (40636, 6, 1, 40556, 7, 'Legplates of the Lost Vanquisher', 'Valorous Scourgeborne Legplates', '25'),
+    (40636, 6, 2, 40556, 7, 'Legplates of the Lost Vanquisher', 'Valorous Scourgeborne Legplates', '25');
