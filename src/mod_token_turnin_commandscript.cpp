@@ -105,6 +105,7 @@
 #include "DBCStores.h"
 #include "Group.h"
 #include "Item.h"
+#include "Log.h"
 #include "ObjectMgr.h"
 #include "Player.h"
 #include "ScriptMgr.h"
@@ -153,6 +154,54 @@ namespace
 
     TokenTurnInConfigData tokenTurnInConfig;
 
+    // Packs (token_entry, class_id, talent_tab) into one key for the lookup
+    // cache below. token_entry uses bits 16+ (up to 32 bits), class_id bits
+    // 8-15, talent_tab bits 0-7 - no overlap since class_id/talent_tab are
+    // both small TINYINT columns.
+    uint64 PackTokenLookupKey(uint32 tokenEntry, uint8 classId, uint8 talentTab)
+    {
+        return (static_cast<uint64>(tokenEntry) << 16) | (static_cast<uint64>(classId) << 8) | talentTab;
+    }
+
+    // In-memory copy of mod_token_turnin_tokens, keyed by PackTokenLookupKey().
+    // The table is static world content (only changes when the module's SQL
+    // file changes), so it's loaded once up front rather than queried per bag
+    // item scanned - a per-item WorldDatabase.Query() was pure overhead: a
+    // full raid scan could mean well over a thousand blocking round-trips on
+    // the world thread for one .tokenturnin command.
+    std::unordered_map<uint64, uint32> tokenLookupCache;
+
+    // Loads (or reloads) the token->item lookup table into memory. Called from
+    // OnBeforeConfigLoad so it runs once at startup and again on `.reload
+    // config`, matching how sibling modules load their static custom tables
+    // (e.g. mod-individual-progression's LoadXpValues). Clears first so a
+    // reload picks up edited/added rows instead of serving a stale copy.
+    void LoadTokenLookupCache()
+    {
+        tokenLookupCache.clear();
+
+        QueryResult result = WorldDatabase.Query(
+            "SELECT token_entry, class_id, talent_tab, result_item_entry FROM mod_token_turnin_tokens");
+        if (!result)
+        {
+            LOG_WARN("module", "TokenTurnIn: mod_token_turnin_tokens is empty or missing - no tokens will convert. Was the module's SQL applied?");
+            return;
+        }
+
+        do
+        {
+            Field* fields = result->Fetch();
+            uint32 tokenEntry = fields[0].Get<uint32>();
+            uint8 classId = fields[1].Get<uint8>();
+            uint8 talentTab = fields[2].Get<uint8>();
+            uint32 resultItemEntry = fields[3].Get<uint32>();
+
+            tokenLookupCache[PackTokenLookupKey(tokenEntry, classId, talentTab)] = resultItemEntry;
+        } while (result->NextRow());
+
+        LOG_INFO("module", "TokenTurnIn: loaded {} token->item mappings into cache", tokenLookupCache.size());
+    }
+
     class TokenTurnInWorldScript : public WorldScript
     {
     public:
@@ -161,6 +210,7 @@ namespace
         void OnBeforeConfigLoad(bool reload) override
         {
             tokenTurnInConfig.Initialize(reload);
+            LoadTokenLookupCache();
         }
     };
 
@@ -315,54 +365,10 @@ namespace
         return true;
     }
 
-    // Packs (token_entry, class_id, talent_tab) into one key for the lookup
-    // cache below. token_entry uses bits 16+ (up to 32 bits), class_id bits
-    // 8-15, talent_tab bits 0-7 - no overlap since class_id/talent_tab are
-    // both small TINYINT columns.
-    uint64 PackTokenLookupKey(uint32 tokenEntry, uint8 classId, uint8 talentTab)
-    {
-        return (static_cast<uint64>(tokenEntry) << 16) | (static_cast<uint64>(classId) << 8) | talentTab;
-    }
-
-    // In-memory copy of mod_token_turnin_tokens, keyed by PackTokenLookupKey().
-    // Loaded once on first use rather than querying per bag item scanned -
-    // the table is static world content (only changes when the module's SQL
-    // file changes), so a per-item WorldDatabase.Query() was pure overhead:
-    // a full raid scan could mean well over a thousand blocking round-trips
-    // on the world thread for one .tokenturnin command.
-    std::unordered_map<uint64, uint32> tokenLookupCache;
-    bool tokenLookupCacheLoaded = false;
-
-    void EnsureTokenLookupCacheLoaded()
-    {
-        if (tokenLookupCacheLoaded)
-            return;
-
-        tokenLookupCacheLoaded = true;
-
-        QueryResult result = WorldDatabase.Query(
-            "SELECT token_entry, class_id, talent_tab, result_item_entry FROM mod_token_turnin_tokens");
-        if (!result)
-            return;
-
-        do
-        {
-            Field* fields = result->Fetch();
-            uint32 tokenEntry = fields[0].Get<uint32>();
-            uint8 classId = fields[1].Get<uint8>();
-            uint8 talentTab = fields[2].Get<uint8>();
-            uint32 resultItemEntry = fields[3].Get<uint32>();
-
-            tokenLookupCache[PackTokenLookupKey(tokenEntry, classId, talentTab)] = resultItemEntry;
-        } while (result->NextRow());
-    }
-
     // Core scan+resolve logic shared by "check" and "redeem".
     // doConvert = false -> report only, no destroy/award.
     std::vector<TokenConversionResult> ScanAndResolve(Player* target, bool doConvert)
     {
-        EnsureTokenLookupCacheLoaded();
-
         std::vector<TokenConversionResult> results;
 
         // 1. Resolve current spec. -1 means no points invested anywhere
