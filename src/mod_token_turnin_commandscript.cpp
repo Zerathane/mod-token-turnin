@@ -519,10 +519,20 @@ namespace
         {
             for (GroupReference* itr = group->GetFirstMember(); itr != nullptr; itr = itr->next())
             {
-                if (Player* member = itr->GetSource())
-                    if (member != invoker)
-                        if (includeRealPlayers || !IsRealPlayer(member))
-                            scope.push_back(member);
+                Player* member = itr->GetSource();
+
+                // Skip anything we can't safely scan and mutate: a member with
+                // no active session or not currently in world (e.g. mid-logout),
+                // the invoker (added above only when IncludeSelf is set), and
+                // real players unless IncludeRealPlayers is enabled.
+                if (!member || !member->GetSession() || !member->IsInWorld())
+                    continue;
+                if (member == invoker)
+                    continue;
+                if (!includeRealPlayers && IsRealPlayer(member))
+                    continue;
+
+                scope.push_back(member);
             }
         }
 
