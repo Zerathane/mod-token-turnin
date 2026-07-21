@@ -100,7 +100,7 @@
 #include "Bag.h"
 #include "Chat.h"
 #include "ChatCommand.h"
-#include "ConfigValueCache.h"
+#include "Config.h"
 #include "DatabaseEnv.h"
 #include "DBCStores.h"
 #include "Group.h"
@@ -124,36 +124,25 @@ using namespace Acore::ChatCommands;
 
 namespace
 {
-    enum class TokenTurnInConfig
+    // Cached config, (re)loaded from the .conf in OnBeforeConfigLoad. See
+    // conf/mod_token_turnin.conf.dist for the full option descriptions.
+    bool configEnable = true;
+    bool configIncludeSelf = false;
+    bool configIncludeRealPlayers = false;
+
+    void LoadTokenTurnInConfig()
     {
-        ENABLE,
-        INCLUDE_SELF,
-        INCLUDE_REAL_PLAYERS,
-        NUM_CONFIGS,
-    };
-
-    class TokenTurnInConfigData : public ConfigValueCache<TokenTurnInConfig>
-    {
-    public:
-        TokenTurnInConfigData() : ConfigValueCache(TokenTurnInConfig::NUM_CONFIGS) {}
-
-        void BuildConfigCache() override
-        {
-            SetConfigValue<bool>(TokenTurnInConfig::ENABLE, "TokenTurnIn.Enable", true);
-            // Default false: this module exists for bot-management convenience,
-            // not to make it easier for the invoking player's own character to
-            // get gear (see DESIGN.md). Off by default, opt-in for admins who
-            // want the convenience for themselves too.
-            SetConfigValue<bool>(TokenTurnInConfig::INCLUDE_SELF, "TokenTurnIn.IncludeSelf", false);
-            // Default false: only real playerbots should be swept up when
-            // scanning a group, not a real grouped friend's character.
-            // Only takes effect when built with mod-playerbots present -
-            // see the MOD_PLAYERBOTS guard on IsRealPlayer() below.
-            SetConfigValue<bool>(TokenTurnInConfig::INCLUDE_REAL_PLAYERS, "TokenTurnIn.IncludeRealPlayers", false);
-        }
-    };
-
-    TokenTurnInConfigData tokenTurnInConfig;
+        configEnable = sConfigMgr->GetOption<bool>("TokenTurnIn.Enable", true);
+        // Default false: this module exists for bot-management convenience, not
+        // to make it easier for the invoking player's own character to get gear
+        // (see DESIGN.md). Opt-in for admins who want the convenience too.
+        configIncludeSelf = sConfigMgr->GetOption<bool>("TokenTurnIn.IncludeSelf", false);
+        // Default false: only real playerbots should be swept up when scanning a
+        // group, not a real grouped friend's character. Only meaningful when
+        // built with mod-playerbots present - see the MOD_PLAYERBOTS guard on
+        // IsRealPlayer() below.
+        configIncludeRealPlayers = sConfigMgr->GetOption<bool>("TokenTurnIn.IncludeRealPlayers", false);
+    }
 
     // Packs (token_entry, class_id, talent_tab) into one key for the lookup
     // cache below. token_entry uses bits 16+ (up to 32 bits), class_id bits
@@ -208,9 +197,9 @@ namespace
     public:
         TokenTurnInWorldScript() : WorldScript("TokenTurnInWorldScript", { WORLDHOOK_ON_BEFORE_CONFIG_LOAD }) {}
 
-        void OnBeforeConfigLoad(bool reload) override
+        void OnBeforeConfigLoad(bool /*reload*/) override
         {
-            tokenTurnInConfig.Initialize(reload);
+            LoadTokenTurnInConfig();
             LoadTokenLookupCache();
         }
     };
@@ -510,9 +499,7 @@ namespace
     {
         std::vector<Player*> scope;
 
-        bool includeRealPlayers = tokenTurnInConfig.GetConfigValue<bool>(TokenTurnInConfig::INCLUDE_REAL_PLAYERS);
-
-        if (tokenTurnInConfig.GetConfigValue<bool>(TokenTurnInConfig::INCLUDE_SELF))
+        if (configIncludeSelf)
             scope.push_back(invoker);
 
         if (Group* group = invoker->GetGroup())
@@ -529,7 +516,7 @@ namespace
                     continue;
                 if (member == invoker)
                     continue;
-                if (!includeRealPlayers && IsRealPlayer(member))
+                if (!configIncludeRealPlayers && IsRealPlayer(member))
                     continue;
 
                 scope.push_back(member);
@@ -541,7 +528,7 @@ namespace
 
     void RunTokenTurnIn(ChatHandler* handler, bool doConvert)
     {
-        if (!tokenTurnInConfig.GetConfigValue<bool>(TokenTurnInConfig::ENABLE))
+        if (!configEnable)
         {
             handler->PSendSysMessage("[TokenTurnIn] This module is currently disabled.");
             return;
