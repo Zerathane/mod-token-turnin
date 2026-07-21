@@ -2,7 +2,7 @@
 
 # mod-token-turnin
 
-**An AzerothCore module for [mod-playerbots](https://github.com/liyunfan1223/mod-playerbots) that turns tier tokens into gear — no alt log in, no trips to the vendor!
+**An AzerothCore module for [mod-playerbots](https://github.com/liyunfan1223/mod-playerbots) that turns tier tokens into gear — no alt log in, no trips to the vendor!**
 
 ## Overview
 
