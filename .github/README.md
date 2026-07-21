@@ -2,15 +2,15 @@
 
 # mod-token-turnin
 
-**An AzerothCore module for [mod-playerbots](https://github.com/liyunfan1223/mod-playerbots) that turns tier tokens into gear — no vendor trip, no alt login, no manual per-bot busywork.**
+**An AzerothCore module for [mod-playerbots](https://github.com/liyunfan1223/mod-playerbots) that turns tier tokens into gear — no alt log in, no trips to the vendor!
 
 ## Overview
 
 Playerbots loot tier tokens just like real players, but unlike real players they can't walk themselves to a vendor and turn them in. Left alone, those tokens just sit in bag slots until someone logs into that specific character and does it manually — impractical when you're managing a full raid of bots.
 
-`mod-token-turnin` adds a single chat command that scans a player's own bags, and (if grouped) their party's or raid's bags, for tier tokens. For every token found, it resolves the correct class- and spec-appropriate gear piece, destroys the token, and awards the item instantly.
+`mod-token-turnin` adds a single chat command that scans a player's own bags (off by default, see below) and (if grouped) their party's or raid's bags, for tier tokens. For every token found, it resolves the correct class- and spec-appropriate gear piece, destroys the token, and awards the item instantly.
 
-The module is deliberately narrow in scope: it's a bot-management convenience tool, not a way to make gearing easier for real players. By default it only touches playerbots in your group, never your own character or real grouped players, unless you explicitly opt in.
+The module is deliberately narrow in scope: it's a bot-management convenience tool, not a way to make gearing easier for real players — by default it only touches playerbots in your group, never your own character or real grouped players unless you explicitly opt in.
 
 ## Features
 
@@ -18,7 +18,6 @@ The module is deliberately narrow in scope: it's a bot-management convenience to
 - **Full raid/party scanning** — point it at your group and it sweeps every bot's bags in one pass.
 - **Spec-aware resolution** — reads each bot's actual invested talent tree (not just their "declared" spec) to award the correct itemization: tank gear for a Protection Paladin, healer gear for a Restoration Druid, and so on.
 - **Class-correct token handling** — tokens shared across multiple classes (e.g. a token usable by Warrior, Priest, and Druid alike) resolve to the right class's gear automatically.
-- **Stack-safe conversion** — a bag slot holding multiple stacked tokens converts in a single sweep, not one at a time.
 - **Inventory-safe** — a bot with no free bag space keeps its token and gets a clear message, instead of losing the token for nothing.
 - **Readable, clickable output** — `check` and `redeem` report real, quality-colored, clickable item links in chat, not plain text.
 - **Configurable scope** — opt in to including your own character or real (non-bot) group members if you want the convenience for yourself too.
@@ -29,7 +28,7 @@ The module is deliberately narrow in scope: it's a bot-management convenience to
 1. Clone this module into your AzerothCore `modules/` directory:
    ```bash
    cd azerothcore-wotlk/modules
-   git clone https://github.com/azerothcore/mod-token-turnin.git
+   git clone https://github.com/Zerathane/mod-token-turnin
    ```
 2. Re-run CMake and rebuild `worldserver` as usual — modules are picked up automatically:
    ```bash
@@ -81,11 +80,9 @@ Item and token names render as real in-game chat links, colored by item quality 
 ## How It Works
 
 1. **Scan** — the command walks the invoker's bags, and (if grouped) the bags of every eligible group member, looking for item entries that match a known tier token.
-2. **Resolve spec** — for each bot carrying a token, the module reads the character's actual invested talent points directly from the core's talent data, and determines their dominant talent tree. This is more reliable than relying on a bot's "declared" spec, which can be stale or unset.
-3. **Look up the correct item** — token, class, and talent tree together resolve to exactly one correct gear piece via the module's data table. A token shared across multiple classes (common in tier-token design) still resolves correctly per class.
-4. **Convert** — on `redeem`, the token is destroyed and the resolved item is awarded, using the bot's actual stack count so a slot of multiple tokens converts in one pass. If there's no free bag space, the bot keeps the token and you're told why.
-
-No vendor NPC, no travel, no dialogue — everything happens through the chat command.
+2. **Resolve spec** — for each bot carrying a token, the module reads the character's actual invested talent points from core's talent data to determine their dominant talent tree.
+3. **Look up the item** — token, class, and talent tree together resolve to exactly one gear piece via the module's data table.
+4. **Convert** — on `redeem`, the token is destroyed and the resolved item awarded. If there's no free bag space, the bot keeps the token and you're told why.
 
 ## Supported Content
 
@@ -95,7 +92,7 @@ Tier token data is added incrementally, tier by tier, and verified in-game befor
 |---|---|---|---|
 | ZG, AQ20 | Zul'Gurub, The Ruins of Ahn'Qiraj | 20-man | ✅ Implemented |
 | T2.5 | The Temple of Ahn'Qiraj | 40-man | ⚠️ Partial — see below |
-| T3 | Naxxramas | 40 man | ✅ Implemented |
+| T3 | Naxxramas | 40-man | ✅ Implemented |
 | T4 | Karazhan / Gruul's Lair / Magtheridon's Lair | 10-man & 25-man | ✅ Implemented |
 | T5 | Serpentshrine Cavern / The Eye | 25-man | ✅ Implemented |
 | T6 | Black Temple / Hyjal Summit / Sunwell Plateau | 25-man | ✅ Implemented |
@@ -104,7 +101,7 @@ Tier token data is added incrementally, tier by tier, and verified in-game befor
 | T9 | Trial of the Crusader | 10-man & 25-man | ❌ Out of scope — see below |
 | T10 | Icecrown Citadel | 10-man & 25-man | ❌ Out of scope — see below |
 
-**T2.5 is implemented for Helm, Legs, and Chest only.** The set has 5 pieces total; Shoulder and Boots are deliberately left out as the two "Bindings" tokens map to two items which, normally are selectable by the player. 
+**T2.5 is implemented for Helm, Legs, and Chest only.** The set has 5 pieces total; Shoulder and Boots are deliberately left out because their two "Qiraji Bindings" tokens don't map to a single item — each is a shared prerequisite across two different quests, and which piece you get is determined by a second slot-specific material the module doesn't track, not by the token itself.
 
 **T9/T10 are intentionally out of scope.** In those tiers, base tier gear is purchased from a vendor with emblem currency rather than looted as a token, and the heroic upgrade item isn't slot-specific — it requires a player's choice of which piece to upgrade. Neither mechanic fits this module's "find token, destroy it, award its paired item" model without inventing behavior the player never asked for.
 
