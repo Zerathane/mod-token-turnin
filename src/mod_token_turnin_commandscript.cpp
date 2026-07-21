@@ -110,10 +110,11 @@
 #include "Player.h"
 #include "ScriptMgr.h"
 #include "StringFormat.h"
+#include <map>
 #include <sstream>
+#include <string>
 #include <unordered_map>
 #include <vector>
-#include <string>
 
 #ifdef MOD_PLAYERBOTS
 #include "PlayerbotMgr.h"

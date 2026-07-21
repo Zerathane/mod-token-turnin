@@ -2,11 +2,9 @@
 -- World database table: maps a tier token + talent tree + difficulty to the
 -- resulting gear item. One token identity + spec role + difficulty = one item.
 --
--- NOTE: talent_tab convention (0/1/2) must match the tab order returned by
--- TalentSpec::highestTree() in the playerbots codebase. Verify this against
--- the actual talent tab indexing before populating data (AzerothCore/WotLK
--- talent tabs are normally ordered left-to-right as tab 0/1/2 per class,
--- but confirm rather than assume).
+-- NOTE: talent_tab convention (0/1/2) must match the tab order resolved by
+-- ResolveHighestTalentTab() in mod_token_turnin_commandscript.cpp, which
+-- reads core's TalentTabEntry tabpage (left-to-right tab 0/1/2 per class).
 
 DROP TABLE IF EXISTS `mod_token_turnin_tokens`;
 CREATE TABLE `mod_token_turnin_tokens` (
@@ -15,7 +13,7 @@ CREATE TABLE `mod_token_turnin_tokens` (
   `class_id`           TINYINT UNSIGNED NOT NULL COMMENT 'Class this token belongs to (Player::getClass() values)',
   `talent_tab`         TINYINT UNSIGNED NOT NULL COMMENT '0/1/2 - talent tree this row''s result item applies to',
   `result_item_entry`  INT UNSIGNED   NOT NULL COMMENT 'Gear item entry awarded on conversion',
-  `tier`               TINYINT UNSIGNED NOT NULL COMMENT 'Tier number, 3-10, for bookkeeping/filtering',
+  `tier`               TINYINT UNSIGNED NOT NULL COMMENT 'Tier number (3-8), or 0 for ZG/AQ20/T2.5 sets; bookkeeping/filtering only',
   `token_name`         VARCHAR(100)   NOT NULL COMMENT 'item_template.name of token_entry, for readability only - not authoritative',
   `result_name`        VARCHAR(100)   NOT NULL COMMENT 'item_template.name of result_item_entry, for readability only - not authoritative',
   `difficulty`         VARCHAR(10)    NOT NULL COMMENT 'normal | heroic | 10 | 25',
@@ -36,7 +34,7 @@ CREATE TABLE `mod_token_turnin_tokens` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='mod_token_turnin conversion table';
 
 -- Druid T4 (Fallen Defender), normal.
-DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (29767, 29764, 29761, 29758, 29753);
+DELETE FROM `mod_token_turnin_tokens` WHERE `token_entry` IN (29767, 29764, 29761, 29758, 29753) AND `class_id` = 11;
 INSERT INTO `mod_token_turnin_tokens`
     (`token_entry`, `class_id`, `talent_tab`, `result_item_entry`, `tier`, `token_name`, `result_name`, `difficulty`)
 VALUES

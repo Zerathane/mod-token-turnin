@@ -16,8 +16,8 @@
 #    TokenTurnIn.IncludeSelf
 #        Description:   Include the invoking player's own character when
 #                       scanning/converting, not just party/raid members. This
-#                       module exists for bot-management convenience, so including self
-#					    is off by default.
+#                       module exists for bot-management convenience, so including
+#                       self is off by default.
 #        Default:       0 - Disabled (bots/group members only)
 #                       1 - Enabled (also convert the invoker's own tokens)
 #
