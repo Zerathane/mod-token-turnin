@@ -1,100 +1,25 @@
 /*
  * mod_token_turnin - CommandScript
  *
- * Verified against uploaded headers:
- *  - CommandScript hook is GetCommands() const (NOT GetChatCommands()) -
- *    CommandScript.h:31. ScriptMgr::GetChatCommands() is the *manager*
- *    method that aggregates every CommandScript's GetCommands() output -
- *    not the one we override.
- *  - PSendSysMessage uses {}-style formatting (Acore::StringFormat), not printf %s/%u
- *    (confirmed via Chat.h:147 and the working mod_junk_to_gold.cpp example)
- *  - Player::DestroyItemCount(item, count, update, unequip_check=false) - Player.h:1366
- *  - Player::StoreNewItemInBestSlots(item_id, item_count) - Player.h:1334
- *  - Player::GetItemByPos(bag, slot) - Player.h:1263
- *  - Group::GetFirstMember() returns GroupReference*, GroupReference itself is only
- *    forward-declared in Group.h - iteration idiom (->next(), ->GetSource()) is the
- *    standard AzerothCore pattern but its exact header wasn't in what I've been given,
- *    so still worth a quick sanity check against GroupReference.h in your tree.
- *  - Group::isRaidGroup() exists (Group.h:221), but scanning via GetFirstMember() covers
- *    party and raid identically - no branching needed on group type at all.
+ * Scans a player's (and, if grouped, their party/raid's) bags for tier
+ * tokens, resolves the correct gear item per character from spec and class,
+ * then destroys the token and awards the item. Player-initiated via
+ * .tokenturnin check|redeem. See DESIGN.md for the full design rationale,
+ * tier-data scope, and the history behind the decisions below.
  *
- * Resolved design point (supersedes an earlier attempt to reuse
- * mod-playerbots' TalentSpec::highestTree()):
- *  - TalentSpec::ReadTalents() (mod-playerbots, Talentspec.cpp) detects
- *    invested points via Player::HasSpell(spellId). In-game testing showed
- *    this fails to recognize points spent in early/passive-only talents -
- *    it only picks up the tree once a talent that also grants an active,
- *    castable spell has been learned. That made highestTree() itself
- *    unreliable for low investment, not just our own "no spec" check.
- *  - Replaced with our own ResolveHighestTalentTab() below, computed
- *    directly against core's own TalentEntry/TalentTabEntry DBC stores
- *    (sTalentStore/sTalentTabStore) and Player::HasTalent(), which checks
- *    the player's actual PlayerTalentMap (m_talents) rather than the general
- *    spellbook - the correct, passive-or-active-agnostic source of truth.
- *  - This also removes the module's hard compile-time dependency on
- *    mod-playerbots (Talentspec.h no longer included), which previously
- *    broke standalone CI builds (see the removed core-build.yml history).
+ * Two non-obvious points worth preserving before "simplifying" this file:
  *
- * Confirmed via ChatHelper.h/.cpp:
- *  - A class -> talent_tab -> spec name table already exists there
- *    (ChatHelper::specs), but it's private and FormatClass() wraps it with
- *    WoW chat-link color formatting we don't want. Reproduced as our own
- *    small static table below instead (kSpecNames) - same data, no formatting,
- *    no access issues.
+ *  - Spec detection is hand-rolled (ResolveHighestTalentTab) rather than
+ *    reusing mod-playerbots' TalentSpec: that path detects invested points
+ *    via Player::HasSpell() and misses passive-only talents, misreading low
+ *    investment as "no spec". Ours reads Player::HasTalent() against the real
+ *    PlayerTalentMap instead. This also keeps the module free of a hard
+ *    compile-time dependency on mod-playerbots, so it builds standalone.
  *
- * Resolved design point:
- *  - difficulty (normal/heroic/10/25) is NOT part of the lookup condition.
- *    Each difficulty's token is already a distinct token_entry (distinct
- *    item_id) in game data, so difficulty is implied by which token was
- *    scanned, not resolved at query time. Lookup is purely
- *    token_entry + talent_tab -> result_item_entry.
- *
- * Resolved design point:
- *  - Full-inventory fallback is "block": StoreNewItemInBestSlots() is tried
- *    before DestroyItemCount(), so a bot with no free space keeps its token
- *    (nothing lost) and gets a chat message instead of a mailed item.
- *
- * Resolved design point:
- *  - A character with zero points in every tree (e.g. a freshly wiped talent
- *    tree) has no real spec. ResolveHighestTalentTab() returns -1 for this
- *    case explicitly rather than defaulting to tab 0, so we can skip the
- *    character with a clear message instead of handing out fabricated gear.
- *
- * Resolved design point:
- *  - A single token_entry can be shared across multiple classes (confirmed
- *    in game data - e.g. T4's "Fallen Defender" family token is looted and
- *    used identically by Warrior, Priest, and Druid, each redeeming their
- *    own 3 spec-variant items from the same token entry). The lookup query
- *    filters on class_id as well as token_entry + talent_tab, so a class
- *    outside a token's real family simply finds no matching row - same
- *    outcome as any other unconvertible token, no separate mismatch/warning
- *    handling needed.
- *
- * Resolved design point:
- *  - This module's purpose is bot-management convenience, not helping real
- *    players get gear faster - so besides excluding the invoker (see
- *    TokenTurnIn.IncludeSelf), a real grouped player (not a bot) should also
- *    be excluded from scanning by default. Detecting "is this a bot" is a
- *    genuine mod-playerbots concern (PlayerbotsMgr::GetPlayerbotAI()), unlike
- *    the TalentSpec dependency removed above - that one was dropped for
- *    being buggy, not for being playerbots-specific. This check is wrapped
- *    in #ifdef MOD_PLAYERBOTS (a macro CMake already defines when playerbots
- *    is present in the build) so the module still compiles standalone;
- *    without playerbots present, real-player filtering is simply a no-op.
- *
- * Resolved design point:
- *  - Awarding via plain StoreNewItemInBestSlots() left items sitting inert
- *    in a bot's bags - in-game testing showed bots don't auto-equip an
- *    upgrade received this way, only when a GM's .additem gives it to them.
- *    Root cause (confirmed against core and mod-playerbots source): a GM's
- *    .additem calls Player::SendNewItem() after storing, which fires
- *    SMSG_ITEM_PUSH_RESULT; mod-playerbots hooks that exact packet as its
- *    "item push result" trigger (WorldPacketHandlerStrategy.cpp) to re-check
- *    gear and equip upgrades. StoreNewItemInBestSlots() never calls
- *    SendNewItem() itself, so bots never received that signal for tokens we
- *    awarded. AwardItemAndNotify() below wraps the same storage call and
- *    adds the missing SendNewItem() call so bots react the same way they do
- *    to a GM-given item.
+ *  - AwardItemAndNotify() calls Player::SendNewItem() after storing the item.
+ *    StoreNewItemInBestSlots() alone never sends SMSG_ITEM_PUSH_RESULT, which
+ *    is the packet mod-playerbots hooks to make a bot re-check and equip gear
+ *    upgrades - without it, awarded items just sit inert in the bot's bags.
  */
 
 #include "Bag.h"

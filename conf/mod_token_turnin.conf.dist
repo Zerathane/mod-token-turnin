@@ -24,6 +24,10 @@
 #    TokenTurnIn.IncludeRealPlayers
 #        Description:   Include real (non-bot) group/raid members, not just
 #                       playerbots. Requires mod-playerbots to be built in.
+#                       WARNING: when enabled, any group member who runs
+#                       .tokenturnin redeem will convert other real players'
+#                       tokens too, without those players consenting. Leave
+#                       disabled unless every member of such groups expects it.
 #        Default:       0 - Disabled (playerbots only)
 #                       1 - Enabled (also convert real players' tokens)
 #
