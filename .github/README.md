@@ -70,9 +70,12 @@ You always trigger this manually — there's no passive or automatic conversion 
 ### Example output
 
 ```
-[TokenTurnIn] BotWarrior1 (Protection) -> Would convert token: [Gloves of the Wayward Protector] -> Item: [Valorous Siegebreaker Gauntlets]
-[TokenTurnIn] BotDruid2 (Restoration) -> Converted token: [Chestguard of the Fallen Defender] -> Item: [Chestguard of Malorne]
-[TokenTurnIn] No convertible tokens found on BotMage3
+[TokenTurnIn] === Redeem (4 characters) ===
+[TokenTurnIn] BotWarrior1 (Protection) -> Converted Token: [Gloves of the Wayward Protector] -> Item: [Valorous Siegebreaker Gauntlets]
+[TokenTurnIn] BotDruid2 (Restoration) -> Failed to convert Token: [Chestguard of the Fallen Defender] -> Item: [Chestguard of Malorne] (no inventory space, token not consumed)
+[TokenTurnIn] No talents invested - spec cannot be determined, skipped: BotPaladin3
+[TokenTurnIn] No convertible tokens found on: BotMage4
+[TokenTurnIn] Summary: 1 converted, 1 failed (no space), 2 characters with nothing to convert.
 ```
 
 Item and token names render as real in-game chat links, colored by item quality and clickable for a tooltip — just like a vendor or loot window.
