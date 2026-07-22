@@ -156,6 +156,20 @@ namespace
         return (tabIt != classIt->second.end()) ? tabIt->second : "unknown";
     }
 
+    // Joins a list of already-colorized character names into one
+    // comma-separated string, for the collapsed group-report lines below.
+    std::string JoinNames(std::vector<std::string> const& names)
+    {
+        std::string joined;
+        for (size_t i = 0; i < names.size(); ++i)
+        {
+            if (i > 0)
+                joined += ", ";
+            joined += names[i];
+        }
+        return joined;
+    }
+
     // Builds a clickable in-game chat item link, e.g. |cff1eff00|Hitem:12345:0:0:0:0:0:0:0:0:0|h[Item Name]|h|r
     // Same idiom as cs_character.cpp's inventory listing. Falls back to a
     // plain entry number if the item no longer has a template (bad data).
@@ -226,6 +240,8 @@ namespace
 
     struct TokenConversionResult
     {
+        // Pre-colored, clickable player-link (Player::GetPlayerName()), not a
+        // plain name - captured while we still have the Player* to ask.
         std::string charName;
         std::string specLabel;
         uint32 tokenEntry = 0;
@@ -293,7 +309,7 @@ namespace
         if (highestTab < 0)
         {
             TokenConversionResult noSpec;
-            noSpec.charName = target->GetName();
+            noSpec.charName = target->GetPlayerName();
             noSpec.matched = false;
             noSpec.noSpec = true;
             return { noSpec };
@@ -321,7 +337,7 @@ namespace
             uint32 resultItemEntry = cacheIt->second;
 
             TokenConversionResult match;
-            match.charName = target->GetName();
+            match.charName = target->GetPlayerName();
             match.specLabel = specLabel;
             match.tokenEntry = tokenEntry;
             match.resultItemEntry = resultItemEntry;
@@ -348,7 +364,7 @@ namespace
         if (results.empty())
         {
             TokenConversionResult none;
-            none.charName = target->GetName();
+            none.charName = target->GetPlayerName();
             none.matched = false;
             results.push_back(none);
         }
@@ -361,9 +377,21 @@ namespace
     // (converted). Deliberately just a tense swap, not an extra tag/suffix -
     // which command you typed already tells you the mode, so repeating that
     // as a label on every line would just be noise.
+    //
+    // Takes the results for the WHOLE scan (every scanned character), not one
+    // character at a time: characters with nothing to report (no convertible
+    // tokens, or no spec) are collapsed into a single line each rather than
+    // repeating "No convertible tokens found on X" once per bot, which is
+    // mostly noise in a full raid scan. A trailing summary line gives the
+    // total outcome at a glance.
     void ReportResults(ChatHandler* handler, std::vector<TokenConversionResult> const& results, bool doConvert)
     {
         char const* verb = doConvert ? "Converted" : "Would convert";
+
+        std::vector<std::string> noSpecNames;
+        std::vector<std::string> noTokensNames;
+        uint32 convertedCount = 0;
+        uint32 failedCount = 0;
 
         for (auto const& r : results)
         {
@@ -374,30 +402,43 @@ namespace
                 // the success verb ("Converted") followed by a contradicting
                 // "not consumed" line.
                 if (r.inventoryFull)
+                {
                     handler->PSendSysMessage(
                         "[TokenTurnIn] {} ({}) -> Failed to convert Token: {} -> Item: {} (no inventory space, token not consumed)",
                         r.charName, r.specLabel, BuildItemLink(r.tokenEntry), BuildItemLink(r.resultItemEntry));
-                else if (r.count > 1)
-                    handler->PSendSysMessage(
-                        "[TokenTurnIn] {} ({}) -> {} Token: {} x{} -> Item: {} x{}",
-                        r.charName, r.specLabel, verb, BuildItemLink(r.tokenEntry), r.count, BuildItemLink(r.resultItemEntry), r.count);
+                    ++failedCount;
+                }
                 else
-                    handler->PSendSysMessage(
-                        "[TokenTurnIn] {} ({}) -> {} Token: {} -> Item: {}",
-                        r.charName, r.specLabel, verb, BuildItemLink(r.tokenEntry), BuildItemLink(r.resultItemEntry));
+                {
+                    if (r.count > 1)
+                        handler->PSendSysMessage(
+                            "[TokenTurnIn] {} ({}) -> {} Token: {} x{} -> Item: {} x{}",
+                            r.charName, r.specLabel, verb, BuildItemLink(r.tokenEntry), r.count, BuildItemLink(r.resultItemEntry), r.count);
+                    else
+                        handler->PSendSysMessage(
+                            "[TokenTurnIn] {} ({}) -> {} Token: {} -> Item: {}",
+                            r.charName, r.specLabel, verb, BuildItemLink(r.tokenEntry), BuildItemLink(r.resultItemEntry));
+                    ++convertedCount;
+                }
             }
             else if (r.noSpec)
-            {
-                handler->PSendSysMessage(
-                    "[TokenTurnIn] {} has no talents invested - spec cannot be determined, skipped",
-                    r.charName);
-            }
+                noSpecNames.push_back(r.charName);
             else
-            {
-                handler->PSendSysMessage(
-                    "[TokenTurnIn] No convertible tokens found on {}", r.charName);
-            }
+                noTokensNames.push_back(r.charName);
         }
+
+        if (!noSpecNames.empty())
+            handler->PSendSysMessage(
+                "[TokenTurnIn] No talents invested - spec cannot be determined, skipped: {}", JoinNames(noSpecNames));
+
+        if (!noTokensNames.empty())
+            handler->PSendSysMessage(
+                "[TokenTurnIn] No convertible tokens found on: {}", JoinNames(noTokensNames));
+
+        handler->PSendSysMessage(
+            "[TokenTurnIn] Summary: {} {}, {} failed (no space), {} character{} with nothing to convert.",
+            convertedCount, doConvert ? "converted" : "would convert",
+            failedCount, noTokensNames.size() + noSpecNames.size(), (noTokensNames.size() + noSpecNames.size()) == 1 ? "" : "s");
     }
 
     // True for a real (non-bot) player. Without mod-playerbots present there's
@@ -477,11 +518,18 @@ namespace
             return;
         }
 
+        handler->PSendSysMessage(
+            "[TokenTurnIn] === {} ({} character{}) ===",
+            doConvert ? "Redeem" : "Check", scope.size(), scope.size() == 1 ? "" : "s");
+
+        std::vector<TokenConversionResult> allResults;
         for (Player* target : scope)
         {
             auto results = ScanAndResolve(target, doConvert);
-            ReportResults(handler, results, doConvert);
+            allResults.insert(allResults.end(), results.begin(), results.end());
         }
+
+        ReportResults(handler, allResults, doConvert);
     }
 
     bool HandleTokenTurnInCheckCommand(ChatHandler* handler)
